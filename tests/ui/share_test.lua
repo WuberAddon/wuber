@@ -1,4 +1,4 @@
--- Tests of UI.Share and the WuberShareButton overlay (SPEC7 5.0; owner A). Loaded by tests/run.lua
+-- Tests of UI.Share and the WuberShareButton overlay. Loaded by tests/run.lua
 -- with its helper table T.
 local T = ...
 local test, eq, ok, H = T.test, T.eq, T.ok, T.H

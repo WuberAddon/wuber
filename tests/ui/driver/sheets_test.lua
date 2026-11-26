@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Sheets (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of UI.Driver.Sheets (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. The end-of-shift card: its sums agree with the fair split
 -- under it (the split shares the whole crew's takings, so the headline is that total).
 local T = ...
@@ -82,7 +82,7 @@ test("ui.driver.sheets: review 13, the rule line says what the split did when no
 	T.clean(w)
 end)
 
--- (BRIEF20 B8) the shift card clears the driver status strip (the real client drew its top edge over the strip)
+-- the shift card clears the driver status strip (the real client drew its top edge over the strip)
 test("ui.driver.sheets: B8 the shift card's top sits below the status strip, however many rows", function()
 	local w, a, W = driver()
 	local D = W.Driver

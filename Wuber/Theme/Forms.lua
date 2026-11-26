@@ -82,7 +82,7 @@ end
 --         onChange = fn(text) (every key), onEnter = fn(text) (Enter pressed), onEscape = fn() (after Escape lets go of the keyboard),
 --         multi = true (several lines, h is the box), colour = the well's colour }
 -- f.edit, f.hint, f:Sync() (shows get() unless typing), f:Text(), f:SetText(t), f.focused.
--- (BRIEF17 B1) A box with no get is the caller's own (notes, the Messages editor, price, searches):
+-- A box with no get is the caller's own (notes, the Messages editor, price, searches):
 -- losing focus, Escape and Sync never touch its text, only the placeholder; the caller reads f:Text().
 function T.Field(parent, w, h, opts)
 	opts = opts or {}
@@ -258,7 +258,7 @@ local function measure(view, content)
 	return ct - vt, vb - cb
 end
 
--- (BRIEF22 S1) the thin scroll bar every clipped list gets with its fades: a faint track on the right
+-- the thin scroll bar every clipped list gets with its fades: a faint track on the right
 -- edge and a thumb as long as the part in view, placed by how far the list is scrolled. Shown only
 -- while the list can scroll; it never takes the mouse (the wheel scrolls) and only moves, never fades.
 local BAR = { w = 3, inset = 4, right = 3, minThumb = 18 }

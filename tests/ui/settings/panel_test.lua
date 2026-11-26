@@ -63,7 +63,7 @@ test("ui.settings.panel: S11 - no Rider messages row above Riding, and no messag
 	T.clean(w)
 end)
 
--- (BRIEF22 T3) the author struggled to find auto-invite: the three switches drivers look for lead Driving, and Search still finds them
+-- the author struggled to find auto-invite: the three switches drivers look for lead Driving, and Search still finds them
 test("ui.settings.panel: BRIEF22 T3 Driving opens with its always rows (whisper invite, advert); the public chat invite is an Advanced row; Search finds them", function()
 	local w = T.newWorld()
 	local d = T.driver(w, T.BOB)
@@ -102,7 +102,7 @@ test("ui.settings.panel: BRIEF22 T3 Driving opens with its always rows (whisper 
 	T.clean(w)
 end)
 
--- (BRIEF22 T2) a founder sees the Founder badge in Your badge, automatic, never stored or clickable
+-- a founder sees the Founder badge in Your badge, automatic, never stored or clickable
 test("ui.settings.panel: BRIEF22 T2 a founder sees 'Founder (automatic)' in Your badge; others do not; it is not clickable", function()
 	local w = T.newWorld()
 	local d = T.driver(w, T.ANITA)
@@ -212,7 +212,7 @@ test("ui.settings.panel: S11 unfolded - a narrow section list, the rows right of
 	T.clean(w)
 end)
 
--- (round 13, I2) the badge picker: Google caught the spinning badges edge-on (thin sticks, squashed
+-- (round 13, I2) the badge picker: a reviewer caught the spinning badges edge-on (thin sticks, squashed
 -- ovals: Skull looked like the rest). The badges you can pick stand still, face-on; only the one
 -- you chose turns, and one you hover turns while the mouse is on it.
 test("ui.settings.panel r13 I2: the badge picker's badges stand still face-on; only the chosen (or hovered) one turns", function()

@@ -9,7 +9,7 @@ Roles are named, not tools: lead, builder, test runner, reviewer. See ROLES.md. 
 
 ## 0. Before touching the addon
 - Read AGENTS.md (CLAUDE.md is only a pointer to it) and CODE-RULES.md.
-- Work on an issue you were given, on your own branch (`claude/<n>`, `google/<n>`, `author/<topic>`) in your own git worktree.
+- Work on an issue you were given, on your own branch (`claude/<n>`, `author/<topic>`) in your own git worktree.
 - Never push to main, tag or release; never upload; never put personal data in the repository.
 - Never shorten or reword player-facing text to make it fit; wording changes need the maintainer (label `needs-author`).
 - WoW Forever: Interface 16001, **Lua 5.1** client. The author may run several game windows on separate accounts (separate SavedVariables) at the same time, so anything automatic must not fire once per window.

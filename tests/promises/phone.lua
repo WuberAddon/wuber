@@ -1,7 +1,7 @@
 -- Promises about the phone itself (owner SHELL): opening and closing, the splash, tabs, where the window stands, the fold,
 -- toasts, slash words, the bug report. From what the player sees and is told: Settings (Wide pages: "Some pages open out to
 -- two panes"; Window position: "Back to its usual place"), tooltips (the tabs, the minimap button, the fold button),
--- Help ("/wuber opens this app"), CHANGELOG 2.3.x (the fold; the window keeps clear of chat), BRIEF19 R6, BRIEF20 B4.
+-- Help ("/wuber opens this app"), CHANGELOG 2.3.x (the fold; the window keeps clear of chat), BRIEF20 B4.
 return function(Hunt)
 	local function is(sit, dial, want)
 		local v = sit[dial]

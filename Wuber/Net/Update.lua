@@ -1,5 +1,5 @@
 -- Module: Net.Update
--- Purpose: "A newer Wuber is out" (round 11, BRIEF11). Learns other players' Wuber versions from
+-- Purpose: "A newer Wuber is out" (round 11). Learns other players' Wuber versions from
 --   messages that already arrive (driver beacons D field 11, ride requests R field 6, crew HI field
 --   3: no new traffic), trusts a newer one when the founder says it (W.IsCreator on the message's
 --   real sender key, never a name in a payload) or when 2 different players said it or higher in the
@@ -16,7 +16,7 @@
 -- Events: listens Listen SETTINGS (updateNotes), login; fires NEWER_VERSION
 -- Standalone: no
 -- Test: tests/net/update_test.lua
--- From: new in round 11 (BRIEF11)
+-- From: new in round 11
 --
 -- Who is believed: Net.Inbox, Net.Requests and Drive.Team pass the key of the message's sender (the
 -- game's own sender field). A version newer than ours from one ordinary player is only remembered

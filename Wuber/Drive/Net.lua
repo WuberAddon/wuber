@@ -169,7 +169,7 @@ function DR.NetDriver()
 	local captain = call("IsCaptain")
 	if captain == nil then captain = true end
 	if not W.IsWarlock() then
-		-- a runner of another class (SPEC4 1.3): riders see and whisper the runner
+		-- a runner of another class: riders see and whisper the runner
 		return captain == true and call("IsRunner") == true
 	end
 	if not W.InGroup() then return captain == true end
@@ -209,7 +209,7 @@ end
 function DR.NetBeacon()
 	if call("Lock") ~= nil then return nil end
 	if not call("Active") then return nil end
-	-- selling only: raid summons never beacon (SPEC4 3.2)
+	-- selling only: raid summons never beacon
 	local selling = call("Selling")
 	if selling == nil then selling = call("IsOpen") end
 	if not selling then return nil end
@@ -239,7 +239,7 @@ function DR.NetBeacon()
 		local okP, set = pcall(sim.peers)
 		if okP and type(set) == "table" then only = set end
 	end
-	-- 2.3.0 (SPEC7 5.6): the crew's PvP danger (D field 18 "level:seconds"), only when there is some
+	-- 2.3.0: the crew's PvP danger (D field 18 "level:seconds"), only when there is some
 	local level, secs = call("DangerLevel")
 	level = tonumber(level) or 0
 	local rank = tonumber(call("RankCount")) or 0
@@ -325,7 +325,7 @@ local function customerOf(key)
 	return type(list) == "table" and list[key] or nil
 end
 
--- Who the rider pays (SPEC4 1.2): the summoner's full name, when it is not this window.
+-- Who the rider pays: the summoner's full name, when it is not this window.
 local function payeeOf(c)
 	local k = call("Payee", c.name)
 	if not k or k == W.myKey then return nil end
@@ -431,7 +431,7 @@ local function afterChange()
 			local stage = STAGE[c.state]
 			NET.rides[key] = { id = c.wuberRide, buyer = c.wuberBuyer, stage = stage and STAGE_RANK[stage] or 0,
 				price = c.wuberPrice, at = now(), label = c.wuberLabel }
-			-- Net's own list of the request too (SPEC5 reload): cancels and ratings still count
+			-- Net's own list of the request too: cancels and ratings still count
 			if W.RestoreIncoming then W.RestoreIncoming(c.wuberRide, c.wuberBuyer, c.dest, c.wuberPrice or c.price, stage, c.wuberVer) end
 		end
 	end
@@ -552,7 +552,7 @@ local function onRequest(ride)
 		end
 		kept = math.max(W.MIN_PRICE, math.floor(price))
 	end
-	-- (SPEC5 farelock, review #6: always locked at request time, a later price change never
+	-- (always locked at request time, a later price change never
 	-- reaches this rider)
 	kept = kept or math.max(W.MIN_PRICE, math.floor(current))
 	local cancelledAt = NET.cancelled[key] -- the rider cancelled the ride before this request
@@ -593,7 +593,7 @@ local function onRequest(ride)
 	if kept then c.price = kept end
 	local before = ahead(c)
 	local charged = tonumber(c.price) or kept or current
-	-- 2.3.0 (SPEC7 5.8): a raincheck (R field 7) the book takes lowers the fare due; A's last
+	-- 2.3.0: a raincheck (R field 7) the book takes lowers the fare due; A's last
 	-- field tells the rider it was taken. The book decides; the sender is the event's sender.
 	local taken = ride.voucher ~= nil and call("RaincheckRedeem", ride.voucher, key, charged, c) == true
 	if taken then
@@ -638,7 +638,7 @@ end
 local function onRating(rideId, buyer, stars)
 	rideId, buyer, stars = str(rideId), str(buyer), tonumber(plain(stars))
 	if not rideId or not buyer or not stars or NET.rated[rideId] then return end
-	if isBlocked(W.Key(buyer) or "") then return end -- (SPEC5 finished: never from a blocked rider)
+	if isBlocked(W.Key(buyer) or "") then return end -- (never from a blocked rider)
 	stars = math.floor(stars)
 	if stars < 1 or stars > 5 then return end
 	NET.rated[rideId] = true

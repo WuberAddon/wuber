@@ -1,7 +1,7 @@
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
--- AUD-30 (Google C07b-1): a rider who sends a second R (new ride id) while the driver holds their
+-- AUD-30 (a reviewer C07b-1): a rider who sends a second R (new ride id) while the driver holds their
 -- ride (a raincheck, or a summon under way) is answered N busy; the held ride must stay in the
 -- driver's W.incoming so the rider's later cancel, paid/done and rating still count.
 

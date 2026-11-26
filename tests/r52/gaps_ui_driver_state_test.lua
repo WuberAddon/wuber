@@ -61,7 +61,7 @@ test("ui.driver.state: the plain-words helpers: crew shards, fixes, stations, ad
 	eq(f and f.label, "Set a place") eq(f and f.tip, "Where you summon to") ok(f and f.run == run)
 	f = D.Fix({ "Pick a summoner", run })
 	eq(f and f.label, "Pick a summoner", "the listed form")
-	-- a station is ready with a summoner and two others (SPEC4 2.1)
+	-- a station is ready with a summoner and two others
 	eq(D.StationReady(nil), false)
 	eq(D.StationReady({ ready = false, summoners = { 1, 2, 3 } }), false, "the engine's word wins")
 	eq(D.StationReady({ ready = true }), true)

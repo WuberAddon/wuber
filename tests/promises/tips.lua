@@ -1,6 +1,6 @@
 -- Promises about the login tips (owner CORE: the starter set that proves the hunt on the bugs the author hit).
 -- Written from what the player was told (Settings > Riding > Login tips: "On: when you open Wuber after logging in,
--- a small tip card shows inside the phone, one tip at a time, each only once"; BRIEF25 T1, round 26 item 1).
+-- a small tip card shows inside the phone, one tip at a time, each only once", round 26 item 1).
 -- A tip card here is the card showing a tip (its Show me button is up), not the "Tips are off" line.
 return function(Hunt)
 	-- phone values where the dial's own open IS the first open (nothing clicked after it)

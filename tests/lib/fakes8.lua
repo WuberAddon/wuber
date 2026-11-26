@@ -1,4 +1,4 @@
--- tests/lib/fakes8.lua: game fakes for round 8 (Wuber 2.3.0, SPEC7 section 8, the lead's row).
+-- tests/lib/fakes8.lua: game fakes for round 8 (Wuber 2.3.0, the lead's row).
 -- Loaded once by tests/harness.lua (H.fakes8); F.api runs for every client while its game API
 -- is built. Nothing here creates a frame, fires an event or schedules a timer unless a test calls
 -- one of the World/Client helpers below, so the behaviour transcript of every older test stays

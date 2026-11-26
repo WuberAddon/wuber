@@ -9,7 +9,7 @@
 -- Events: listens (none); fires (none)
 -- Standalone: no
 -- Test: tests/ui/rider/wrapped_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.9; owner C)
+-- From: new in Wuber 2.3.0
 --
 -- Trips (UI.Rider.Trips) asks Due() on each visit: in the first 10 days of a month, the month
 -- before with 3+ rides gives the card once (W.db.wrapped.seen = "2026-10"); afterwards Chip()
@@ -18,9 +18,9 @@
 -- and a summary with Share (UI.Share: the player's click posts to party or raid, at most once a
 -- minute per month). Slides move by translation and alpha only (no scale); a time worked out,
 -- not timed, says about; unknown flight savings are left out.
--- Unfolded (SPEC7 5.9 / 2.8 "trips"): the slide stays on the left, the whole month is a list in
+-- Unfolded: the slide stays on the left, the whole month is a list in
 -- the Trips side pane (UI.trips.side.holder); a row's click shows that slide. Folded: no list.
--- (round 13, I1) The story and the list are solid (Google saw '1h 50m', 'Bronze Rider' and the
+-- (round 13, I1) The story and the list are solid (a reviewer saw '1h 50m', 'Bronze Rider' and the
 -- milestones ghost through them): while they show, the Trips page under them is put out of sight
 -- (alpha 0: its scroll area, the side pane's, the Wrapped card) and comes back on Close. Unfolded,
 -- the story's x is the list's, at the window's right edge (not a second x mid-window).

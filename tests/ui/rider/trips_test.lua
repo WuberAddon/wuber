@@ -1,4 +1,4 @@
--- Tests of UI.Rider.Trips (BRIEF19 F6): the folded page never slices a milestone row and says when more lies below.
+-- Tests of UI.Rider.Trips: the folded page never slices a milestone row and says when more lies below.
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
@@ -86,7 +86,7 @@ test("ui.rider.trips: F6 the scroll cue never covers a trip row, folded and unfo
 	end
 end)
 
--- (BRIEF20 B2, tour 19) the real client reports a clip's height as 0 until it has laid the clip out
+-- the real client reports a clip's height as 0 until it has laid the clip out
 -- (the unfolded page, right after the window re-anchored). The rows must still show, the cue only
 -- while rows are hidden below, and never over a drawn row (geometry, not fields).
 local function drawn(f) return f:IsVisible() and f:GetAlpha() > 0 end

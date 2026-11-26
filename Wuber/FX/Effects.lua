@@ -58,7 +58,7 @@ local SHEETS = {
 	portal_loop = { file = "portal_loop", w = 512, h = 512, cell = 128, cols = 4, blend = "ADD" },
 	arrival = { file = "arrival", w = 1024, h = 512, cell = 128, cols = 8, blend = "ADD" },
 	milestone = { file = "milestone", w = 512, h = 512, cell = 128, cols = 4, blend = "ADD" },
-	-- founder gold (SPEC7 5.13): the same grids, recoloured offline (tools/make_fx.py --gold); lazy like the rest
+	-- founder gold: the same grids, recoloured offline (tools/make_fx.py --gold); lazy like the rest
 	portal_open_gold = { file = "portal_open_gold", w = 1024, h = 512, cell = 128, cols = 8, blend = "ADD" },
 	portal_loop_gold = { file = "portal_loop_gold", w = 512, h = 512, cell = 128, cols = 4, blend = "ADD" },
 	arrival_gold = { file = "arrival_gold", w = 1024, h = 512, cell = 128, cols = 8, blend = "ADD" },
@@ -722,7 +722,7 @@ EFFECTS.coins = {
 	},
 }
 
--- Founder gold (SPEC7 5.13): each portal effect again with the gold flipbooks and rune ring, and its
+-- Founder gold: each portal effect again with the gold flipbooks and rune ring, and its
 -- violets mapped to golds, so it reads as the same effect in gold. Built once at load from the
 -- definitions above (no texture is touched until first play).
 local GOLD_MAP = {

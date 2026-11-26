@@ -7,9 +7,9 @@ Wuber is a World of Warcraft addon for WoW Forever (Interface 16001, Lua 5.1) th
 
 ## How work is organised
 - **Issues are the work list.** Work only on an issue you were given.
-- **One issue per branch and per pull request.** Branch names: `claude/<n>`, `google/<n>`, `author/<topic>` (n = the issue number). Commit messages start with `#<issue>`.
+- **One issue per branch and per pull request.** Branch names: `claude/<n>`, `author/<topic>` (n = the issue number). Commit messages start with `#<issue>`.
 - **Work in your own git worktree**, not in the main checkout.
-- Claude and Google's agy may both work in this repository, completely separately. GitHub (issues and pull requests) is the only shared place. The `google` label on an issue is added only by the maintainer. Nobody starts, drives or reads another tool.
+- Several contributors and tools may work in this repository at the same time, each on their own branch. GitHub (issues and pull requests) is the only shared place; nobody starts, drives or reads another contributor's tool.
 - Read `ROLES.md` to see which role you play and its limits.
 - A finding from a reviewer or another tool becomes a bug only after a failing test proves it.
 - Before a pull request run `tools/check.lua`, the whole suite and `tools/layout-check.lua` (commands below) and the scrub check.
@@ -59,7 +59,7 @@ Use Lua 5.1, not LuaJIT (LuaJIT changes table order and random numbers, so tests
 - Several checkouts on one PC: set `WUBER_SUITE_LOCK` to one shared folder and up to `WUBER_SUITE_SLOTS` (default 3) full suites run at once and the rest wait in line there (stale after a dead pid or 60 minutes; after 45 minutes it runs anyway). A pass is cached by the git tree hash of the working tree plus the lua5.1 executable hash in `WUBER_SUITE_CACHE` (default `tests/out/cache`): the same code again prints "CACHE HIT: same code already passed" and exits 0; `--fresh` or `--force` runs it anyway, a failing run is never cached. Details: `tools/README.md`.
 - Scrub check: `python scrub-check.py . --patterns scrub-patterns.public.txt` must print 0 hits.
 - All the checks before a pull request in one command, one summary line: `bash tools/pr-checks.sh <worktree> [--baseline <transcript>] [--private <patterns>]` (`--help`).
-- Before a pull request, all of the above in one command: `python tools/pr-ready.py --prefix <claude/ or google/> --title "#<n> ..." --what ... --why ... --test ... --issue <n>` (checks, scrub, push of your branch, the pull request; `--dry-run` shows what it would do, `--help` for the rest). A long log in 10 lines: `python tools/log-digest.py tests/out/join.log`. More tools: `tools/README.md`.
+- Before a pull request, all of the above in one command: `python tools/pr-ready.py --prefix claude/ --title "#<n> ..." --what ... --why ... --test ... --issue <n>` (checks, scrub, push of your branch, the pull request; `--dry-run` shows what it would do, `--help` for the rest). A long log in 10 lines: `python tools/log-digest.py tests/out/join.log`. More tools: `tools/README.md`.
 - A PR body block from the added lines (new API names with surface flags, forbidden names, direct test clicks): `lua5.1 tools/pr-summary.lua <base> <head>`.
 - Regenerate the map after a header, TOC or size change: `lua5.1 tools/map.lua --write` (maintainer or lead only, after the last merge).
 
@@ -83,14 +83,11 @@ Use Lua 5.1, not LuaJIT (LuaJIT changes table order and random numbers, so tests
 - **No pushes to main, no force pushes, no tags and no releases.** Those are the maintainer's. Releases (zip, CurseForge upload) are made by the maintainer.
 - Merging into main happens through a pull request, after the checks pass and the maintainer approves.
 
-## If you are Google's agent
-Everything above applies. Only what differs:
-- Branch `google/<n>`. Work in your own clone, never in anyone else's checkout or worktree.
-- When asked to review a pull request: change no file, push nothing, and post the review with `gh pr review <n> --comment --body "..."`.
-- Never push main, tags or releases. The `google` label is added only by the maintainer.
+## If you are asked to review a pull request
+Change no file, push nothing, and post the review with `gh pr review <n> --comment --body "..."`. Never push main, tags or releases.
 
 ## What needs the maintainer
-- Choosing the work, and labelling an issue `google`.
+- Choosing the work.
 - Any wording players see (`needs-author`), art, and decisions about behaviour.
 - Anything run in the real game (see the workflow skill), uploads, releases, tags, rule changes.
 - If you are stuck on a choice, write it into the issue or the pull request with a recommended answer and carry on with the rest.

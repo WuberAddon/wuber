@@ -5,7 +5,7 @@
 --   D.RaidRowClick, D.DescribeRaid, D.RaidTip, D.Row, D.LayRow, D.RideCount, D.PaintAgain,
 --   D.PaintRaidRow, D.PaintRow, D.Passphrase, D.RaincheckRide, D.GiveRaincheck, D.ToggleGetApp
 -- Internals: layRow (design 3: the chips flow onto more lines and the row grows, r.grown / r.laidH; lists place
---   the next row by its height), textW, paintGetApp (BRIEF17 B2: the "Invite to Wuber" pill on a chat rider's row, made
+--   the next row by its height), textW, paintGetApp (the "Invite to Wuber" pill on a chat rider's row, made
 --   on first use; a tap only queues or cancels the whisper, the big button's next click sends it),
 --   SUMMON_FORMS, summonSays (2.4: the game's word on a rider's summon, DR.SummonSeen: "has the summon
 --   window", "summon accepted", "declined: summon again?", or a shorter form where the row is narrow)
@@ -102,7 +102,7 @@ function D.Describe(c, t)
 		return "has the summon window", secs(t - (N(c.endAt) or N(c.at) or t)), "glow"
 	elseif s == "arrived" then
 		if c.walked then return "is here (no ride)", "", "muted" end
-		-- they pay the summoner who cast them (SPEC4 1.2); one without Wuber can't see the trade
+		-- they pay the summoner who cast them; one without Wuber can't see the trade
 		local payee = D.PayeeName(c)
 		if c.payeeBlind and payee then return "paid? ask " .. payee, "owes " .. money(due(c)), "gold" end
 		if (N(c.paid) or 0) > 0 then return "paid " .. money(c.paid), "owes " .. money(due(c)), "gold" end
@@ -115,7 +115,7 @@ end
 
 local SOURCE_TEXT = { whisper = "whisper", public = "in chat", manual = "added by you", group = "in your group" }
 
--- (2.3, SPEC7 5.7) The two words an app rider sees on their Found screen ("Violet Otter"), from
+-- (2.3) The two words an app rider sees on their Found screen ("Violet Otter"), from
 -- the ride id (W.Passphrase, Net.Portal). Only for riders who booked through the app; nil
 -- otherwise, or while the network can't say. (Round 9, C4) A crew window knows the ride only from
 -- ST field 9 (c.rideId, its row's source "group" or "relay"): it shows the words only while the
@@ -139,7 +139,7 @@ end
 function D.RowTip(c)
 	if type(c) ~= "table" then return "" end
 	local lines = {}
-	local look = T.PioneerLook(S(c.name)) -- (BRIEF15) a Pioneer: the shipped list only
+	local look = T.PioneerLook(S(c.name)) -- a Pioneer: the shipped list only
 	if look then lines[#lines + 1] = T.PIONEER[look].tip end
 	local label = S(c.wuberLabel)
 	if label then lines[#lines + 1] = label end
@@ -231,7 +231,7 @@ function D.RowClick(c, button)
 	return D.OpenMenu(c)
 end
 
--- (2.3, SPEC7 5.8) A raincheck for this rider's failed paid ride: the ride id when the book
+-- (2.3) A raincheck for this rider's failed paid ride: the ride id when the book
 -- (DR.RaincheckEligible, Drive.Raincheck) says it may have one, else nil and why. The driver's
 -- click gives it (DR.GiveRaincheck); it counts only once the rider accepts.
 function D.RaincheckRide(c)
@@ -259,7 +259,7 @@ function D.GiveRaincheck(c)
 	return true
 end
 
--- (BRIEF17 B2) "Get Wuber" for a chat rider without the app: queued for the big button's next
+-- "Get Wuber" for a chat rider without the app: queued for the big button's next
 -- click (DR.AskGetApp; the whisper only ever leaves on that secure click), or cancelled when it
 -- already is. The row's pill and the row menu both call this. Returns true when it changed.
 function D.ToggleGetApp(c)
@@ -447,10 +447,10 @@ function D.Row(parent, w)
 	-- a returning rider (review #19): "3rd ride with you", on the second line
 	r.again = T.Chip(r, "", "muted")
 	r.again:Hide()
-	-- the station this rider is summoned at (only with 2+ stations, SPEC4 2.2)
+	-- the station this rider is summoned at (only with 2+ stations)
 	r.station = T.Chip(r, "", "glow")
 	r.station:Hide()
-	-- (2.3, SPEC7 5.7) the app rider's passphrase, "· Violet Otter", made the first time one shows
+	-- (2.3) the app rider's passphrase, "· Violet Otter", made the first time one shows
 	r:Hide()
 	return r
 end
@@ -640,7 +640,7 @@ local function paintPass(r, words)
 	r.pass:Show()
 end
 
--- (BRIEF17 B2) the "Invite to Wuber" pill on the second line: offered (teal tint) or queued (violet,
+-- the "Invite to Wuber" pill on the second line: offered (teal tint) or queued (violet,
 -- a tick, "Next click sends"); a tap toggles it. Made the first time a row offers it.
 local GETAPP_TIP = {
 	ok = "%s asked without the app. Tap: your next big-button click whispers them how to get Wuber"
@@ -652,7 +652,7 @@ local function getAppPill(r)
 	local b = CreateFrame("Button", nil, r)
 	b:SetSize(100, 18)
 	b:RegisterForClicks("LeftButtonUp")
-	-- (BRIEF22 G1) two fills, each at the alpha it keeps, shown or hidden: soft (Invite) and solid (Next click sends)
+	-- two fills, each at the alpha it keeps, shown or hidden: soft (Invite) and solid (Next click sends)
 	b.fill = T.PillFill(b, { T.RGB("glow", 0.16) }, 18, "BACKGROUND", 1)
 	b.solid = T.PillFill(b, "accent", 18, "BACKGROUND", 1)
 	b.solid:SetShown(false)
@@ -710,7 +710,7 @@ local function paintDisc(r, name, colour)
 	r.ring:SetVertexColor(cr, cg, cb, 0.9)
 end
 
--- (BRIEF15) the Pioneer badge on the initial's top-left (made only for a listed rider)
+-- the Pioneer badge on the initial's top-left (made only for a listed rider)
 local function paintPioneer(r, name)
 	local b = T.ShowPioneer(r, "pioneer", T.PioneerLook(S(name)), 14)
 	if b then
@@ -758,7 +758,7 @@ function D.PaintRaidRow(r, row, t)
 	r:Show()
 end
 
--- (BRIEF22 P2) A lead's line, longest first: the row shows the first that fits, so a chat line is
+-- A lead's line, longest first: the row shows the first that fits, so a chat line is
 -- the whole quote or a shorter form ("asked for Loch Modan"), never cut ('"Any summons to loch modan?" · in...').
 -- The whole line is in the row's tooltip.
 local SHORT_SRC = { public = "asked in chat", whisper = "whispered you", manual = "added by you", group = "in your group" }

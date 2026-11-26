@@ -1,4 +1,4 @@
--- (BRIEF24 F2) Proof for F1: through Wuber's own animation helpers (Theme.Anim: A.SlideIn on every Drive screen,
+-- Proof for F1: through Wuber's own animation helpers (Theme.Anim: A.SlideIn on every Drive screen,
 -- A.ZoomIn on the window), a texture's Region:SetAlpha is held while the Alpha animation plays, as the game
 -- does (alpha probe, 20 Nov), and is taken once it has ended. Loaded by tests/run.lua with its helper table T.
 local T = ...

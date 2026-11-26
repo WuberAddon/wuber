@@ -433,7 +433,7 @@ test("lab passive: login checks, blocked actions and errors are noted; a clean s
 	clean(w2)
 end)
 
--- BRIEF18 00:33: another addon's Lua error (DaylightUI's unit frames, during summoning) was logged as
+-- another addon's Lua error (DaylightUI's unit frames, during summoning) was logged as
 -- "error fail Wuber" because the lab's own handler (WuberLab/Log.lua) is in its stack. The name comes
 -- from the error's own file path (Interface\AddOns\<name>\...): another addon is "other addon: <name>"
 -- and only looked at, Wuber's own is a fail, the lab's is the lab.

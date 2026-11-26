@@ -246,7 +246,7 @@ function DR.Hello(needSync)
 	local mode = ""
 	-- (review 2.2 #9: paused raid summons don't advertise themselves)
 	if DR.RaidOn and DR.RaidOn() and not (DR.IsPaused and DR.IsPaused()) then mode = DR.char().captain == "" and "R" or "r" end
-	-- 2.3.0 (SPEC7 5.6): field 11, my PvP danger "level:seconds:zone" (only when there is some)
+	-- 2.3.0: field 11, my PvP danger "level:seconds:zone" (only when there is some)
 	DR.Send("HI", W.VERSION, shards or -1, DR.IsLeader() and 1 or 0, needSync and 1 or 0, math.ceil(cd),
 		lock and "L" or "H", (DR.Class and DR.Class()) or "", place or "", map or "", mode,
 		DR.DangerWire and DR.DangerWire() or "")
@@ -262,7 +262,7 @@ function DR.SyncStates()
 	end
 end
 
--- One rider's ST. 2.3.0 (SPEC7 5.7, 5.8): field 9 the Wuber ride id; flag v = the fare a raincheck
+-- One rider's ST. 2.3.0: field 9 the Wuber ride id; flag v = the fare a raincheck
 -- lowered (any amount, even under the minimum); flag n = a 2.3.0 app rider (paid before arriving:
 -- still summoned, see DR.Apply's PAID). Field 9 and flag n only for a 2.3.0 rider (or a raincheck):
 -- for older riders the ST is the 2.2 one, byte for byte.
@@ -397,7 +397,7 @@ end
 function DR.SyncNow()
 	DR.SendConfig()
 	DR.SendService()
-	-- (SPEC5 roles, review #17: a reloading captain who doesn't lead never sends its stale pause
+	-- (a reloading captain who doesn't lead never sends its stale pause
 	-- over the leading Warlock's)
 	local leaderKey = DR.LeaderOf and DR.LeaderOf()
 	local lockLeads = leaderKey and leaderKey ~= W.myKey and DR.peers[leaderKey] and DR.peers[leaderKey].role == "L"
@@ -448,7 +448,7 @@ local function heardHello(key, name, p)
 	local roleWas = m and m.role
 	if m and p[8] == "L" and m.role ~= "lock" then m.role = "lock" end
 	if m and p[8] == "H" and m.role ~= "helper" then m.role = "helper" end
-	-- (SPEC5 roles, review #17: a member's role learned late - an offer taken out of the group -
+	-- (a member's role learned late - an offer taken out of the group -
 	-- reaches the other windows at once)
 	if m and m.role ~= roleWas and DR.IsCaptain() then DR.SendCrew() end
 	-- a crew member is never a customer
@@ -494,7 +494,7 @@ local function isContact(k)
 end
 
 -- The captain asks one player to join the crew (one name per tap). `kind` "raid": a raid
--- summoner pick (SPEC4 3.1; the card reads "Summon for X's raid?"), who then summons; one already
+-- summoner pick (the card reads "Summon for X's raid?"), who then summons; one already
 -- in my crew gets no card and summons at once (returns true, "crew").
 -- Can this be a character's name? One word of letters only, or "First Surname" (two such words, one space),
 -- 2 to 12 letters each (accented Latin letters count as one), then an optional -Realm of letters. Nothing is sent for anything else.
@@ -617,7 +617,7 @@ function DR.AnswerOffer(fromName, yes)
 	local p = DR.pendingOffers[k]
 	local name = (p and p.name) or fromName
 	DR.pendingOffers[k] = nil
-	-- (SPEC5 roles: TY says what this window is, L or H, so a Warlock invited out of the group
+	-- (TY says what this window is, L or H, so a Warlock invited out of the group
 	-- is a Warlock in the crew list at once)
 	if yes then DR.Whisper(name, "TY", (DR.IsWarlock and DR.IsWarlock()) and "L" or "H") else DR.Whisper(name, "TN") end
 	if yes then
@@ -809,7 +809,7 @@ local GROUP_KINDS = { CFG = true, PAU = true, SVC = true, TPL = true, ASK = true
 	THX = true, HELP = true, CAST = true, ["END"] = true, PAID = true, ST = true, BLK = true, UBL = true,
 	-- 2.1 raid summons: queue add, drop, move to top, channel started
 	RA = true, RD = true, RT = true, CH = true,
-	-- 2.3.0 raincheck book facts (SPEC7 5.8)
+	-- 2.3.0 raincheck book facts
 	IOU = true,
 	-- (#72) a crew window whispered an asker (Drive.AutoReply): the one hour holds on every own window
 	RPL = true }

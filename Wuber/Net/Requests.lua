@@ -40,7 +40,7 @@ local function findIncoming(id, key)
 	return nil
 end
 
--- A ride that ended paid or done (SPEC5 finished, review #25: never a declined, cancelled
+-- A ride that ended paid or done (never a declined, cancelled
 -- or timed-out one): its rating may come later, also after a /reload (W.db.netFinished
 -- keeps the last 40 for 30 min).
 local function remember(id, key)
@@ -98,7 +98,7 @@ local function cleanVer(v)
 	return (str(v) or ""):gsub("%-.*$", ""):gsub("[^%d%.]", ""):sub(1, 12)
 end
 
--- A Wuber ride the driver's engine still has after a /reload (SPEC5 reload, review #25):
+-- A Wuber ride the driver's engine still has after a /reload:
 -- back in W.incoming as accepted, so the rider's cancel and rating still count. ver (2.3.2,
 -- optional): the rider's version the engine kept (c.wuberVer), so Net.Portal's G still goes.
 function W.RestoreIncoming(id, buyer, dest, price, stage, ver)
@@ -261,7 +261,7 @@ function W.AcceptRequest(id, eta, buyer, price, taken)
 	if r and r.voucher then r.voucherTaken = taken and true or nil end
 	if not W.SendTo(to, "A", acceptArgs(id, price, eta, r)) then return false end
 	local bk = (r and r.buyerKey) or W.Key(to)
-	if bk then fb.booked[bk] = now() end -- (SPEC5 stagger: no more D answers or pushes to them)
+	if bk then fb.booked[bk] = now() end -- (no more D answers or pushes to them)
 	if r then
 		r.state, r.eta, r.acceptedAt = "accepted", eta, now()
 		W.Fire("REQUESTS", W.incoming)
@@ -360,7 +360,7 @@ local function heardRating(addr, name, key, f)
 	local stars = W.Int(f[2])
 	if not id or not stars or rated[id] then return end
 	stars = clamp(stars, 1, 5)
-	-- (SPEC5 finished: only a ride that ended paid/done, or one the rider has landed on; never
+	-- (only a ride that ended paid/done, or one the rider has landed on; never
 	-- from a player the driver blocked)
 	local r = findIncoming(id, key)
 	if r and r.stage ~= "arrived" then r = nil end

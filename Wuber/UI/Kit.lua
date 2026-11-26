@@ -216,7 +216,7 @@ local function driverView(d)
 		team = team, seats = N(d.seats), heard = N(d.heard), mapID = N(d.mapID), x = x, y = y,
 		badge = S(d.badge), queue = queue, creator = creator, raw = d, avgSummon = avg and math.floor(avg) or nil,
 		rank = rank and math.floor(rank) or nil,
-		-- the Warlock who casts, when the one riders talk to isn't one (SPEC4 1.3)
+		-- the Warlock who casts, when the one riders talk to isn't one
 		summoner = (S(d.summoner) and W.Key(S(d.summoner)) ~= key) and W.Short(S(d.summoner)) or nil,
 	}
 end
@@ -305,7 +305,7 @@ local function rideView()
 		service = S(r.service), summonUp = W.Plain(r.summonUp) == true, grouped = W.Plain(r.grouped) == true,
 		stars = N(r.stars), rated = W.Plain(r.rated) == true, raw = r,
 		position = N(r.position), saved = N(r.saved),
-		-- who to pay: the summoner who cast you (SPEC4 1.2); who casts, when not the driver
+		-- who to pay: the summoner who cast you; who casts, when not the driver
 		payto = (S(r.payto) or S(r.payee)) and W.Short(S(r.payto) or S(r.payee)) or nil,
 		summoner = S(r.summoner),
 	}
@@ -491,14 +491,14 @@ local function inRaid()
 end
 
 ---------------------------------------------------------------------------
--- The Fold (SPEC7 2): unfolded, the window is two panes of WIN_W side by side (the primary pane
+-- The Fold: unfolded, the window is two panes of WIN_W side by side (the primary pane
 -- on the left keeps every folded page and every secure pill; the side pane opens to its right)
 ---------------------------------------------------------------------------
 
 local WIDE_W = WIN_W * 2
 local SLICE_CAP = 126 -- the rounded ends of a 3-slice background (window units)
 
--- A background cut in three from one stretched texture (SPEC7 2.5): a left cap, a middle that
+-- A background cut in three from one stretched texture: a left cap, a middle that
 -- stretches, a right cap, so the window can widen without stretching the art's rounded
 -- corners. tex: the texture that covered the whole width (it becomes the left cap); path: its
 -- art; u1, v0, v1: its texcoords as it was laid over WIN_W (u from 0 to u1); top, bottom: its

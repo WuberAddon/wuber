@@ -1,6 +1,6 @@
 -- Wuber 2.2.1 tests: shared flight prices (every Wuber user who opens a flight map adds its real
 -- prices to a pool that spreads peer to peer) and measured flight times (2.2: read from Enhanced
--- Flight Map; 2.3.0, SPEC7 4: the player's own flights, Core.FlightTimes, and 2.2's EFM times kept
+-- Flight Map; 2.3.0: the player's own flights, Core.FlightTimes, and 2.2's EFM times kept
 -- as own by the login migration).
 -- Loaded by run.lua with the round-six helpers. Test names start "r6 flights:".
 

@@ -12,14 +12,14 @@
 --   RIDE); fires FLIGHT_TIME, FLIGHTS
 -- Standalone: no
 -- Test: tests/core/flighttimes_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 4; owner B)
+-- From: new in Wuber 2.3.0
 --
 -- Nothing runs at load (one W.OnLogin function: Mod.resume, below). Core.Flights' own flight-map listeners call Mod.MapOpened (TAXIMAP_OPENED)
 -- and Mod.MapClosed (TAXIMAP_CLOSED); the first MapOpened hooks TakeTaxiNode (hooksecurefunc: a
 -- hook, never a replacement, so nothing is tainted), and the first click registers the four
 -- flight listeners. A player who never flies gets nothing new.
 --
--- Recording (SPEC7 4.2): a click on the flight map (TakeTaxiNode(slot)) remembers from (the
+-- Recording: a click on the flight map (TakeTaxiNode(slot)) remembers from (the
 -- CURRENT node) and to (that slot), both as Core.Flights' store keys (towns this side flies to).
 -- Take-off: UnitOnTaxi("player") within 5 s of the click (PLAYER_CONTROL_LOST, and a 0.5 s ticker).
 -- Landing: PLAYER_CONTROL_GAINED off the taxi, or (LRN-01) the same ticker seeing UnitOnTaxi turn
@@ -32,14 +32,14 @@
 -- W.db.flights[side|from|to].t, tsrc "own" (FLY.SetOwnTime: within 10 % the smaller stays); fires
 -- FLIGHT_TIME(from, to, secs) and FLIGHTS; the pool (Net.Flights, kind F) shares it from there.
 --
--- Estimate (SPEC7 4.3): the cheapest route's legs (Core.Flights' Dijkstra over W.TAXI), each
+-- Estimate: the cheapest route's legs (Core.Flights' Dijkstra over W.TAXI), each
 -- yards / FLY.SPEED + its stop seconds (W.TAXI.lens), a boat or zeppelin FLY.CROSS, plus
 -- FLY.TAKEOFF per flight. Calibration: each own flight with an estimate gives a ratio (measured
 -- over estimated flying time); from 3 ratios the median (of the last 9) multiplies every
 -- spline time: W.db.flyCal = { ratio, n, samples }. These are labelled "est" ("about" on
 -- screen) and never stored or shared.
 --
--- Map calibration (SPEC7 3.3 step 2): at a flight master, TaxiNodePosition(i) (map u, v on the
+-- Map calibration: at a flight master, TaxiNodePosition(i) (map u, v on the
 -- continent map) of nodes whose world position W.TAXI knows; 3 or more distinct nodes -> a
 -- least-squares affine u = a*wx + b*wy + c, v = d*wx + e*wy + f in W.db.mapCal[continent] =
 -- { a, b, c, d, e, f, n, at, pts } (pts: the samples by node id, so it improves with each visit).

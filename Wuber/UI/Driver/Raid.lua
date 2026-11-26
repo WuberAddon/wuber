@@ -28,7 +28,7 @@ local DR = W.Drive
 local D = W.Driver
 
 ---------------------------------------------------------------------------
--- Raid summons (SPEC4 3): summoners, the raiders' queue, "Not here (N)", summoned tonight
+-- Raid summons: summoners, the raiders' queue, "Not here (N)", summoned tonight
 ---------------------------------------------------------------------------
 
 -- "dan rider" -> "Dan Rider"
@@ -215,7 +215,7 @@ local function updateCue(v, R)
 	end
 	local viewH = N(Try(v.scroll, "GetHeight")) or 0
 	local edge = (N(v.scroll.offset) or 0) + viewH + 1
-	-- (BRIEF19 F1) a row the pill would touch is not drawn (alpha 0) and counted as below, so the pill
+	-- a row the pill would touch is not drawn (alpha 0) and counted as below, so the pill
 	-- never sits on a row, sliced or whole
 	-- (HUNT-145) the "Not here" header counts like a row: one under the pill's strip is below, not half hidden
 	local cueMode = items.nh and items.nh > edge - CUE.GAP
@@ -316,7 +316,7 @@ local function notHere()
 	return nh
 end
 
--- (unfolded, SPEC7 2.8) the left keeps the slot, Start/Stop, Pause and Summoners; (round 9, S10)
+-- (unfolded) the left keeps the slot, Start/Stop, Pause and Summoners; (round 9, S10)
 -- the raiders are listed once, in the side pane, with "Not here" and the summoners ("Summoned
 -- tonight" is the status line's number)
 local function drawRaidWide(v, y, t, R)
@@ -503,7 +503,7 @@ local function hideRaid(v)
 end
 
 ---------------------------------------------------------------------------
--- (2.3, SPEC7 2.8) The raid page's side pane: every raider who asked, "Not here (N)" with a +
+-- (2.3) The raid page's side pane: every raider who asked, "Not here (N)" with a +
 -- per member (the whole list, it scrolls), and the summoner strip (shards, "no Wuber")
 ---------------------------------------------------------------------------
 

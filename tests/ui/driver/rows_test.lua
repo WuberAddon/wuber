@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Rows (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of UI.Driver.Rows (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. What a queue row says: waits read as a clock ("0:30"),
 -- never like a price ("30s" looked like 30 silver next to "owes 50s" and on free raid summons).
 local T = ...
@@ -34,7 +34,7 @@ test("ui.driver.rows: I17 waits read as a stopwatch (0:30, 1:10, 12 min), never 
 end)
 
 
--- (BRIEF22 P2) a lead's row: '"Any summons to loch modan?" · in...' was cut (the lab: width 219). The words
+-- a lead's row: '"Any summons to loch modan?" · in...' was cut (the lab: width 219). The words
 -- fit at every row width, the whole quote or a shorter form, never cut
 test("ui.driver.rows: P2 a lead's chat line fits its row at every width, never cut", function()
 	local w, a, W = driver()

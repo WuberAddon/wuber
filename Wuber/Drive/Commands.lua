@@ -661,7 +661,7 @@ local function run(line)
 		local db = toggle.db and (W.db or {}) or opts()
 		if v == "on" or v == "off" then
 			local on = v == "on"
-			-- (2.3.2, BRIEF19 R4) inviting public chat buyers is turned on only after its warning
+			-- (2.3.2) inviting public chat buyers is turned on only after its warning
 			-- (Yes / Cancel on screen); the answer is said when it comes
 			if toggle.key == "autoPublic" and type(DR.SetAutoPublic) == "function" then
 				local res = DR.SetAutoPublic(on, function(yes)

@@ -144,7 +144,7 @@ def scan_text(name, text):
     return hits
 
 
-# Wuber is never called "free": its summons are paid (BRIEF22 T1). A shipped Lua line (not a comment) that has
+# Wuber is never called "free": its summons are paid. A shipped Lua line (not a comment) that has
 # the word "free" and says Wuber is refused, unless it is one of these real uses, which do not describe Wuber:
 #   - free summons / ride / raincheck / raid: a gift, a raincheck or a raid's own summons (not Wuber's price)
 #   - "Free, no adverts, no invites": the raid-summons button's tooltip (Driver/Build.lua)
