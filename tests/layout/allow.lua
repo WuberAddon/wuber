@@ -48,7 +48,6 @@ return {
 	-------------------------------------------------------------------------
 
 	-- (job 2885, #238) text the real game draws wider than the old fake game did: each one has its issue and a fix PR that removes its line.
-	{ kind = "under", what = "^Rows%.lua:%d+.-Inviting", known = "#295: the Inviting heading is 3 px under the next card at the 2662x2089 window and Wuber 2.2, once the paragraph room of #269 is in (#238); the fix removes this entry" },
 	{ kind = "windows", screen = "^toast_longword/", known = "#271: a long-word toast lies over the window's buttons at the real game's measured text width (#238); the fix removes this entry" },
 	{ kind = "covered", screen = "^toast_longword/", known = "#271: a long-word toast lies over the window's buttons at the real game's measured text width (#238); the fix removes this entry" },
 
