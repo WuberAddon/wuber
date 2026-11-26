@@ -81,6 +81,16 @@ local function factsText(name)
 	local day = dayText(f.last)
 	if day then parts[#parts + 1] = "last " .. day end
 	if S(f.place) then parts[#parts + 1] = W.Clean(S(f.place), 24) end
+	-- (playtest) the tip of the last ride and the total, worked out from the logged payments
+	local lastTip, lastPrice, total = N(f.lastTip), N(f.lastPrice), N(f.tipTotal)
+	if lastTip and lastPrice and lastPrice > 0 then
+		if lastTip > 0 then
+			parts[#parts + 1] = "tipped " .. W.Money(lastTip) .. " (" .. math.floor(lastTip * 100 / lastPrice + 0.5) .. "%)"
+		else
+			parts[#parts + 1] = "no tip"
+		end
+	end
+	if total and total > 0 and (total ~= lastTip or (N(f.rides) or 0) > 1) then parts[#parts + 1] = W.Money(total) .. " tipped in all" end
 	return table.concat(parts, " · ")
 end
 D.CustomerFacts = factsText
@@ -574,29 +584,30 @@ local function buildSide(p)
 	p.facts = T.Text(c, "caption", "glow", "LEFT", "medium")
 	p.facts:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -34)
 	p.facts:SetWidth(SIDE_W)
+	T.Lines(p.facts, 2) -- (playtest) the tip words may take a second line
 	p.field = T.Field(c, SIDE_W, 110, { multi = true, max = 200, size = "sub",
 		placeholder = "Anything you want to remember (200 letters)", onChange = function(t) p.cap(t) end })
 	p.cap = capNote(p.field)
-	p.field:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -58)
+	p.field:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -74)
 	pcall(p.field.edit.SetMaxBytes, p.field.edit, DR.BOOK.NOTE_MAX + 1) -- (as the Note sheet's)
 	T.Tip(p.field.edit, "Note", "One note per rider, 200 letters at most (accented letters count double). Only you and the crew windows you marked as your own accounts see it; the rider never does.")
 	-- (round 13, I27) the Note sheet's order: the note, the privacy line, then Save | Gifted
 	p.privacy = para(c, "caption", "muted", SIDE_W)
-	p.privacy:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -176)
+	p.privacy:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -192)
 	p.privacy:SetText("Only you and the crew windows you marked as your own accounts see notes. Never the rider.")
 	p.save = T.Pill(c, "Save", "dark", 156, 36)
-	p.save:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -214)
+	p.save:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -230)
 	T.Tip(p.save, "Save", SAVE_TIP)
 	p.gift = T.Pill(c, "Gifted", "dark", 156, 36)
-	p.gift:SetPoint("TOPLEFT", c, "TOPLEFT", PAD + SIDE_W - 156, -214)
+	p.gift:SetPoint("TOPLEFT", c, "TOPLEFT", PAD + SIDE_W - 156, -230)
 	T.Tip(p.gift, "Gifted", function() return giftTip(giftOf(p.name)) end)
 	-- (BRIEF17 B3) their Wuber, under Save | Gifted: why "Get Wuber" isn't offered, or that it waits
 	p.app = T.Text(c, "caption", "muted", "LEFT", "medium")
-	p.app:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -262)
+	p.app:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -278)
 	p.app:SetWidth(SIDE_W)
 	-- (BRIEF19 F4) the Invite to Wuber action, as the queue row's pill (D.ToggleGetApp), for a rider in the queue
 	p.invite = T.Pill(c, "Invite to Wuber", "dark", SIDE_W, 36)
-	p.invite:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -262)
+	p.invite:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -278)
 	T.Tip(p.invite, function() return p.inviteQueued and "Next click sends" or "Invite to Wuber" end, function()
 		if p.inviteQueued then
 			return "Queued: your next big-button click whispers " .. short(p.name) .. " how to get Wuber. Click again to cancel."
@@ -609,7 +620,7 @@ local function buildSide(p)
 		D.Refresh(true)
 	end)
 	p.serve = T.Pill(c, SERVE.LABEL, "dark", SIDE_W, 36)
-	p.serve:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -316)
+	p.serve:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -332)
 	T.Tip(p.serve, SERVE.TIP, function() return serveTip(p.name) end)
 	safeScript(p.serve, "OnClick", function()
 		serveClick(p.name)
@@ -635,7 +646,7 @@ local function buildSide(p)
 		toast(short(p.name) .. (okG and " stamped gifted " or " was already gifted on ") .. (dayText(at) or "today"), "info")
 		D.Refresh(true)
 	end)
-	p.scroll:SetContentHeight(364)
+	p.scroll:SetContentHeight(380)
 end
 
 -- the right pane for one customer (name), or its empty state (nil)
