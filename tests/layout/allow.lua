@@ -57,7 +57,6 @@ return {
 	{ kind = "words", screen = "^button_portal/", known = "126 words today, budget 120: waits for its rewrite (the word rule, plan 3)" },
 	{ kind = "words", screen = "^button_summoning/", known = "123 words today, budget 120: waits for its rewrite (the word rule, plan 3)" },
 	{ kind = "words", screen = "^button_waiting/", known = "128 words today, budget 120: waits for its rewrite (the word rule, plan 3)" },
-	{ kind = "under", screen = "^pay_trade/", what = "^Ride%.lua:%d+.-Put 60s in the trade window", known = "the rider's pay page with the trade open, at the real game's measured text width (#238): the instruction is partly under the Accepted pill (job 2858's new tour screen); wrap or move, never shorten: the fix removes this entry" },
 	{ kind = "words", screen = "^pay_trade/", known = "43 words today, budget 40: the rider's pay page with the trade open (job 2858's new tour screen); waits for its rewrite (the word rule, plan 3)" },
 	{ kind = "words", screen = "^chat_home/", known = "74 words today, budget 70: waits for its rewrite (the word rule, plan 3)" },
 	{ kind = "words", screen = "^confirm/", known = "53 words today, budget 40: waits for its rewrite (the word rule, plan 3)" },

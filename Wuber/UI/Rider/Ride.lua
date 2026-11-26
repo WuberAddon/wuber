@@ -795,6 +795,12 @@ local function buildFound(body)
 		-- (fix round, ING-09/5) in the pay look the line under the title stops short of the map strip's rider dot (at the
 		-- middle) and wraps, rather than hiding the dot
 		s.sub:SetWidth(s.mode == "pay" and math.min(INNER, (INNER + 2 * PAD) / 2 - 32 - PAD) or INNER)
+		if paying then
+			-- (#30) the narrow line can wrap to three: the step bar moves down with it, the words stay whole
+			local subH = s.sub:IsShown() and (N(s.sub:GetStringHeight()) or 0) or 0
+			prog:ClearAllPoints()
+			prog:SetPoint("TOPLEFT", f, "TOPLEFT", 0, -math.max(102, 54 + subH + 6))
+		end
 		if not paying then
 			prog:ClearAllPoints()
 			prog:SetPoint("TOPLEFT", f, "TOPLEFT", 0, liveY(144))
