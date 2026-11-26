@@ -395,7 +395,7 @@ local function build(win)
 	fx:SetPoint("BOTTOMLEFT", er, "BOTTOMLEFT", 16, 12)
 	st.controls.fx = fx
 	-- (design 2) pages and sheets fade in place instead of sliding (Theme.Anim's T.ReduceMotion reads it)
-	y = toggleRow(sound, y, "reduceMotion", "Reduce motion", "", "Pages and sheets fade in place instead of sliding.",
+	y = toggleRow(sound, y, "reduceMotion", "Reduce motion", "", "Nothing slides, grows, pulses or turns. Pages and sheets fade in place instead.",
 		function() return db().reduceMotion == true end, function(on) set("reduceMotion", on and true or false) end)
 	local emblemsOn = type(W.Emblem) == "table" and type(W.Emblem.Active) == "function" and W.Emblem.Active() == true
 	y = toggleRow(sound, y, "plates", "Badges over heads",

@@ -123,8 +123,8 @@ test("d2 a: Reduce motion is a switch row on Sound and effects: saves W.db.reduc
 	local t = st.controls.reduceMotion
 	ok(t and t.row, "the Reduce motion switch")
 	eq(t.row.title:GetText(), "Reduce motion", "its title")
-	eq(t.row.wuberTip.text, "Pages and sheets fade in place instead of sliding.", "its tooltip")
-	eq(t.wuberTip.text, "Pages and sheets fade in place instead of sliding.", "on the switch too")
+	eq(t.row.wuberTip.text, "Nothing slides, grows, pulses or turns. Pages and sheets fade in place instead.", "its tooltip")
+	eq(t.wuberTip.text, "Nothing slides, grows, pulses or turns. Pages and sheets fade in place instead.", "on the switch too")
 	eq(t.on, false, "off by default")
 	local fx = st.controls.fx
 	eq(t.row.group, fx:GetParent().group, "beside the effects setting: the same card")
