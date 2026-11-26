@@ -1416,12 +1416,27 @@ local function metricLayout(self)
 		if twoPoints and side.y0 and side.y1 and ok and r then height = r.h / e elseif s.h then height = s.h end
 	end
 	if width and width <= 0 then width = nil end
-	return M.layout(f and f.path, (f and f.size) or 12, s.text or "", { width = width, height = height,
+	if not s.measuring then s.boxW = width end -- (job 2893) H.textBox
+	local L = M.layout(f and f.path, (f and f.size) or 12, s.text or "", { width = width, height = height,
 		wrap = s.wrap ~= false, maxLines = s.maxLines, spacing = s.spacing, scale = effScale(self) })
+	-- (job 2893) a probe run measured this string in this box: its answer, cut yes or no, replaces the metric's (tests/lib/probe_learn.lua)
+	if H.measuredCut and width and not s.measuring then
+		local verdict = H.measuredCut(f and f.path, (f and f.size) or 12, s.text or "", width, s.maxLines, s.wrap ~= false, effScale(self), L)
+		if verdict ~= nil and verdict ~= L.truncated then
+			local copy = {}
+			for k, v in pairs(L) do copy[k] = v end
+			copy.truncated = verdict
+			return copy
+		end
+	end
+	return L
 end
 -- (probe pack) H.measuredWidths(fontPath, size, text) -> the width a real client measured, or nil (tests/lib/probe_learn.lua sets it
 -- from a probe fixture). nil by default: the harness's own metrics answer.
 H.measuredWidths = nil
+-- (job 2893) H.measuredCut(fontPath, size, text, boxWidth, maxLines, wrap, effScale, layout) -> true (the game cut it), false (it did not), or nil (this
+-- string was never measured: the metric answers). Set by tests/lib/probe_learn.lua L.apply from the fixture's labels part.
+H.measuredCut = nil
 local function textWidth(self)
 	local s = S[self]
 	local f = s.font
@@ -1619,6 +1634,13 @@ function FontString:IsTruncated()
 	return H.truncation(self, true) ~= nil
 end
 H.metricLayout = metricLayout
+-- (job 2893) the box a string was laid out in: font path, size, text, box width (nil = unbounded), maxLines, wrap, effective scale (tools/rec/probe-labels.lua)
+function H.textBox(fs)
+	if not H.textMetrics then return nil end
+	metricLayout(fs)
+	local s = S[fs]
+	return s.font and s.font.path, (s.font and s.font.size) or 12, s.text or "", s.boxW, s.maxLines, s.wrap ~= false, effScale(fs)
+end
 function FontString:SetAlphaGradient() return true end
 
 ---------------------------------------------------------------------------

@@ -60,7 +60,13 @@ TL.TRACK = 0 -- pixels added after each glyph (the game's text runs a little wid
 -- nearest measured one. Sizes the Lab did not measure are SCALED with the measured ratio this way, they are not measured.
 -- Every glyph advance is multiplied by TL.ratio(size) (tests/r55/small_text_width_test.lua pins the measured rows).
 TL.RATIOS = { { 11, 1.060 }, { 14, 1.040 }, { 22, 1.042 } }
+-- TL.FLAT = true: the first draft's flat rule (#245: every glyph 6% wider at 12 px and under, nothing above), kept only so a proof can show what a
+-- flat factor over-flags (tests/r55/probe_labels_test.lua, layout-check --text-rule flat). Off in every normal run.
+TL.FLAT = nil
+TL.RAW = nil -- true: the font's own advances, no ratio (tools/rec/probe-labels.lua records them next to what the game measured)
 function TL.ratio(size)
+	if TL.RAW then return 1 end
+	if TL.FLAT then return size <= 12 and 1.06 or 1 end
 	local R = TL.RATIOS
 	if size <= R[1][1] then return R[1][2] end
 	for i = 2, #R do
