@@ -875,7 +875,7 @@ def light_sheet(frames_E, cols, rows, cell, ss):
 
 
 # ---------------------------------------------------------------------------
-# Founder gold (SPEC7 5.13): the violet portal sheets, recoloured offline
+# Founder gold: the violet portal sheets, recoloured offline
 # ---------------------------------------------------------------------------
 
 GOLD_RAMP = [(0.0, DEEPGOLD), (0.55, GOLD), (1.0, np.array([0xFF, 0xD8, 0x66]) / 255)]

@@ -431,7 +431,7 @@ local function BadgeInfo(id)
 	if e == nil then return nil end
 	if type(e) ~= "table" then e = { name = W.Str(e) } end
 	local tex = e.tex or e.texture or e.icon
-	-- (BRIEF18) W.BADGES names a bare file ("badge_skull"): make it a full Media path, or the pin draws blank (white)
+	-- W.BADGES names a bare file ("badge_skull"): make it a full Media path, or the pin draws blank (white)
 	if type(tex) == "string" and tex ~= "" and not tex:find("[\\/]") then tex = "Interface\\AddOns\\Wuber\\Media\\" .. tex end
 	return { id = id, name = W.Str(e.name) or id, tex = tex }
 end

@@ -11,6 +11,8 @@
 --             with a string are in fileIdStrings)
 --   fileIdsAre  "number" | "string" | "mixed"   (what GetTexture answers for an addon's own file)
 --   atlases   [name] = { file, fileID, width, height, l, r, t, b } or { none = true }
+--   labels    { hash, scales, caps, rows } Wuber's own strings in their boxes: per scale GetStringWidth, GetUnboundedStringWidth, IsTruncated, GetNumLines
+--             (tests/lib/probe_learn.lua; L.cutFn replays "was it cut" for the strings the probe measured)
 --   widths    [lower-case font file name][size] = { adv = { [byte] = advance }, strings = { [text] = width }, imm, settled, lineH }
 --   hit       [scenario id] = { [cell number] = winner role }, hitMixed (cells with more than one winner), hitCoverage
 --   keys      the keysAuto answers, keysGuided = the rows of the typed test
@@ -18,6 +20,10 @@
 --   unfinished  (job 2907) the probes the run started (run.started) but never finished: { name, why, at }; printed by the command line
 --   fingerprint the build|interface|locale|UI scale the run was made on; hitRules = scenario id -> evidence-ledger rule id
 --   blocked   the ADDON_ACTION_BLOCKED / FORBIDDEN rows (event, addon, function, combat)
+--   taintSweep, protect, protectCombat, dummy  (job 2908, WuberProbe Taint.lua) issecurevariable rows { name = true | "<tainted by>" | "<nil>" } (compare
+--             with tests/fakegame/taint-allow.lua: tools/rec/taint-compare.lua); protect = { S, kid, tied, ctl, box } each { prot, explicit } (IsProtected,
+--             both returns; the harness learns its protection rule from it: tests/lib/probe_learn.lua L.protectRule); protectCombat = the passive reads
+--             in a fight; dummy = the opt-in training-dummy step { control, fight = { at, op, ok, err } }
 -- Job 2894: --blocked-out <file> also turns the passive blocked log (run.blocked of WuberProbe, the Lab's L13.blocked list) and the Lab's
 --   L13.calls notes into the guard's evidence file (default tests/fixtures/probe/measured-blocked.lua): one row per
 --   { fn, kind = "BLOCKED"|"FORBIDDEN", combat, click = true|false|nil (from a click handler or not; nil = not known), build }.
@@ -95,6 +101,17 @@ function PI.convert(run, source)
 			end
 		end
 	end
+	-- labels (job 2893): Wuber's real strings measured in their boxes at 2-3 scales (see tests/lib/probe_learn.lua "labels")
+	if type(p.labels) == "table" and type(p.labels.rows) == "table" then
+		local rows = {}
+		for _, r in ipairs(p.labels.rows) do
+			if type(r) == "table" and type(r.text) == "string" and type(r.font) == "string" and isNum(r.size) and isNum(r.box) then
+				rows[#rows + 1] = { text = r.text, font = baseName(r.font), size = r.size, box = r.box, maxLines = r.maxLines, wrap = r.wrap, raw = r.raw,
+					w = r.w, uw = r.uw, trunc = r.trunc, lines = r.lines }
+			end
+		end
+		fx.labels = { hash = p.labels.hash, scales = p.labels.scales, caps = p.labels.caps, rows = rows }
+	end
 	-- hit order: the winner of each cell (the one seen most)
 	local hit = p.hit
 	if type(hit) == "table" and type(hit.cells) == "table" then
@@ -139,6 +156,11 @@ function PI.convert(run, source)
 	fx.fingerprint = run.fp
 	fx.blocked = run.blocked
 	fx.blockedN = run.blockedN
+	-- (job 2908) taint and combat-lockdown probes: the sweep, the propagation rows, the passive fight reads, the opt-in dummy step
+	if type(p.sweep) == "table" and type(p.sweep.rows) == "table" then fx.taintSweep = { has = p.sweep.has, n = p.sweep.n, rows = p.sweep.rows } end
+	if type(p.protprop) == "table" and p.protprop.built and type(p.protprop.rows) == "table" then fx.protect = p.protprop.rows end
+	if type(run.k4) == "table" and type(run.k4.combat) == "table" then fx.protectCombat = run.k4.combat end
+	if type(p.dummy) == "table" and type(p.dummy.fight) == "table" then fx.dummy = { control = p.dummy.control, fight = p.dummy.fight, ended = p.dummy.ended, blockedRows = p.dummy.blockedRows } end
 	if type(p.taint) == "table" then fx.taint = p.taint end
 	-- env, events, timing
 	if type(p.env) == "table" then

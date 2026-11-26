@@ -6,7 +6,7 @@
 -- hard edge is the bug the author saw. Viewports are applied from the nearest out, so a part already
 -- hidden by an inner list (or cut there under its fade) is judged only by what still shows.
 --
--- (round 13, I18) It also fails on any visible font string whose text the game cuts with "..." (Google
+-- (round 13, I18) It also fails on any visible font string whose text the game cuts with "..." (a reviewer
 -- found 'Waiting for Mia to open tra...', 'Top window: 17:00-20:...', '50s to Orgrim...' and more):
 -- the harness models truncation (H.truncation: wider than its width with word wrap off, or more
 -- lines than SetMaxLines). Intended ellipses are listed in ALLOW (a short list, each with its why),

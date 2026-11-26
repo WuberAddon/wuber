@@ -775,7 +775,7 @@ L.AddCheck({ id = "login_errors", login = true, who = "cast", timeout = 30,
 		for _, l in ipairs(L.Tail(400)) do
 			local at, kind, text = l:match("^([%d%.]+)|[^|]*|([^|]*)|(.*)$")
 			if (kind == "err" or kind == "werr") and (tonumber(at) or 0) >= (L.loginAt or 0) then
-				-- another addon's error (its file path names it) is said, not failed (BRIEF18)
+				-- another addon's error (its file path names it) is said, not failed
 				local from = kind == "err" and L.ErrorAddon(text) or nil
 				if from and from ~= "Wuber" and from ~= "WuberLab" then
 					if not others[from] then others[#others + 1], others[from] = from, true end

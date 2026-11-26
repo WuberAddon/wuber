@@ -8,7 +8,7 @@
 -- Events: listens (none); fires (none)
 -- Standalone: no
 -- Test: tests/core/wrapped_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.9; owner C)
+-- From: new in Wuber 2.3.0
 --
 -- Callers reach it through the handle:
 --   local WrappedMod = W.Mod("Core.Wrapped")

@@ -1,4 +1,4 @@
--- Tests of UI.Bird (SPEC7 5.11; owner C). Loaded by tests/run.lua with its helper table T.
+-- Tests of UI.Bird. Loaded by tests/run.lua with its helper table T.
 -- Shown once per flight-map open, still there after 10 s, gone on close; not with the setting off, in
 -- combat, during a ride, with no match; anchored beside the map, never over it; the click opens
 -- Confirm for that driver.

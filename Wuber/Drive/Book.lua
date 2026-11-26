@@ -756,7 +756,7 @@ end
 
 -- "ok" (may be asked), "queued" (the next click sends it), "sent" (today already), "app" (Wuber
 -- knows they run Wuber: DR.HasWuber), "crew", "off" (whispers are off), "raid", or "none".
--- (BRIEF17) peek = true: the same answer, read only (painting a row or a pane writes nothing; without
+-- peek = true: the same answer, read only (painting a row or a pane writes nothing; without
 -- it an "app" answer stamps the rider's book record, as before).
 function DR.GetAppState(c, peek)
 	if type(c) ~= "table" or not S(c.name) or S(c.helperOf) or c.iouOnly then return "none" end

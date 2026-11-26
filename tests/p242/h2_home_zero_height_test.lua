@@ -1,4 +1,4 @@
--- p242 group H, follow-up G1 (Google review of H24-14): the empty Home's room rule must never count the title or the
+-- p242 group H, follow-up G1 (an outside review of H24-14): the empty Home's room rule must never count the title or the
 -- line as shorter than one line. A label whose font has not loaded yet reports a height of 0 (GetStringHeight), and
 -- 0 is a number, so "or 17" never applied: the stack looked shorter than it draws, the round icon stayed and the
 -- OpenMap line was let in, so the stack ran into the 12 above Ping drivers. Swept: the first refresh with both

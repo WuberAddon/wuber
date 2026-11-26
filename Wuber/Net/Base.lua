@@ -33,7 +33,7 @@
 --              W.SetDriving, W.SetLocalDriver (Driver.lua), W.BADGES, WuberAPI
 -- Both:        W.SendChannel, W.SendTo, W.OnNetwork, W.Encode, W.Decode
 --
--- Round two (SPEC2), backward compatible (proto stays 1, fields only added at the end):
+-- Round two, backward compatible (proto stays 1, fields only added at the end):
 --   D ... faction, ver, badge (12), queue (13)   R ... tier (4), rides (5)
 --   P rideId, position, eta  (whisper, driver -> rider: place in the driver's queue)
 -- A round-one peer ignores the extra fields and the P kind; missing fields read as
@@ -101,7 +101,7 @@ local CHANNEL_KINDS = { D = true, X = true, Q = true }
 -- fallback below); round-one peers drop them, as they drop any channel kind by whisper
 local WHISPER_TOO = { D = true, X = true, Q = true }
 
--- 2.3.0 (SPEC7 section 6): kinds added by W.NetKind. Each has a handler that Net.Inbox calls
+-- 2.3.0: kinds added by W.NetKind. Each has a handler that Net.Inbox calls
 -- with (addr, name, key, fields, chan, viaComm, proto) once the usual trust checks passed
 -- (channel kinds over the channel or by whisper from the sender itself, the rest by whisper
 -- only). Old clients don't know the kind: W.Decode returns nil there and it is dropped.
@@ -242,7 +242,7 @@ function W.CleanName(name)
 	if not name then return nil end
 	name = W.Clean(name, 48)
 	if name == "" then return nil end
-	-- (SPEC5 realms: any realm tail goes, hyphenated first names stay; W.SplitName)
+	-- (any realm tail goes, hyphenated first names stay; W.SplitName)
 	name = W.SplitName(name) or name
 	local first, last = name:match("^(%S+) (.+)$")
 	if first then name = first .. W.Sep() .. last end
@@ -460,7 +460,7 @@ local fb = {
 W.fallback = fb -- read by the tests and /wuber status
 
 NETK.NOT_FOUND_WINDOW = 10 -- "No player named" this soon after our whisper to them is ours
-NETK.SEEN_MAX = 60          -- drivers kept in W.db.seenDrivers (SPEC5 gossip: was 30)
+NETK.SEEN_MAX = 60          -- drivers kept in W.db.seenDrivers (was 30)
 NETK.SEEN_KEEP = 14 * 86400 -- ... for this long after they were last heard (time())
 
 -- The rider's saved list of drivers heard lately: W.db.seenDrivers[key] = { name, addr, at = time() }.

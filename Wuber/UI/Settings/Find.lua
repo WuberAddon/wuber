@@ -421,7 +421,7 @@ function Mod.build(p)
 	end
 	f.help = card(f.groups[4], "help", "Help: how Wuber finds drivers", "Why you might see few or no drivers, and what helps.")
 	f.cards[#f.cards + 1] = f.help
-	-- (BRIEF20 B9) the bug report is a row on the home too, not only a row deep in "This window"
+	-- the bug report is a row on the home too, not only a row deep in "This window"
 	f.bug = card(f.groups[4], "bug", "Report a bug", "Opens a short report to copy: your Wuber version, game build, window and the last errors. Other players' names become \"player 1\", \"player 2\" and nothing is sent.")
 	f.cards[#f.cards + 1] = f.bug
 	f.ver = T.Text(inner, "caption", "muted", "CENTER", "regular")
@@ -457,7 +457,7 @@ function Mod.build(p)
 			self:Hide()
 			return
 		end
-		fl.tex:SetAlpha(fl.t / L.flash) -- (BRIEF22 G1) the wash keeps its colour's alpha; the region fades
+		fl.tex:SetAlpha(fl.t / L.flash) -- the wash keeps its colour's alpha; the region fades
 	end)
 	Mod.paint("")
 	return f

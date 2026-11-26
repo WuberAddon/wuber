@@ -11,7 +11,7 @@
 -- Events: listens RIDE (remembers the last paid, failed ride: W.db.rcFailed); fires RAINCHECK
 -- Standalone: no
 -- Test: tests/net/raincheck_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.8; owner E)
+-- From: new in Wuber 2.3.0
 --
 -- A raincheck is one free summon later from the same crew, given instead of a refund when a ride
 -- paid by trade failed before the rider arrived. Wuber never refunds or moves gold. The driver's
@@ -407,7 +407,7 @@ local function heardGive(addr, name, key, f)
 	W.Fire("RAINCHECK", "offer", id)
 end
 
--- V: ask / give / ok / no / void (SPEC7 5.8)
+-- V: ask / give / ok / no / void
 function Mod.heard(addr, name, key, f, chan)
 	if chan ~= "WHISPER" then return end
 	local op = f[1]

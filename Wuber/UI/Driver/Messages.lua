@@ -47,12 +47,12 @@ local MESSAGES = {
 	-- 2.4: the big button's oops step (Drive.Careful's DR.Oops)
 	oops = { "Oops, wrong invite", "when you undo a wrong invite" },
 	advert = { "My advert line", "in public chat when you click Advertise" },
-	-- 2.1 (SPEC4): stations, summoners without Wuber, raid summons
+	-- 2.1: stations, summoners without Wuber, raid summons
 	where = { "Where to?", "when we don't know the place" },
 	callsum = { "Ask a summoner", "chat, to a Warlock without Wuber" },
 	raidsum = { "Raid: summon coming", "whisper to the raider" },
 	raidclick = { "Raid: click the portal", "a raid chat line" },
-	-- round 9 (Y1): only when you pick "Get Wuber" for a rider without the app (Drive.Book); BRIEF17 B2: the row's pill
+	-- round 9 (Y1): only when you pick "Get Wuber" for a rider without the app (Drive.Book): the row's pill
 	getapp = { "Get Wuber", "on your next big-button click after you tap Invite to Wuber on their row" },
 	-- 2.4 (the decisions round): sent only by itself, with its switch on (Drive.AutoLines)
 	next = { "You're next", "to the first rider waiting in your line" },
@@ -114,7 +114,7 @@ local function layRows(s, wide)
 	return y + 6
 end
 
--- (BRIEF22 L2) the view's bottom edge never slices a text at the top of the page (the layout checker's
+-- the view's bottom edge never slices a text at the top of the page (the layout checker's
 -- "clipped"): it ends just above the first text it would cut, so the rest waits whole below it. Positions are
 -- from the content's top, so the scroll offset doesn't matter; shown, not visible: the page may be hidden yet. Returns how far the edge goes up (px).
 local function sliceLift(content, view)
@@ -220,7 +220,7 @@ local function buildEditor(s, c, pad, iw, host)
 		local text = "{" .. p .. "}"
 		local b = T.Pill(bd, text, "dark", 60, 24)
 		-- (round 13, I6) each chip as wide as its word, with room to spare, and the word never held
-		-- to a width (7 of 13 read '{pric...' in Google's shots): the label sits centred, unbounded
+		-- to a width (7 of 13 read '{pric...' in a reviewer's shots): the label sits centred, unbounded
 		b.label:ClearAllPoints()
 		b.label:SetPoint("CENTER", b, "CENTER", 0, 0)
 		b.label.wuberRoom = nil
@@ -254,7 +254,7 @@ local function buildEditor(s, c, pad, iw, host)
 	e.prevHead:SetPoint("TOPLEFT", bd, "TOPLEFT", pad + 4, -y)
 	e.prevHead:SetText("As the rider reads it")
 	y = y + 18
-	e.bubble = T.Card(bd, iw, 70, { colour = { 0.53, 0.25, 0.85, 0.32 }, radius = 16, shadow = false }) -- (BRIEF22 G1) its alpha from the start
+	e.bubble = T.Card(bd, iw, 70, { colour = { 0.53, 0.25, 0.85, 0.32 }, radius = 16, shadow = false }) -- its alpha from the start
 	e.bubble:SetPoint("TOPLEFT", bd, "TOPLEFT", pad, -y)
 	e.bubble:EnableMouse(true)
 	T.Tip(e.bubble, "Preview", "Exactly what Wuber whispers, here for a made-up rider called Dan.")
@@ -511,7 +511,7 @@ D.screens.messages = function(parent)
 		s.listH = layRows(s, wide)
 		if s.kind then s.edit(s.kind, true) else s.list() end
 	end
-	-- (BRIEF22 L2) a taller or shorter phone moves the edge: fit the list's view again
+	-- a taller or shorter phone moves the edge: fit the list's view again
 	safeScript(s.frame, "OnSizeChanged", function()
 		if s.rows[1] and s.rows[1]:IsShown() then fitView(s, true) end
 	end)
@@ -531,7 +531,7 @@ D.screens.messages = function(parent)
 	return s
 end
 
--- (2.3, SPEC7 2.8) the messages page's side pane (made the first time it unfolds): the editor
+-- (2.3) the messages page's side pane (made the first time it unfolds): the editor
 -- moves into it; the list stays left
 D.FOLD.messages = {
 	build = function(holder)

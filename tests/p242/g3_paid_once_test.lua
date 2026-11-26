@@ -1,4 +1,4 @@
--- prep-242 group G (Drive/Queue.lua), Google finding G11: one paid ride counts once, however many PAID
+-- prep-242 group G (Drive/Queue.lua), review finding G11: one paid ride counts once, however many PAID
 -- messages arrive for the rider. Loaded by tests/run.lua with its helper table T.
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok

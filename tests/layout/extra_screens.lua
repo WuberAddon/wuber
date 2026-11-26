@@ -42,7 +42,7 @@ local function homeWith(W)
 	return true
 end
 
--- (BRIEF26 item 3) realistic, DIFFERENT world sizes for the two continents (the harness gives both the same fake
+-- realistic, DIFFERENT world sizes for the two continents (the harness gives both the same fake
 -- 10000-yard square, so a scale rule could never fail). u runs along -y and v along -x, as the game's maps:
 -- Kalimdor from the author's saved calibration (u = 0.4507 - 4.1085e-5 wy, v = 0.5123 - 4.1085e-5 wx); the Eastern
 -- Kingdoms taller than wide (33333 yards along y, 21739 along x).

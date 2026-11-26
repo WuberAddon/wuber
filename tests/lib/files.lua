@@ -48,7 +48,7 @@ F.NEW = {
 
 -- files the restructure (and later rounds) add that hold no old file's code
 F.ADDED = { "Core/Registry.lua",
-	-- round 8 (Wuber 2.3.0, SPEC7 section 1): new modules, no old file's code
+	-- round 8 (Wuber 2.3.0): new modules, no old file's code
 	"Core/FlightPaths.lua", "Core/FlightTimes.lua", "Core/Wrapped.lua", "Net/Portal.lua", "Net/Raincheck.lua",
 	"Net/Bounty.lua", "Drive/Danger.lua", "Drive/Kitchen.lua", "Drive/Cut.lua", "Drive/Raincheck.lua", "UI/Fold.lua",
 	"UI/Share.lua", "UI/Rider/WorldMap.lua", "UI/Rider/Booking.lua", "UI/Rider/Wrapped.lua", "UI/Bird.lua",
@@ -57,9 +57,9 @@ F.ADDED = { "Core/Registry.lua",
 	"Drive/Book.lua", "UI/Driver/Customers.lua",
 	-- 2.3.2 (BRIEF15, agent B): the Pioneers' emblem
 	"FX/Emblem.lua",
-	-- 2.3.2 (BRIEF19 R3): the bug report
+	-- 2.3.2: the bug report
 	"UI/Bug.lua",
-	-- 2.3.3 (BRIEF25): login tips, the sea route arrow
+	-- 2.3.3: login tips, the sea route arrow
 	"UI/TipTexts.lua", "UI/Rider/SeaRoute.lua", "UI/Tips.lua",
 	-- 2.4 (part 4): flight map summon price tags
 	"UI/FlightPins.lua",

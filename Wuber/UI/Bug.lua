@@ -11,7 +11,7 @@
 -- Events: listens (none); fires (none)
 -- Standalone: no
 -- Test: tests/ui/bug_test.lua
--- From: new in Wuber 2.3.2 (BRIEF19 R3)
+-- From: new in Wuber 2.3.2
 --
 -- The logs are Core.Runtime's W.errorLog ({ at, where, text, n }) and W.blockedAt ({ at, func, where, n, guess }: the last 5 blocked actions and the Wuber file:line under the call; guess = taken from the last breadcrumb) and W.crumbs ({ at, tag, where, n }: the last 5 Wuber calls the game may refuse) and W.eventLog ({ at, name, n }:
 -- W.Fire names only, never their values); the report shows RITUAL as SUMMON PORTAL (shownName). W.debugLog is not used (it holds advert texts).

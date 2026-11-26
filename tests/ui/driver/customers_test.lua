@@ -228,7 +228,7 @@ test("ui.driver.customers: (review) the Crew card's 'My own account' switch mark
 	ok(bea.own and H.visible(bea.own), "a switch on Bea's card")
 	ok(tipOf(a, bea.own):find("Only mark your own characters", 1, true), "its tooltip")
 	ok(not (cal.own and H.visible(cal.own)), "none for a helper without Wuber")
-	-- (BRIEF17 S7) the label clears the card's bottom edge: the card is taller than switch + label + gap
+	-- the label clears the card's bottom edge: the card is taller than switch + label + gap
 	ok(bea:GetHeight() >= 60, "member card height " .. tostring(bea:GetHeight()))
 	ok(bea.ownLabel:GetWidth() <= 72, "label stays narrow (design 3: 72, \"my account\" measures 65 at Inter's smallest size)")
 	eq(DR.BookOwn("bea jones"), false, "not marked yet")

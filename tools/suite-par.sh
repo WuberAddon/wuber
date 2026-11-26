@@ -18,7 +18,7 @@
 # cores) took 83-95 s on 21 Nov (1275 tests), 12 took 106 s, 8 took 156 s. When other runs share the CPU, fewer. The 5 slowest tests of the run are printed at the end.
 # LuaJIT (WUBER_LUA=.../luajit) runs the suite about 1.5x faster but is NOT a substitute: its pairs() order
 # and math.random differ from Lua 5.1, which changes what Wuber does in some tests (another crew member
-# whispered first, one test fails), so its transcript never matches. Use Lua 5.1 (BRIEF21 S3).
+# whispered first, one test fails), so its transcript never matches. Use Lua 5.1.
 # One run per tree: tests/out/.suite-lock holds "<pid> <start epoch>". A second run in the same tree refuses
 # (exit 3, one line) while that pid is alive (kill -0 only tests, nothing is ever killed) and the lock is under
 # 30 minutes old; a stale lock (dead pid, or older) is taken over with a note. The lock goes on exit.

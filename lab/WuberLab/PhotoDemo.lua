@@ -130,7 +130,7 @@ function L.PhotoDemoLog(t, myKey)
 	return l, info
 end
 
--- (BRIEF20 B9) a driver with just a little history, for the "Open a few hours to find your best ones" tip:
+-- a driver with just a little history, for the "Open a few hours to find your best ones" tip:
 -- last evening he was open 25 and 20 minutes (two rides; under an hour in any three, so no top window) and
 -- two buyers asked at an hour he was shut (the "Try ..." tip). No shift. Same line formats as above.
 function L.PhotoSparseLog(t)

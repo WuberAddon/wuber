@@ -1,4 +1,4 @@
--- Tests of UI.Rider.Wrapped (SPEC7 5.9; owner C). Loaded by tests/run.lua with its helper table T.
+-- Tests of UI.Rider.Wrapped. Loaded by tests/run.lua with its helper table T.
 -- The card once, only days 1-10, only with 3+ rides; then the chip; the story's slides (tap,
 -- 6 s, paused on hover, translation and alpha only); the share text (<= 240, passes SpamReason).
 local T = ...
@@ -134,7 +134,7 @@ test("ui.rider.wrapped: the story (slides, tap, 6 s, paused on hover, no scale) 
 	T.clean(w)
 end)
 
--- (round 13, I1) Google's shots 20-23: the story was see-through ('1h 50m', 'Bronze Rider' and the
+-- (round 13, I1) a reviewer's shots 20-23: the story was see-through ('1h 50m', 'Bronze Rider' and the
 -- milestones ghosted through it) and, unfolded, had a second x in the middle of the window. While
 -- the story shows nothing of the Trips page shows under it (folded: the tab; unfolded: the side
 -- pane under the month list too), its backgrounds are solid, and there is one x of its own, at the

@@ -169,7 +169,7 @@ local function ownRealm()
 	return r and r:lower():gsub("[%s%-']", "") or ""
 end
 
--- Whether the text after a name's last "-" is a realm (SPEC5 realms, review #8): our own
+-- Whether the text after a name's last "-" is a realm: our own
 -- realm; or a Forever server node, which always carries digits or starts "CAMWOW", with or
 -- without spaces ("CAMWOW EU4 Realm 7", "CAMWOWEU4Realm7PvE"). Name parts never hold digits.
 function W.IsRealmTail(tail)

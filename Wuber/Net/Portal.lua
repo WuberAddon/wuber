@@ -9,9 +9,9 @@
 -- Events: listens (none); fires RITUAL
 -- Standalone: no
 -- Test: tests/net/portal_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 sections 5.7, 5.10, 5.13; owner E)
+-- From: new in Wuber 2.3.0
 --
--- Kind G (whisper, driver -> rider; SPEC7 5.10):
+-- Kind G (whisper, driver -> rider):
 --   G~1~<rideId>~<phase q|t|c|h|s|f>~<tapped 0-9>~<need 0-9>~<caster <=24>~<danger 0-2>  (<= 45 bytes)
 -- The network driver's window (Drive.Kitchen) calls W.SendRitual on each change. It goes only to
 -- a rider whose R said 2.3.0 or later (field 6, kept by Net.Requests), on change only, at least
@@ -153,7 +153,7 @@ function Mod.heard(addr, name, key, f, chan)
 end
 
 ---------------------------------------------------------------------------
--- The passphrase (SPEC7 5.7): two friendly words from the ride id and the rider; both sides
+-- The passphrase: two friendly words from the ride id and the rider; both sides
 -- work it out alone, nothing is sent
 ---------------------------------------------------------------------------
 
@@ -192,7 +192,7 @@ function W.Passphrase(id, riderKey)
 end
 
 ---------------------------------------------------------------------------
--- The founder's gold portal (SPEC7 5.13): never on a name in a message alone
+-- The founder's gold portal: never on a name in a message alone
 ---------------------------------------------------------------------------
 
 -- Whether a group member's name as the game gives it carries another realm ("Name-Realm",

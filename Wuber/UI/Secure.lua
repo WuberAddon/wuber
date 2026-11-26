@@ -1,6 +1,6 @@
 -- Module: UI.Secure
 -- Purpose: The secure Request/Cancel macro buttons, the advert/go overlays and the share overlay
---   (WuberShareButton, SPEC7 5.0): macros, overlay placement, UI.SyncSecure, combat lock handling.
+--   (WuberShareButton): macros, overlay placement, UI.SyncSecure, combat lock handling.
 -- API: UI.SyncSecure
 -- Internals: BLOCK_TEXT, buildSecure, combatRequest, doCancel, hideOverlays, requestBlock, requestMacro, settleLater
 --   (an overlay whose pill moved looks again every 0.1 s for half a second, so it follows a rising sheet)
@@ -377,7 +377,7 @@ local function buildSecure()
 	end
 	secure.go = advertButton("WuberGoButton", "go")
 	secure.advert = advertButton("WuberAdvertButton", "advert")
-	-- the share pills (SPEC7 5.0): "/p <line>", "/ra <line>", or "/g <line>" (guild pills),
+	-- the share pills: "/p <line>", "/ra <line>", or "/g <line>" (guild pills),
 	-- set only in the click itself by UI.Share from the pill under it, emptied after; never in combat
 	secure.share = makeSecure("WuberShareButton", function(self, _, down)
 		self.armed = nil

@@ -302,7 +302,7 @@ test("r6 engine: rrsnapshot (#4): a Warlock alt that first logs in after the old
 	clean(w)
 end)
 
--- SPEC5 rrmentions: the TOC has no load-order tie to the old addon; Wuber reads its data at
+-- the TOC has no load-order tie to the old addon; Wuber reads its data at
 -- PLAYER_LOGIN (DR.Lock is read live before that), so the load order doesn't matter
 test("r6 engine: rrmentions (#4): no OptionalDeps on the old addon; the lock and import still work (read at login)", function()
 	local toc = T.readFile(T.dir .. "/../Wuber/Wuber.toc")
@@ -576,7 +576,7 @@ test("r6 engine: public (#18): a closed driver never parses buyers; [Wuber] adve
 	local a = driver(w, ANITA, { spot = SPOT })
 	settle(w)
 	local DR = DRof(a)
-	DR.opts().autoPublic = true -- (2.3.2, BRIEF19 R4: off by default, on after a warning)
+	DR.opts().autoPublic = true -- (2.3.2: off by default, on after a warning)
 	local calls = 0
 	local real = DR.PublicWant
 	DR.PublicWant = function(...) calls = calls + 1 return real(...) end

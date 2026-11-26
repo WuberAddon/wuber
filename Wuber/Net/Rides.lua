@@ -364,7 +364,7 @@ function W.CheckArrival()
 end
 
 -- (review 2.2 #14) Booked: the other drivers we whispered a Q in the last 5.5 min hear B, so
--- they stop pushing us their D (SPEC5 stagger). One tiny whisper each, once.
+-- they stop pushing us their D. One tiny whisper each, once.
 local function tellBooked(except)
 	local t = now()
 	for k, addr in pairs(fb.qAddr) do
@@ -778,7 +778,7 @@ function W.RideTrader(r, key)
 	return false
 end
 
--- Whether the trade open now is with our driver or the driver's crew (SPEC5 tradecheck,
+-- Whether the trade open now is with our driver or the driver's crew (
 -- review #3, 2.2 #1): true; false = anyone else (never pay them); nil = no ride, no trade, or
 -- the game didn't say who.
 function W.TradePartnerOK()
@@ -906,7 +906,7 @@ W.On("PLAYER_MONEY", function()
 	countPaid(r)
 end)
 
--- Before "Accept summon" (SPEC5 mapcheck, review #26): whether the group really stands where
+-- Before "Accept summon": whether the group really stands where
 -- the ride goes. The game's own map of each party/raid member (server-side, not the driver's
 -- beacon) against the booked place's map (or its zone's). Returns true (someone of the group
 -- - the summoner first - is there), false (readable, and nobody is: the screen warns, never

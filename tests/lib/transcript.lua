@@ -22,7 +22,7 @@
 --              globals the addons wrote (sorted); violations and errors (counts)
 -- Deterministic: keys sorted, numbers rounded to 1e-6 (rects 0.1), no table addresses, no
 -- file names or line numbers (they change by design in the restructure), no wall-clock time.
--- The build's own version is not in it either (BRIEF21 S1: one baseline for master and a release):
+-- The build's own version is not in it either (one baseline for master and a release):
 -- every string is written with this build's "a.b.c-dev" as <ver> (also inside digests), and when
 -- the checkout says a plain "a.b.c" (a stamped release tree) every Wuber window is started as
 -- "a.b.c-dev" (the harness's opts.version), so it behaves as master does: a released 2.3.2 beside

@@ -184,7 +184,7 @@ function W.AdvertOwnText(text)
 	if fare and not (W.SentenceSpam and W.SentenceSpam((dest or "") .. " " .. fare)) then
 		return W.Clean(W.ADVERT_TAG .. " " .. t, NETK.ADVERT_MAX + #W.ADVERT_TAG + 1)
 	end
-	-- (SPEC5 advert, review #13: the spam check reads the driver's own words, not what Wuber
+	-- (the spam check reads the driver's own words, not what Wuber
 	-- filled in: the guild's name, the service name and the fare never trip it)
 	local why = W.SentenceSpam and W.SentenceSpam(W.AdvertWords(t))
 	if why and why ~= "letters" then return nil, "spam", why end

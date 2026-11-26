@@ -71,15 +71,15 @@ not the folder.
 |---|---|---|
 | `Wuber/Core/` | 10 | 4492 |
 | `Wuber/Net/` | 17 | 7631 |
-| `Wuber/Theme/` | 4 | 4340 |
+| `Wuber/Theme/` | 4 | 4353 |
 | `Wuber/FX/` | 4 | 2534 |
 | `Wuber/UI/` | 18 | 9507 |
 | `Wuber/UI/Rider/` | 12 | 9896 |
-| `Wuber/UI/Settings/` | 4 | 3682 |
+| `Wuber/UI/Settings/` | 4 | 3692 |
 | `Wuber/UI/Map/` | 4 | 2588 |
 | `Wuber/Drive/` | 26 | 17571 |
 | `Wuber/UI/Driver/` | 15 | 11045 |
-| total | 114 | 73286 |
+| total | 114 | 73309 |
 
 ### Modules in load order
 
@@ -176,7 +176,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/net/base_test.lua` (not written yet); standalone: no
 
 #### 12. Net.Update
-`Wuber/Net/Update.lua`, 258 lines. "A newer Wuber is out" (round 11, BRIEF11). Learns other players' Wuber versions from messages that already arrive (driver beacons D field 11, ride requests R field 6, crew HI field 3: no new traffic), trusts a newer one when the founder says it (W.IsCreator on the message's real sender key, never a name in a payload) or when 2 different players said it or higher in the last 24 h, keeps the newest trusted one in WuberDB.newer = { ver, at }, and shows one quiet toast per session once the player is idle. /wuber updates off (WuberDB.updateNotes, nil = on) turns the toast off. A saved version not heard again for 14 days is forgotten.
+`Wuber/Net/Update.lua`, 258 lines. "A newer Wuber is out" (round 11). Learns other players' Wuber versions from messages that already arrive (driver beacons D field 11, ride requests R field 6, crew HI field 3: no new traffic), trusts a newer one when the founder says it (W.IsCreator on the message's real sender key, never a name in a payload) or when 2 different players said it or higher in the last 24 h, keeps the newest trusted one in WuberDB.newer = { ver, at }, and shows one quiet toast per session once the player is idle. /wuber updates off (WuberDB.updateNotes, nil = on) turns the toast off. A saved version not heard again for 14 days is forgotten.
 
 - API: W.ParseVersion, W.CompareVersions, W.HeardVersion, W.NewerVersion, W.UPDATE_URL, Mod.Why Why(): nil, or the line /wuber why prints while a known newer version's notice is held back; read-only.
 - Uses: (none); Later: UI.Toasts (UI.Toast), UI.Settings.Panel (UI.OpenHelp), Net.Rides (W.RideActive), Drive.Queue (DR.Busy)
@@ -328,7 +328,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/theme/widgets_test.lua`; standalone: no
 
 #### 31. Theme.Forms
-`Wuber/Theme/Forms.lua`, 1297 lines. driver-screen building blocks: T.Line, T.Field, T.EdgeFade, T.Scroll, T.Sheet, T.ListButton, T.Para, T.Tag, T.AlertCard, and the list row (design 2): T.RowGroup, group:Row, T.RowHeading. T.EdgeFade is the one look for every clipped list (soft top/bottom edges and a thin scroll bar shown while the list can scroll).
+`Wuber/Theme/Forms.lua`, 1310 lines. driver-screen building blocks: T.Line, T.Field, T.EdgeFade, T.Scroll, T.Sheet, T.ListButton, T.Para, T.Tag, T.AlertCard, and the list row (design 2): T.RowGroup, group:Row, T.RowHeading. T.EdgeFade is the one look for every clipped list (soft top/bottom edges and a thin scroll bar shown while the list can scroll).
 
 - API: T.Line, T.Outline, Outline:SetColor, Outline:SetAlpha, Outline:SetShown, T.Field, T.EdgeFade, T.Scroll, T.Sheet, T.SheetCard, T.ListButton, T.ParaLines, T.Para, T.Tag, T.AlertCard, T.CutOneLine, T.WholeOnHover, T.RowGroup, Group:Row, Group:Layout, Group:LayoutNow, T.RowHeading, T.ROW, Row:SetTitle, Row:SetSub, Row:SetValue, Row:SetShown, Row:Wash, Row:Unwash T.WholeOnHover(fs, owner): hovering the owner (default: the nearest mouse-taking ancestor up to 3 up, else a hover-only frame over the label) shows the whole text of a one-line label that is cut at that moment, as the first words of the tip card, before the owner's own T.Tip words; T.Fit sets it on every label it finds cut.
 - Uses: (none); Later: UI.Window (UI.HeadAbove, run time: a sheet with opts.head lifts the header's buttons over its dim while it is up)
@@ -360,7 +360,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/kit_test.lua` (not written yet); standalone: yes
 
 #### 35. UI.Toasts
-`Wuber/UI/Toasts.lua`, 564 lines. UI.Toast and the toast queue (one at a time, slides from the top). (BRIEF19 R6) UI.ChatBox and UI.ClearOfChat: where the game's chat frame is now, and a spot for a Wuber frame clear of it. (BRIEF20 B4) UI.HudBoxes and UI.ClearOfHud: the shown action bars, micro menu, bags, status bars and party frames (the game's and Daylight UI's), and a spot clear of them and the chat, with room to breathe.
+`Wuber/UI/Toasts.lua`, 564 lines. UI.Toast and the toast queue (one at a time, slides from the top). UI.ChatBox and UI.ClearOfChat: where the game's chat frame is now, and a spot for a Wuber frame clear of it. UI.HudBoxes and UI.ClearOfHud: the shown action bars, micro menu, bags, status bars and party frames (the game's and Daylight UI's), and a spot clear of them and the chat, with room to breathe.
 
 - API: UI.ToastPlace, UI.Toast, UI.ToastShowing, UI.UndoToast, UI.UndoPending, UI.ChatBox, UI.ClearOfChat, UI.HudBoxes, UI.ClearOfHud (decisions N) UI.UndoToast(text, undo): a toast with an Undo button that stays 10 s; what was reset is kept only in the undo function, which is dropped when the toast goes.
 - Uses: UI.Kit; Later: (none)
@@ -368,7 +368,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/toasts_test.lua` (not written yet); standalone: no
 
 #### 36. UI.Secure
-`Wuber/UI/Secure.lua`, 413 lines. The secure Request/Cancel macro buttons, the advert/go overlays and the share overlay (WuberShareButton, SPEC7 5.0): macros, overlay placement, UI.SyncSecure, combat lock handling.
+`Wuber/UI/Secure.lua`, 413 lines. The secure Request/Cancel macro buttons, the advert/go overlays and the share overlay (WuberShareButton): macros, overlay placement, UI.SyncSecure, combat lock handling.
 
 - API: UI.SyncSecure
 - Uses: UI.Kit; Later: UI.Share (Target, Macro, Shared: the share pill under WuberShareButton)
@@ -376,11 +376,11 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/secure_test.lua` (not written yet); standalone: no
 
 #### 37. UI.Window
-`Wuber/UI/Window.lua`, 1269 lines. The app window: screens table, scale, raise, position, tabs (UI.AddTab/GetTab/SelectTab), screen routing (wantedScreen, goTo), buildWindow, UI.Refresh/RefreshNow, UI.Toggle/Show/IsShown/SetSearch, start-up listeners and the login build. (BRIEF19 R6) the default place keeps the handset off the chat frame and (BRIEF20 B4) the action bars (UI.ClearOfHud, UI.Toasts, at run time); a saved place (W.db.pos) is never moved.
+`Wuber/UI/Window.lua`, 1269 lines. The app window: screens table, scale, raise, position, tabs (UI.AddTab/GetTab/SelectTab), screen routing (wantedScreen, goTo), buildWindow, UI.Refresh/RefreshNow, UI.Toggle/Show/IsShown/SetSearch, start-up listeners and the login build. the default place keeps the handset off the chat frame and the action bars (UI.ClearOfHud, UI.Toasts, at run time); a saved place (W.db.pos) is never moved.
 
 - API: UI.WantedScale, UI.ApplyScale, UI.MigrateScale, UI.Raise, UI.AddTab, UI.GetTab, UI.SelectTab, UI.HideOtherScreens, UI.Dismiss, UI.Refresh, UI.RefreshNow, UI.Toggle, UI.Show, UI.IsShown, UI.SetSearch, UI.PlaceWindow, UI.PaintGear, UI.SyncClose, UI.HEAD_H, UI.TABBAR_H, UI.HEAD_ROW, UI.HeadRoom, UI.HeadPush, UI.HeadControl, UI.HeadHit, UI.HeadLayout, UI.TabsHidden, UI.HeadAbove
 - Uses: UI.Kit, UI.Secure; Later: UI.Rider.Cards, UI.Rider.Home, UI.Rider.Confirm, UI.Rider.Ride, UI.Rider.Done, UI.Moments, UI.Coach, UI.Phone, UI.Minimap, UI.Tips (NoteDriveAsked), UI.Fold (Page, Apply), UI.Share (Sync), UI.Rider.Wrapped (Shown) on the way back (A.PopPage), inside the Ride tab's body; a tab change swaps at once. A move ends at once (A.StopPage) when a fight starts, the window hides or folds, a tab is chosen or UI.HideOtherScreens runs; the secure overlays are laid when the move ends. UI.Show on a shut window opens it on the settled page.
-- Events: listens Listen DRIVERS, Listen FLIGHTS, Listen RIDE, Listen SETTINGS, Listen FOLD, Listen DRIVE_OFFER, Listen DRIVE_CREW, Listen DRIVE_MODE, On PLAYER_REGEN_DISABLED, On PLAYER_REGEN_ENABLED, Listen NETWORK, Listen PROVIDER, On GLOBAL_MOUSE_DOWN, On GROUP_ROSTER_UPDATE, On ZONE_CHANGED_NEW_AREA, login; fires PAGE (the page key changed: SPEC7 2.1); reads UI.Moments' pops through MomentsMod.popCount()
+- Events: listens Listen DRIVERS, Listen FLIGHTS, Listen RIDE, Listen SETTINGS, Listen FOLD, Listen DRIVE_OFFER, Listen DRIVE_CREW, Listen DRIVE_MODE, On PLAYER_REGEN_DISABLED, On PLAYER_REGEN_ENABLED, Listen NETWORK, Listen PROVIDER, On GLOBAL_MOUSE_DOWN, On GROUP_ROSTER_UPDATE, On ZONE_CHANGED_NEW_AREA, login; fires PAGE (the page key changed); reads UI.Moments' pops through MomentsMod.popCount()
 - Test: `tests/ui/window_test.lua`; standalone: no
 
 #### 38. UI.Rider.HomeMap
@@ -523,7 +523,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 `Wuber/UI/Rider/Trips.lua`, 939 lines. The Trips tab (was UI_Trips.lua): time saved, rider level, habit chips, milestones and trip history.
 
 - API: UI.trips, UI.TripsHM, UI.BuildTrips, UI.TripsHabits, UI.TripsChips, UI.UpdateTrips, UI.RaincheckList
-- Uses: (none); Later: UI.Rider.Wrapped (the Wrapped card, chip and story, through W.Mod at run time), UI.Fold (Register: the unfolded "trips" page, SPEC7 2.8)
+- Uses: (none); Later: UI.Rider.Wrapped (the Wrapped card, chip and story, through W.Mod at run time), UI.Fold (Register: the unfolded "trips" page)
 - Events: listens Listen MILESTONE, Listen RAINCHECK, Listen SETTINGS; fires (none)
 - Test: `tests/ui/rider/trips_test.lua`; standalone: no
 
@@ -560,10 +560,10 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/settings/pages_test.lua`; standalone: no
 
 #### 60. UI.Settings.Panel
-`Wuber/UI/Settings/Panel.lua`, 1477 lines. Settings panel build, layout and update (UI.BuildSettings/OpenSettings/CloseSettings) and the "How Wuber finds drivers" help page. game's Options > AddOns list (Settings.RegisterCanvasLayoutCategory, else InterfaceOptions_AddCategory, else nothing). The button opens Wuber's own settings beside the game's window; it never closes or hooks the game's window, and in combat it only says so. Mod.optionsFrame() returns the page (nil when the client has no such list).
+`Wuber/UI/Settings/Panel.lua`, 1487 lines. Settings panel build, layout and update (UI.BuildSettings/OpenSettings/CloseSettings) and the "How Wuber finds drivers" help page. game's Options > AddOns list (Settings.RegisterCanvasLayoutCategory, else InterfaceOptions_AddCategory, else nothing). The button opens Wuber's own settings beside the game's window; it never closes or hooks the game's window, and in combat it only says so. Mod.optionsFrame() returns the page (nil when the client has no such list).
 
 - API: UI.LayoutSettings, UI.UpdateSettings, UI.BuildSettings, UI.OpenSettings, UI.CloseSettings, UI.SettingsShown, UI.HelpShown, UI.OpenHelp, UI.CloseHelp, UI.ScrollHelp, UI.HasOpenMap
-- Uses: UI.Settings.Rows, UI.Settings.Find, UI.Settings.Pages, UI.Kit; Later: UI.Tips (ShowAgain, else ShowNow: Help's "Show a tip" row), UI.Fold (Register, IsUnfolded: the unfolded layout, SPEC7 2.8 "settings"), FX.Emblem (W.Emblem.Active, W.Emblem.Mine, W.Emblem.Sweep: the Pioneer emblem rows), UI.Bug (UI.Bug.Open: the "Report a bug" rows)
+- Uses: UI.Settings.Rows, UI.Settings.Find, UI.Settings.Pages, UI.Kit; Later: UI.Tips (ShowAgain, else ShowNow: Help's "Show a tip" row), UI.Fold (Register, IsUnfolded: the unfolded layout), FX.Emblem (W.Emblem.Active, W.Emblem.Mine, W.Emblem.Sweep: the Pioneer emblem rows), UI.Bug (UI.Bug.Open: the "Report a bug" rows)
 - Events: listens Listen SETTINGS (advanced); fires SETTINGS, PAGE (open, close, help)
 - Test: `tests/ui/settings/panel_test.lua`; standalone: no
 
@@ -682,7 +682,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 #### 75. Drive.Queue
 `Wuber/Drive/Queue.lua`, 1715 lines. Riders and their states (was Drive_Queue.lua).
 
-- API: W.Drive, DR.customers, DR.units, DR.ignored, DR.helpers, DR.session, DR.requestFilters, DR.RANK, DR.Rank, DR.LEAD_TTL, DR.QUEUE_TTL, DR.WAIT_TTL, DR.CAST_TTL, DR.AWAY_AFTER, DR.ResolveKey, DR.Find, DR.CleanName, DR.Create, DR.SetState, DR.Remove, DR.Sorted, DR.Count, DR.Due, DR.NeverRider, DR.WuberLine, DR.Classify, DR.Wanted, DR.ResetRide, DR.Lead, DR.Request, DR.Invite, DR.ClickInvites (r30: whisper invites off, a queued rider's row click invites when the timer would), DR.SetPriority, DR.MarkPaid, DR.NotRider, DR.Market, DR.PublicLine, DR.Busy, DR.LeaderOf, DR.CanInvite, DR.LeadTarget, DR.HandLead, DR.LeadFix, DR.PumpInvites, DR.owing, DR.OWING_GRACE, DR.recentLeft, DR.LEFT_KEEP (riders who left in the last 120 s: a late PAID still counts), DR.DecidesNonPayer, DR.OwingTick, DR.SyncRoster, DR.LockPrice, DR.Apply, DR.QueueTick, DR.PLACE_SETTLE, DR.MOVED_TTL, DR.moved, DR.ServedPlaces, DR.PlaceOK, DR.PlaceStale, DR.PlaceSweep, DR.Travelling (BRIEF18: a request's place; riders for a place the driver left), DR.AskedFor, DR.AskOK (BRIEF18 00:53: a request naming a place we don't serve is a lead, never invited)
+- API: W.Drive, DR.customers, DR.units, DR.ignored, DR.helpers, DR.session, DR.requestFilters, DR.RANK, DR.Rank, DR.LEAD_TTL, DR.QUEUE_TTL, DR.WAIT_TTL, DR.CAST_TTL, DR.AWAY_AFTER, DR.ResolveKey, DR.Find, DR.CleanName, DR.Create, DR.SetState, DR.Remove, DR.Sorted, DR.Count, DR.Due, DR.NeverRider, DR.WuberLine, DR.Classify, DR.Wanted, DR.ResetRide, DR.Lead, DR.Request, DR.Invite, DR.ClickInvites (r30: whisper invites off, a queued rider's row click invites when the timer would), DR.SetPriority, DR.MarkPaid, DR.NotRider, DR.Market, DR.PublicLine, DR.Busy, DR.LeaderOf, DR.CanInvite, DR.LeadTarget, DR.HandLead, DR.LeadFix, DR.PumpInvites, DR.owing, DR.OWING_GRACE, DR.recentLeft, DR.LEFT_KEEP (riders who left in the last 120 s: a late PAID still counts), DR.DecidesNonPayer, DR.OwingTick, DR.SyncRoster, DR.LockPrice, DR.Apply, DR.QueueTick, DR.PLACE_SETTLE, DR.MOVED_TTL, DR.moved, DR.ServedPlaces, DR.PlaceOK, DR.PlaceStale, DR.PlaceSweep, DR.Travelling (a request's place; riders for a place the driver left), DR.AskedFor, DR.AskOK (a request naming a place we don't serve is a lead, never invited)
 - Uses: Drive.Careful, Drive.AutoReply; Later: Drive.Raincheck (DR.RaincheckFact: DR.Apply hands it the IOU facts), Drive.Service (DR.SendConfig, DR.Summoners: a Warlock who left a typed place), Drive.Chat (DR.PlacesText), Drive.Book (DR.ServeHold: a held rider's request is a lead, never queued by itself)
 - Events: listens On CHAT_MSG_WHISPER, On CHAT_MSG_CHANNEL, On CHAT_MSG_SAY, On CHAT_MSG_YELL, On CHAT_MSG_SYSTEM, On GROUP_ROSTER_UPDATE, On GROUP_JOINED, On GROUP_LEFT, On PARTY_LEADER_CHANGED, On PARTY_INVITE_REQUEST; fires DRIVE_MODE, DRIVE_PAID, DRIVE_RAID, DRIVE_REMOVED, DRIVE_STATE, DRIVE_STATIONS, SETTINGS, DRIVE_RITUAL (2.3.0: name, phase c|h|s|f|t, data, from the CAST, HELP (field 2: a helper without Wuber), END and GR facts)
 - Test: `tests/drive/queue_test.lua`; standalone: no
@@ -952,7 +952,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/sheets_test.lua`; standalone: no
 
 #### 109. UI.Driver.Customers
-`Wuber/UI/Driver/Customers.lua`, 917 lines. the customer book on the driver's console (round 9, Y1 and Y3): the row menu's "Get Wuber", "Note..." and "Gifted" items, the note and gift marks on queue rows and their tooltip lines, the Note sheet (the note, the Gifted stamp, the facts from the log) and the Customers screen (search, newest ride first; the footer's Customers link). (BRIEF17) Where "Get Wuber" isn't offered, the menu, the Note sheet and the Customers pane say why; the list says it scrolls; Save says only what it did, and an empty Save over a note asks once before it removes it.
+`Wuber/UI/Driver/Customers.lua`, 917 lines. the customer book on the driver's console (round 9, Y1 and Y3): the row menu's "Get Wuber", "Note..." and "Gifted" items, the note and gift marks on queue rows and their tooltip lines, the Note sheet (the note, the Gifted stamp, the facts from the log) and the Customers screen (search, newest ride first; the footer's Customers link). Where "Get Wuber" isn't offered, the menu, the Note sheet and the Customers pane say why; the list says it scrolls; Save says only what it did, and an empty Save over a note asks once before it removes it.
 
 - API: D.CustomerMenu, D.CustomerPick, D.CustomerTip, D.PaintMarks, D.CustomerFacts, D.CrewOwnMark, D.screens.note, D.screens.customers, D.FOLD.customers (design 4, H) a rider who left owing gets one more pill on the Note sheet and the side pane (Advanced only): "Don't serve again until <date>" (Drive.Book's DR.ServeHold: the driver's own, never sent), a click sets or lifts it
 - Uses: UI.Driver.Screens; Later: UI.Driver.Console (D.SidePane, D.WideLayout's D.wide, run time); the "Mail seen" line on a row's tooltip and under a customer's name is Drive.Mail's (DR.MailNote, through the customer book)
@@ -960,7 +960,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/customers_test.lua`; standalone: no
 
 #### 110. UI.Driver.Mini
-`Wuber/UI/Driver/Mini.lua`, 609 lines. Crew-offer card (UI.CrewOffer), the floating mini console, driver toasts and alerts, UI.ShowDrive / DriveSlot / DriveSummary / DriveWantsClick. (BRIEF19 R6) the crew offer keeps off the chat frame and (BRIEF20 B4) the action bars (UI.ClearOfHud, at run time). (round 31) the console shows the rows its place has room for (DR.Button.MiniRows, at run time).
+`Wuber/UI/Driver/Mini.lua`, 609 lines. Crew-offer card (UI.CrewOffer), the floating mini console, driver toasts and alerts, UI.ShowDrive / DriveSlot / DriveSummary / DriveWantsClick. the crew offer keeps off the chat frame and the action bars (UI.ClearOfHud, at run time). (round 31) the console shows the rows its place has room for (DR.Button.MiniRows, at run time).
 
 - API: UI.CrewOffer, D.UpdateMini, UI.ShowDrive, UI.DriveSlot, UI.DriveSummary, UI.DriveWantsClick, D.SyncMini, D.MiniTicking
 - Uses: UI.Driver.Screens; Later: (none)
@@ -976,7 +976,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/fx/nameplates_test.lua` (not written yet); standalone: no
 
 #### 112. FX.Emblem
-`Wuber/FX/Emblem.lua`, 592 lines. the Pioneers' floating emblem (BRIEF15, PLAN 2.3.2 feature 2): Wuber's own small swirling portal over a listed Pioneer's nameplate, seen by other Wuber users in the open world; Pioneer Drivers in teal; the founders' crown wins; a local-only preview over your own head.
+`Wuber/FX/Emblem.lua`, 592 lines. the Pioneers' floating emblem: Wuber's own small swirling portal over a listed Pioneer's nameplate, seen by other Wuber users in the open world; Pioneer Drivers in teal; the founders' crown wins; a local-only preview over your own head.
 
 - API: W.Emblem, W.EmblemHeard, W.EmblemFlag
 - Uses: FX.Effects, FX.Nameplates, Theme.Widgets; Later: UI.UpdateSettings (the chat command moves an open Settings switch)

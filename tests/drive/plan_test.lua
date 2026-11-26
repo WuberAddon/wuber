@@ -1,4 +1,4 @@
--- Tests of Drive.Plan (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of Drive.Plan (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. The big button's words and the rider's queue row follow
 -- one state: while the button says "Summoning Dan" or "CLICK THE PORTAL", Dan's row says he is being
 -- summoned (shots 26-29 showed "ready to summon": the photo tour fakes the button's plan, I13), and
@@ -79,7 +79,7 @@ test("drive.plan: I13 the queue row follows the big button (Summon / Summoning /
 	T.clean(w)
 end)
 
--- (BRIEF20 B5, shot 87) raid summons: a raider who has the summon window is listed on the console
+-- raid summons: a raider who has the summon window is listed on the console
 -- ("has the summon window"), so the button must not say "nobody waiting" while they are there.
 test("drive.plan BRIEF20 B5: raid summons never say nobody waiting while a raider has the summon window", function()
 	local w = T.newWorld()

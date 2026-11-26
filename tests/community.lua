@@ -260,7 +260,7 @@ test("community: the Join card shows for drivers with an invitation and accepts 
 	ok(not hasText(d, "Join the Wuber community"), "the card is gone")
 	ok(not hasText(d, "Tip: join the Wuber community for more visibility"), "and the hint")
 	w:advance(5)
-	-- (SPEC5 community: no channel follows; the membership makes the roster whisper seeds)
+	-- (no channel follows; the membership makes the roster whisper seeds)
 	eq(d.W.CommunityIndex(), nil, "no community channel")
 	eq(d.W.CommunityStatus(), "Community: joined.", d.W.CommunityStatus())
 	clean(w)

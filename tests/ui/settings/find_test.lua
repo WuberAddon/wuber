@@ -195,7 +195,7 @@ test("ui.settings.find: a match opens its section at the row, highlighted by alp
 	w2:advance(0.2)
 	local fl2 = st2.find.flashing
 	ok(fl2 and fl2.tex.parts.M:IsShown(), "lit right after the tap")
-	-- (BRIEF22 G1) drawn: the colour's alpha (kept) times the region's (the fade)
+	-- drawn: the colour's alpha (kept) times the region's (the fade)
 	local function drawn(t) return select(4, t:GetVertexColor()) * (t:GetAlpha() or 1) end
 	local a1 = drawn(fl2.tex.parts.M)
 	w2:advance(0.6)
@@ -284,7 +284,7 @@ test("ui.settings.find: unfolded - the box above a narrow list, matches in the r
 	T.clean(w)
 end)
 
--- (2.3.2, I30: Google's shots 62 and 63) a match whose name doesn't hold the typed word says why it matched
+-- (2.3.2, I30: a reviewer's shots 62 and 63) a match whose name doesn't hold the typed word says why it matched
 test("ui.settings.find: I30 - a match says why it matched (grey 'matches: price'), its tooltip lights the word; nothing cut", function()
 	local check = dofile(T.dir .. "/lib/listfade.lua")(H)
 	for _, wide in ipairs({ false, true }) do

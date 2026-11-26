@@ -11,10 +11,10 @@
 --   log: this client forbids it to addons (round 12).
 -- Standalone: no
 -- Test: tests/drive/danger_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.6; owner F); round 12: rebuilt without the combat log
+-- From: new in Wuber 2.3.0; round 12: rebuilt without the combat log
 --
 -- Only enemy players who can fight me count (UnitCanAttack either way: on a PvE realm an unflagged
--- one can't, though UnitIsEnemy is true). Levels (SPEC7 5.6): 2 = in the last 5 minutes I entered
+-- one can't, though UnitIsEnemy is true). Levels: 2 = in the last 5 minutes I entered
 -- combat with such a player as my target, or with one near (nameplate in the 30 s before) who is
 -- in combat or targeting me, or such a player's nameplate showed while we were both in combat (or
 -- they targeted me); 1 = such players seen (nameplates) in the last 2 minutes; 0 otherwise. It

@@ -617,7 +617,7 @@ test("lab: adverts are logged (posted with channel and text, tagged lines heard,
 end)
 
 ---------------------------------------------------------------------------
--- Shard-free test mode ("Pretend to summon (no shards)", SPEC5)
+-- Shard-free test mode ("Pretend to summon (no shards)")
 ---------------------------------------------------------------------------
 
 local SIM_SPOT = "Undercity"

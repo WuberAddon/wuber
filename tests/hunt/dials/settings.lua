@@ -126,17 +126,17 @@ return function(Hunt)
 		},
 	}
 
-	-- pairs the briefs and reports name together (BRIEF18 R4/T3, BRIEF19 R4, BRIEF24 P1, BRIEF25 T1, BRIEF26, REPORT26):
+	-- pairs the briefs and reports name together:
 	-- the core's pairwise set covers every pair already; this list is for the report and for extra weight
 	Hunt.settingPairs = {
-		{ "tipsOn", "coach" },              -- tips wait for the coach marks (BRIEF25 T1, REPORT26)
+		{ "tipsOn", "coach" },              -- tips wait for the coach marks
 		{ "tipsOn", "birdTip" },            -- both are tips, in Settings > Riding (REPORT26: re-arming)
 		{ "birdTip", "coach" },
 		{ "autoAccept", "autoLeave" },      -- the rider's two group switches (Settings > Riding)
 		{ "advertOnline", "opt_adChannels" }, -- the advert and where it goes (REPORT26: services only)
 		{ "advertOnline", "opt_adEvery" },
 		{ "advertOnline", "opt_autoPublic" },
-		{ "opt_autoInvite", "opt_autoPublic" }, -- whispers vs public chat (BRIEF18, BRIEF19 R4)
+		{ "opt_autoInvite", "opt_autoPublic" }, -- whispers vs public chat
 		{ "opt_oneAtATime", "opt_autoInvite" },
 		{ "opt_oneAtATime", "opt_autoPublic" },
 		{ "opt_oneAtATime", "opt_autoTrade" },

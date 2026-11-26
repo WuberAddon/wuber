@@ -7,7 +7,7 @@
 --   height, again when it changes)
 -- Uses: (none: Core via W)
 -- Later: UI.Rider.Wrapped (the Wrapped card, chip and story, through W.Mod at run time), UI.Fold
---   (Register: the unfolded "trips" page, SPEC7 2.8)
+--   (Register: the unfolded "trips" page)
 -- Events: listens Listen MILESTONE, Listen RAINCHECK, Listen SETTINGS; fires (none)
 -- Standalone: no
 -- Test: tests/ui/rider/trips_test.lua
@@ -17,7 +17,7 @@
 -- your rider level and the bar to the next, habit chips, the milestones (earned ones glow, locked ones say how to earn them) and
 -- your trip history with your own ratings. Data from Core/Net (W.Stats, W.TierProgress,
 -- W.MILESTONES, W.db.rides), every call guarded: a missing piece shows a plain zero.
--- Unfolded (SPEC7 2.8 "trips"): stats and trips on the left, the milestones (3 to a row, scrolling)
+-- Unfolded: stats and trips on the left, the milestones (3 to a row, scrolling)
 -- and the Wrapped card on the right, in the Fold's side pane. Folded: one column, as before.
 
 local _, W = ...
@@ -314,7 +314,7 @@ function UI.BuildTrips(body)
 	end)
 	-- the smooth scroll
 	safeScript(clip, "OnUpdate", function(_, elapsed)
-		-- (BRIEF20 B2) the view's real height, once the game has laid it out: fitted again on a change
+		-- the view's real height, once the game has laid it out: fitted again on a change
 		-- the clip's own height when it has one (> 1; DS24-01), else the body's less the head row
 		local h = type(clip.GetHeight) == "function" and N(clip:GetHeight())
 		if not (h and h > 1) then
@@ -331,7 +331,7 @@ function UI.BuildTrips(body)
 		c:SetPoint("TOPLEFT", clip, "TOPLEFT", 0, y)
 		Mod.trimCells()
 	end)
-	-- (BRIEF19 F6) "Scroll for your trips" below the scroll area while more lies below
+	-- "Scroll for your trips" below the scroll area while more lies below
 	local cue = CreateFrame("Frame", nil, body)
 	cue:SetSize(150, 22)
 	cue:SetPoint("BOTTOM", body, "BOTTOM", 0, 8)
@@ -343,7 +343,7 @@ function UI.BuildTrips(body)
 	cue.label:SetPoint("CENTER", cue, "CENTER", 0, 0)
 	cue:Hide()
 	tr.cue = cue
-	-- the unfolded page (SPEC7 2.8)
+	-- the unfolded page
 	local F = UI.Fold
 	if type(F) == "table" and type(F.Register) == "function" then
 		F.Register("trips", { build = Mod.foldBuild, layout = Mod.foldLayout })
@@ -351,7 +351,7 @@ function UI.BuildTrips(body)
 end
 
 ---------------------------------------------------------------------------
--- Unfolded (SPEC7 2.8 "trips"): the milestones and the Wrapped card in the side pane
+-- Unfolded: the milestones and the Wrapped card in the side pane
 ---------------------------------------------------------------------------
 
 -- the side pane's own scroll (made on the first unfold)
@@ -446,9 +446,9 @@ local function fillLevel(st)
 	lv.disc:SetVertexColor(T.RGB(colour))
 	lv.icon:SetVertexColor(T.RGB(tier >= 1 and "ink" or "muted"))
 	lv.halo:SetVertexColor(T.RGB(colour, 0.5))
-	lv.halo:SetShown(tier >= 1) -- (BRIEF22 G1) hidden below the first level, never an alpha change
+	lv.halo:SetShown(tier >= 1) -- hidden below the first level, never an alpha change
 	lv.bar:SetColor("accent")
-	-- (BRIEF15) my own Pioneer badge on the medal (the shipped list only; a founder: none)
+	-- my own Pioneer badge on the medal (the shipped list only; a founder: none)
 	local pb = T.ShowPioneer(lv, "pioneer", T.PioneerLook(W.myKey), 22, lv.medal, true)
 	if pb then pb:ClearAllPoints() pb:SetPoint("CENTER", lv.medal, "TOPRIGHT", -6, -6) end
 end
@@ -701,7 +701,7 @@ local function fillHistory(top)
 	tr.hCount:SetPoint("TOPRIGHT", tr.content, "TOPRIGHT", -PAD, -top - 4)
 	tr.list:ClearAllPoints()
 	tr.list:SetPoint("TOPLEFT", tr.content, "TOPLEFT", PAD, -top - 30)
-	tr.listTop = top + 30 -- (BRIEF19 F6) the first row's top in content px, for the cue's clearance
+	tr.listTop = top + 30 -- the first row's top in content px, for the cue's clearance
 	tr.histTop = top
 	local shown = 0
 	for i = #trips, 1, -1 do
@@ -747,12 +747,12 @@ local function fillHistory(top)
 	return top + 30 + shown * ROW_H + 10
 end
 
--- (BRIEF19 F6) folded: a milestone row the view's edge would slice is left out (never half a medal),
+-- folded: a milestone row the view's edge would slice is left out (never half a medal),
 -- and the cue says there is more below. Each time the page is drawn or scrolls.
 -- the page's state (for tests: tr.cue, tr.cells, tr.clip)
 function Mod.view() return tr end
 
--- (BRIEF20 B2) the view's height. In the real client GetHeight() is 0 until the game has laid the
+-- the view's height. In the real client GetHeight() is 0 until the game has laid the
 -- clip out (on the unfolded page, right after the window re-anchored): then the last height measured,
 -- else the body's 544. A 0 here hid every trip row under the cue (tour 19).
 local function viewH()
@@ -816,7 +816,7 @@ function Mod.trimCells()
 		-- (#2) a card with no medal shown has no job: hidden, on every pass (open and after each scroll)
 		if tr.tray:IsShown() ~= anyCell then tr.tray:SetShown(anyCell) end
 	end
-	-- (BRIEF19 F6) a trip row the cue's pill would touch is hidden whole, never covered; (BRIEF20 B2)
+	-- a trip row the cue's pill would touch is hidden whole, never covered;
 	-- hidden, not faded, and only by the cue: shown again on every pass
 	local edge = y + clipH - 30 -- the cue's height plus its gap
 	for i, r in ipairs(tr.rows) do

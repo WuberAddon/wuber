@@ -1,4 +1,4 @@
--- Tests of Drive.Kitchen (SPEC7 5.10; owner F). Loaded by tests/run.lua with its helper table T.
+-- Tests of Drive.Kitchen. Loaded by tests/run.lua with its helper table T.
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok
 

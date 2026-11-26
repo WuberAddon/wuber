@@ -1,4 +1,4 @@
--- Tests of Net.Raincheck (SPEC7 5.8; owner E). Loaded by tests/run.lua with its helper table T.
+-- Tests of Net.Raincheck. Loaded by tests/run.lua with its helper table T.
 -- Round 8 step 0: the stub's contract (registered, deps = header Uses, public names) and that it
 -- is idle (does nothing, sends nothing, saves nothing). The owner adds the behaviour tests.
 local T = ...

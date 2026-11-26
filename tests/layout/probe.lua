@@ -6,7 +6,9 @@
 --   the pattern is matched against the frame's key (file:line), or against its "what" (file:line, role and the text: Rows.lua:255 label "Replay");
 --   a table of patterns takes a hit that matches ANY of them in its key or its what
 local H = ...
-return function(cfgText, screens, keyPattern, kind)
+--   probe(cfg, screens, pattern, kind, { textRule = "flat", probe = "<fixture path>" })   (job 2893) the flat 6% rule, and/or a probe fixture's "was it cut" answers
+return function(cfgText, screens, keyPattern, kind, extra)
+	extra = extra or {}
 	local w, h, sc, ui = cfgText:match("^(%d+)x(%d+)@([%d.]+),ui([%d.]+)$")
 	assert(w, "config WxH@scale,uiN, e.g. 1920x1080@1.15,ui0.71")
 	local cfg = { w = tonumber(w), h = tonumber(h), scale = tonumber(sc), ui = tonumber(ui), id = cfgText }
@@ -15,8 +17,9 @@ return function(cfgText, screens, keyPattern, kind)
 	H.ADDONS.WuberLab = lab
 	local E = assert(loadfile(H.root .. "/tests/layout/engine.lua"))(H)
 	local Run = assert(loadfile(H.root .. "/tests/layout/run.lua"))(H, E, H.root)
-	local ok, res = pcall(Run.config, cfg, { screens = screens, scenes = true })
+	local ok, res = pcall(Run.config, cfg, { screens = screens, scenes = true, textRule = extra.textRule, probe = extra.probe })
 	H.ADDONS.WuberLab = oldLab
+	H.measuredCut = nil -- (job 2893) a run that threw leaves no learned rule behind
 	if not ok then error(res, 0) end
 	local out = {}
 	local pats = type(keyPattern) == "table" and keyPattern or { keyPattern }

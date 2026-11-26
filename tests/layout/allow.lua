@@ -1,4 +1,4 @@
--- The layout checker's allow-list (tools/layout-check.lua; BRIEF21 S11).
+-- The layout checker's allow-list (tools/layout-check.lua).
 -- Each entry matches a problem by its kind (cut, overlap, under, boxes, windows, clipped, spill, offscreen, tooltip,
 -- emptycue, words) and Lua patterns on the shot ("trips/unfolded"), the problem's key (the frames' names: the Wuber file
 -- and line that made them, e.g. "Earnings.lua:883(Tokens.lua) hours.1 clipped"), and its detail.

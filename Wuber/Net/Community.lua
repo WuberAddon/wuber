@@ -45,7 +45,7 @@ local CX = {
 	START = 15,     -- after login (WuberNet joins first, so it keeps its number)
 	ADD_GAP = 20,   -- AddClubStreamChatChannel at most this often, 3 times a session
 	TARGET = "\1community", -- the queue's target for a community copy
-	-- (SPEC5 community, review #7: Forever's community streams take addon messages and deliver
+	-- (Forever's community streams take addon messages and deliver
 	-- none, and the stream's channel costs one of the game's 10 chat channels: no channel is
 	-- added and nothing is sent there. The community's online members are whisper seeds
 	-- instead, W.CommunitySeeds.)
@@ -269,7 +269,7 @@ end
 -- A pending invitation to the Wuber community from the founder's team (or from anyone when
 -- the game doesn't say who): clubId, inviter name; nil when none or already a member.
 function W.CommunityInvite()
-	-- (SPEC5 founder, review #1: the founders' names mean them only on their own ruleset)
+	-- (the founders' names mean them only on their own ruleset)
 	if not W.OnFounderRuleset() then return nil end
 	if not W.CommunityAvailable() or findClub() then return nil end
 	local okc, list = CX.call("GetInvitationsForSelf")
