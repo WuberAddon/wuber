@@ -591,6 +591,16 @@ function UI.LayoutSettings()
 		st.winFoot.baseH = fy + 60
 	end
 
+	-- (#295) a Driving page is as tall as its lowest card really stands: a note that wraps at a big Wuber size makes a card taller
+	-- than the y its builder counted, and the page under it (Advanced Driving's first heading) lay 3 px inside it
+	for _, pg in ipairs({ st.drive, st.driveAdv }) do
+		local need = 0
+		for _, g in ipairs(st.groups or {}) do
+			if g.topY and g:GetParent() == pg then need = math.max(need, g.topY + (N(g:GetHeight()) or 0)) end
+		end
+		if need + 6 > (N(pg.baseH) or 0) then pg.baseH = need + 6 end
+	end
+
 	local top = 0
 	st.frameTop = {}
 	for _, fr in ipairs(st.chain or {}) do
