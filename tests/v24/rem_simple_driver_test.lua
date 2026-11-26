@@ -171,20 +171,20 @@ test("v24 simple driver: 5 Your business lists Earnings, Blocked only with someo
 			end
 		end
 	end
-	eq(shown(), "earnings", "Simple, alone, nobody blocked: Earnings only")
+	eq(shown(), "advert earnings", "Simple, alone, nobody blocked: My advert line and Earnings")
 	noGaps("Simple")
 	eq(count(a, "Messages"), 0, "Simple: no Messages word")
 	eq(count(a, "Customers"), 0, "Simple: no Customers word")
 	-- someone blocked: Blocked joins
 	DR.Blacklist(DAN, "owes gold")
 	again(w, W)
-	eq(shown(), "blocked earnings", "Simple, one player blocked: Blocked and Earnings")
+	eq(shown(), "advert blocked earnings", "Simple, one player blocked: My advert line, Blocked and Earnings")
 	noGaps("Simple blocked")
 	-- in a crew: Crew joins
 	local crewCount = D.CrewCount
 	D.CrewCount = function() return 2 end
 	again(w, W)
-	eq(shown(), "crew blocked earnings", "Simple, in a crew: Crew, Blocked, Earnings")
+	eq(shown(), "crew advert blocked earnings", "Simple, in a crew: Crew, My advert line, Blocked, Earnings")
 	noGaps("Simple crew")
 	-- Advanced: all five
 	switch(w, a, true)
@@ -192,7 +192,7 @@ test("v24 simple driver: 5 Your business lists Earnings, Blocked only with someo
 	noGaps("Advanced")
 	D.CrewCount = crewCount
 	switch(w, a, false)
-	eq(shown(), "blocked earnings", "Simple again: the crew is gone, Blocked stays")
+	eq(shown(), "advert blocked earnings", "Simple again: the crew is gone, Blocked stays")
 	T.clean(w)
 end)
 

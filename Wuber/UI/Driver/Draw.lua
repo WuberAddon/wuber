@@ -846,11 +846,13 @@ local function drawBusiness(v, y)
 	local showMessages = isAdv and not helper
 	local showBlocked = not helper and (isAdv or n > 0)
 	local showCustomers = isAdv
-	local key = (showCrew and "1" or "0") .. (showMessages and "1" or "0") .. (showBlocked and "1" or "0") .. (showCustomers and "1" or "0")
+	local showAdvert = not isAdv and not helper -- (playtest) Simple: one "My advert line" row instead of Messages
+	local key = (showCrew and "1" or "0") .. (showMessages and "1" or "0") .. (showBlocked and "1" or "0") .. (showCustomers and "1" or "0") .. (showAdvert and "1" or "0")
 	if v.linksFor ~= key then
 		v.linksFor = key
 		links.crew:SetShown(showCrew)
 		links.messages:SetShown(showMessages)
+		links.advert:SetShown(showAdvert)
 		links.blocked:SetShown(showBlocked)
 		links.earnings:SetShown(true)
 		links.customers:SetShown(showCustomers)

@@ -495,7 +495,7 @@ local function buildMiddle(v)
 	v.empty = CreateFrame("Frame", nil, c)
 	v.empty:SetSize(SLOT_W, 64)
 	v.empty.bg = T.Rounded(v.empty, "card", 14, "BACKGROUND", 0)
-	v.empty.pulse = A.Pulse(v.empty, { size = 44, colour = "accent", alpha = 0.5, period = 2.2, rings = 2, start = false })
+	v.empty.pulse = A.Pulse(v.empty, { size = 44, colour = "accent", alpha = 0.35, period = 3, rings = 1, start = false }) -- (playtest) one soft ring every 3 s
 	v.empty.pulse.frame:ClearAllPoints()
 	v.empty.pulse.frame:SetPoint("CENTER", v.empty, "LEFT", 32, 0)
 	v.empty.ring = T.Icon(v.empty, "ring", 26, "accent", "ARTWORK")
@@ -566,6 +566,8 @@ end
 local LINKS = {
 	{ "crew", "Crew", "Who summons and clicks with you. Add friends or your own other characters.", "summon" },
 	{ "messages", "Messages", "What Wuber whispers to riders (greeting, price, thanks...). Change any of them.", "chat" },
+	-- (playtest) Simple mode: ONE row for the advert line (the rest of Messages stays Advanced); it opens Messages on the advert
+	{ "advert", "My advert line", "The public line the Advertise button posts. Change its words here.", "chat" },
 	{ "blocked", "Blocked", "Players you won't serve, and why. Unblock anyone here.", "lock" },
 	{ "earnings", "Earnings", "Rides, gold and which hours of the day pay best.", "coin" },
 	-- round 9 (Y3): everyone who rode with you, your notes and gifts (UI.Driver.Customers)
@@ -586,7 +588,9 @@ local function buildBusiness(v)
 	v.links = {}
 	for i, l in ipairs(LINKS) do
 		local b = g:Row({ title = l[2], icon = l[4], right = "chevron", tip = { body = l[3] },
-			onClick = function(row) D.ShowScreen(row.what) end })
+			onClick = function(row)
+				if row.what == "advert" then D.ShowScreen("messages", "advert") else D.ShowScreen(row.what) end
+			end })
 		b.what = l[1]
 		b.label = b.title
 		b.badge = T.Text(b.lead, "caption", "ink", "CENTER", "bold")
