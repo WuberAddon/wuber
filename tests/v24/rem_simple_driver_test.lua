@@ -212,7 +212,7 @@ end)
 -- Rider rows and their menu
 ---------------------------------------------------------------------------
 
-test("v24 simple driver: 6 the row chips '3rd ride with you' and 'Invite to Wuber' are not drawn in Simple", function()
+test("v24 simple driver: 6 the row chips '2 rides with you' and 'Invite to Wuber' are not drawn in Simple", function()
 	local dan = rider(DAN)
 	local w, a, W = console({ queue = { dan } })
 	local D = W.Driver
@@ -228,7 +228,7 @@ test("v24 simple driver: 6 the row chips '3rd ride with you' and 'Invite to Wube
 	again(w, W)
 	r = rowOf(D, dan)
 	ok(vis(r.again), "Advanced: the 'ride with you' chip shows")
-	ok(count(a, "3rd ride with you") > 0, "Advanced: '3rd ride with you' is on the page")
+	ok(count(a, "2 rides with you") > 0, "Advanced: a lead reads '2 rides with you' (the rides so far) on the page")
 	ok(r.getapp and vis(r.getapp), "Advanced: the Invite to Wuber chip shows")
 	switch(w, a, false)
 	r = rowOf(D, dan)
