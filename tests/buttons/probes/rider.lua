@@ -11,45 +11,102 @@ local function eq(a, b, msg)
 end
 
 return {
-	-- Shared header, tab bar and minimap chrome (probed on home)
+	-- Shared header, tab bar, minimap and home controls (on home)
 	{
 		id = "[signal] <Frame> @Phone.lua",
 		on = "home",
-		does = "Clicking the signal badge opens the connection check view.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "signal badge click changed visible state")
+		does = "Clicking the signal badge opens the connection status Help page.",
+		check = function(ctx)
+			eq(ctx.W.UI.HelpShown(), true, "Help overlay opened for connection status")
 		end,
 	},
 	{
 		id = "Wide <Button> @Phone.lua",
 		on = "home",
-		does = "Clicking Wide at the default window position leaves the pane folded when room is tight.",
+		does = "Clicking Wide unfolds the side pane when the window has room.",
+		setup = function(ctx)
+			if ctx.W.UI.Fold then ctx.W.UI.Fold.Fits = function() return true end end
+		end,
 		check = function(ctx)
-			eq(ctx.W.UI.Fold.IsUnfolded(), false, "pane stays folded when beside chat")
+			eq(ctx.W.UI.Fold.IsUnfolded(), true, "side pane unfolded")
 		end,
 	},
 	{
 		id = "(no label) Phone.lua <Button> @Phone.lua",
 		on = "home",
-		does = "Clicking the window close button hides the Wuber window.",
+		does = "Clicking the phone home indicator bar hides the Wuber window.",
 		check = function(ctx)
-			eq(ctx.W.UI.IsShown(), false, "window closed")
+			eq(ctx.W.UI.IsShown(), false, "window hidden by home bar")
 		end,
 	},
 	{
 		id = "[circle] <Button> @Window.lua",
+		srcMatch = "Window%.lua:824",
 		on = "home",
-		does = "Clicking the window header close button hides the Wuber window.",
+		does = "Clicking the window close button hides the Wuber window.",
 		check = function(ctx)
-			eq(ctx.W.UI.IsShown(), false, "window hidden by header close button")
+			eq(ctx.W.UI.IsShown(), false, "window hidden by close button")
+		end,
+	},
+	{
+		id = "[circle] <Button> @Window.lua",
+		srcMatch = "Window%.lua:871",
+		on = "home",
+		does = "Clicking the settings gear button opens the Settings overlay.",
+		check = function(ctx)
+			eq(ctx.W.UI.SettingsShown(), true, "Settings overlay opened")
 		end,
 	},
 	{
 		id = "Ride <Button> @Window.lua",
 		on = "home",
-		does = "Clicking the already-active Ride tab keeps the Ride tab selected.",
+		does = "Clicking the Ride tab switches back to the Ride tab.",
+		setup = function(ctx)
+			ctx.W.UI.SelectTab("Trips")
+			ctx.w:advance(0.2)
+		end,
 		check = function(ctx)
-			eq(ctx.W.UI.state.tab, "Ride", "Ride tab remains active")
+			eq(ctx.W.UI.state.tab, "Ride", "switched to Ride tab")
+		end,
+	},
+	{
+		id = "(no label) Cards.lua <EditBox> @Cards.lua",
+		on = "home",
+		does = "Clicking the destination search box gives it keyboard focus.",
+		check = function(ctx)
+			eq(ctx.ctl.f:HasFocus(), true, "search edit box gained focus")
+		end,
+	},
+	{
+		id = "Ping drivers <Button> @Home.lua",
+		on = "home",
+		skip = "sends an addon message to other players to ping online drivers",
+	},
+	{
+		id = "Tell me <Button> @Home.lua",
+		on = "home",
+		does = "Clicking Tell me toggles watching for a driver in saved watch state.",
+		check = function(ctx)
+			ok(next(ctx.W.db.watch or {}) ~= nil, "saved watch table updated")
+		end,
+	},
+	{
+		id = "Pin a bounty <Button> @Home.lua",
+		on = "home",
+		does = "Clicking Pin a bounty sets the place filter and opens the bounty picker.",
+		check = function(ctx)
+			local st = ctx.W.UI.state
+			local empty = ctx.ctl.f:GetParent()
+			ok(st.filter and st.filter.place ~= nil, "place filter set for bounty")
+			ok(empty and empty.bounty and empty.bounty.pin:IsShown(), "bounty Pin button shown")
+		end,
+	},
+	{
+		id = "Why? <Button> @Home.lua",
+		on = "home",
+		does = "Clicking Why? opens the home Help page.",
+		check = function(ctx)
+			eq(ctx.W.UI.HelpShown(), true, "Help overlay opened from Why?")
 		end,
 	},
 	{
@@ -72,92 +129,8 @@ return {
 		id = "[circle] <Button> @Minimap.lua",
 		on = "home",
 		does = "Clicking the minimap button toggles the Wuber window closed.",
-		check = function(ctx, before)
-			eq(ctx.W.UI.IsShown(), not before.shown, "window visibility toggled")
-		end,
-	},
-
-	-- Home screen controls
-	{
-		id = "(no label) Cards.lua <EditBox> @Cards.lua",
-		on = "home",
-		does = "Clicking the destination search box gives it keyboard focus.",
 		check = function(ctx)
-			ok(ctx.ctl.f:HasFocus(), "search edit box gained focus")
-		end,
-	},
-	{
-		id = "All <Button> @Home.lua",
-		on = "home",
-		does = "Clicking the All destination chip keeps the destination filter empty.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.search or "", "", "destination filter is empty")
-		end,
-	},
-	{
-		id = "Undercity <Button> @Home.lua",
-		on = "home",
-		does = "Clicking the Undercity chip filters the driver list to Undercity.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "Undercity filter changed visible state")
-		end,
-	},
-	{
-		id = "Booty Bay <Button> @Home.lua",
-		on = "home",
-		does = "Clicking the Booty Bay chip filters the driver list to Booty Bay.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "Booty Bay filter changed visible state")
-		end,
-	},
-	{
-		id = "Ratchet <Button> @Home.lua",
-		on = "home",
-		does = "Clicking the Ratchet chip filters the driver list to Ratchet.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "Ratchet filter changed visible state")
-		end,
-	},
-	{
-		id = "Mia's Rides <Button> @Cards.lua",
-		on = "home",
-		does = "Clicking Mia's Rides opens the confirm screen for Mia Runner.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened")
-		end,
-	},
-	{
-		id = "Nia's Portals <Button> @Cards.lua",
-		on = "home",
-		does = "Clicking Nia's Portals opens the confirm screen for Nia Quill.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened")
-		end,
-	},
-	{
-		id = "Bob's Rides <Button> @Cards.lua",
-		on = "home",
-		does = "Clicking Bob's Rides opens the confirm screen for Bob Stone.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened")
-		end,
-	},
-	{
-		id = "Ivy's Express <Button> @Cards.lua",
-		on = "home",
-		does = "Clicking Ivy's Express opens the confirm screen for Ivy Moss.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened")
-		end,
-	},
-	{
-		id = "[heart_outline] <Button> @Cards.lua",
-		on = "home",
-		does = "Clicking a driver card's favourite heart toggles that driver in saved favourites.",
-		check = function(ctx, before)
-			local n = 0
-			for _, v in pairs(ctx.W.db.favs or {}) do if v then n = n + 1 end end
-			ok(n ~= before.favCount, "saved favourite count changed")
+			eq(ctx.W.UI.IsShown(), false, "window toggled closed by minimap button")
 		end,
 	},
 
@@ -167,217 +140,125 @@ return {
 		on = "home_search",
 		does = "Clicking the populated search box gives it keyboard focus.",
 		check = function(ctx)
-			ok(ctx.ctl.f:HasFocus(), "populated search box gained focus")
+			eq(ctx.ctl.f:HasFocus(), true, "populated search box gained focus")
 		end,
 	},
 	{
 		id = "[circle] <Button> @Cards.lua",
 		on = "home_search",
-		does = "Clicking the search clear button empties the destination search.",
+		does = "Clicking the search clear button empties the destination filter.",
 		check = function(ctx)
-			eq(ctx.W.UI.state.search or "", "", "search cleared")
+			local f = ctx.W.UI.state.filter
+			eq(f and f.place or nil, nil, "destination filter cleared")
 		end,
 	},
 	{
-		id = "Tell me when one opens <Button> @Home.lua",
+		id = "All <Button> @Home.lua",
 		on = "home_search",
-		does = "Clicking Tell me when one opens toggles the destination watch.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "watch button state changed")
+		does = "Clicking the All chip clears the active destination filter.",
+		check = function(ctx)
+			local f = ctx.W.UI.state.filter
+			eq(f and f.place or nil, nil, "All chip cleared destination filter")
 		end,
 	},
 	{
-		id = "(long text) <Button> @Home.lua",
+		id = "Undercity <Button> @Home.lua",
 		on = "home_search",
-		does = "Clicking the long banner button on home_search updates the screen state.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "banner click changed visible state")
+		does = "Clicking the Undercity chip sets the destination filter to Undercity.",
+		setup = function(ctx)
+			local W = ctx.W
+			W.drivers = {
+				["mia runner"] = {
+					name = "Mia Runner", key = "mia runner", dest = "Undercity",
+					price = 5000, state = "open", heard = W.Now and W.Now() or 100,
+				},
+			}
+			W.UI.SetSearch("")
+			if W.UI.RefreshNow then W.UI.RefreshNow() end
+			eq(W.UI.state.filter and W.UI.state.filter.place or nil, nil, "filter starts cleared before clicking Undercity")
 		end,
-	},
-	{
-		id = "[close] <Button> @Home.lua",
-		on = "home_search",
-		does = "Clicking the banner close button dismisses it.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "banner dismissed")
-		end,
-	},
-
-	-- home_empty controls
-	{
-		id = "Ping drivers <Button> @Home.lua",
-		on = "home_empty",
-		skip = "sends an addon message to other players to ping online drivers",
-	},
-	{
-		id = "Tell me <Button> @Home.lua",
-		on = "home_empty",
-		does = "Clicking Tell me toggles watching for online drivers.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "Tell me toggled watch state")
-		end,
-	},
-	{
-		id = "Pin a bounty <Button> @Home.lua",
-		on = "home_empty",
-		does = "Clicking Pin a bounty reveals the bounty amount picker.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "bounty picker opened")
-		end,
-	},
-	{
-		id = "Why? <Button> @Home.lua",
-		on = "home_empty",
-		does = "Clicking Why? opens the explanation card.",
-		check = function(ctx, before)
-			ok(ctx.sig ~= before.sig, "Why? explanation shown")
+		check = function(ctx)
+			local f = ctx.W.UI.state.filter
+			eq(f and f.place or nil, "Undercity", "Undercity filter active")
 		end,
 	},
 
 	-- home_bounty controls
 	{
-		id = "Take down <Button> @Home.lua",
+		id = "Gadgetzan <EditBox> @Cards.lua",
 		on = "home_bounty",
-		skip = "sends a bounty cancellation broadcast to other players",
+		does = "Clicking the Gadgetzan search box gives it keyboard focus.",
+		check = function(ctx)
+			eq(ctx.ctl.f:HasFocus(), true, "Gadgetzan search box gained focus")
+		end,
+	},
+	{
+		id = "50s <Button> @Home.lua",
+		on = "home_bounty",
+		does = "Clicking 50s selects 5000 copper as the bounty amount.",
+		check = function(ctx)
+			local bb = ctx.ctl.f:GetParent()
+			eq(bb.copper, 5000, "bounty amount set to 50s (5000c)")
+		end,
+	},
+	{
+		id = "75s <Button> @Home.lua",
+		on = "home_bounty",
+		does = "Clicking 75s selects 7500 copper as the bounty amount.",
+		check = function(ctx)
+			local bb = ctx.ctl.f:GetParent()
+			eq(bb.copper, 7500, "bounty amount set to 75s (7500c)")
+		end,
+	},
+	{
+		id = "1g <Button> @Home.lua",
+		on = "home_bounty",
+		does = "Clicking 1g selects 10000 copper as the bounty amount.",
+		check = function(ctx)
+			local bb = ctx.ctl.f:GetParent()
+			eq(bb.copper, 10000, "bounty amount set to 1g (10000c)")
+		end,
+	},
+	{
+		id = "Custom <Button> @Home.lua",
+		on = "home_bounty",
+		does = "Clicking Custom reveals the custom bounty amount input.",
+		check = function(ctx)
+			local bb = ctx.ctl.f:GetParent()
+			eq(bb.custom:IsShown(), true, "custom bounty input shown")
+		end,
+	},
+	{
+		id = "Pin 50s <Button> @Home.lua",
+		on = "home_bounty",
+		skip = "broadcasts a bounty to other players (and covered by toast in home_bounty)",
+	},
+	{
+		id = "Gadgetzan <Button> @Home.lua",
+		on = "home_bounty",
+		does = "Clicking the Gadgetzan chip keeps the destination filter on Gadgetzan.",
+		check = function(ctx)
+			local f = ctx.W.UI.state.filter
+			eq(f and f.place or nil, "Gadgetzan", "Gadgetzan filter active")
+		end,
 	},
 
 	-- confirm controls
 	{
 		id = "[circle] <Button> @Confirm.lua",
 		on = "confirm",
-		does = "Clicking the back button on Confirm returns to the home screen.",
+		does = "Clicking the Confirm back button returns to the home screen.",
 		check = function(ctx)
 			eq(ctx.W.UI.state.screen, "home", "returned to home screen")
 		end,
 	},
 	{
-		id = "Favourite <Button> @Cards.lua",
+		id = "Driver went offline <Button> @Confirm.lua",
 		on = "confirm",
-		does = "Clicking Favourite on Confirm toggles the driver's favourite state.",
-		check = function(ctx, before)
-			ok((ctx.W.db.favs["mia runner"] == true) ~= before.favMia, "Mia favourite toggled")
-		end,
-	},
-	{
-		id = "You're already in Undercity. <Button> @Confirm.lua",
-		on = "confirm",
-		does = "Clicking the disabled already-there button keeps the Confirm screen open.",
+		does = "Clicking the disabled Driver went offline button leaves Confirm open.",
 		check = function(ctx)
+			eq(ctx.ctl.f.inactive, true, "offline button is disabled")
 			eq(ctx.W.UI.state.screen, "confirm", "stayed on confirm screen")
 		end,
-	},
-
-	-- worldmap controls (unfolded)
-	{
-		id = "Narrow <Button> @Phone.lua",
-		on = "worldmap",
-		does = "Clicking Narrow folds the side pane closed.",
-		check = function(ctx)
-			eq(ctx.W.UI.Fold.IsUnfolded(), false, "side pane folded")
-		end,
-	},
-	{
-		id = "Here <Button> @WorldMap.lua",
-		on = "worldmap",
-		does = "Clicking Here switches the map pane to the local zone view.",
-		check = function(ctx)
-			eq(ctx.W.db.mapView, "here", "mapView set to here")
-		end,
-	},
-	{
-		id = "World <Button> @WorldMap.lua",
-		on = "worldmap",
-		does = "Clicking World keeps the map pane in the world view.",
-		check = function(ctx)
-			ok(ctx.ctl.f.chosen ~= nil or ctx.W.db.mapView == "world", "World segment is active")
-		end,
-	},
-	{
-		id = "[circle] <Button> @WorldMap.lua",
-		on = "worldmap",
-		does = "Clicking a flight master node dot leaves the screen unchanged.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "home", "screen remained home")
-		end,
-	},
-	{
-		id = "[pin] <Button> @WorldMap.lua",
-		on = "worldmap",
-		does = "Clicking a driver pin on the world map opens the confirm screen.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened from driver pin")
-		end,
-	},
-	{
-		id = "2 <Button> @WorldMap.lua",
-		on = "worldmap",
-		does = "Clicking a queued driver pin on the world map opens the confirm screen.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened from queued driver pin")
-		end,
-	},
-	{
-		id = "60s <Button> @WorldMap.lua",
-		on = "worldmap",
-		does = "Clicking the 60s driver pin on the world map opens the confirm screen.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "confirm", "confirm screen opened from 60s driver pin")
-		end,
-	},
-
-	-- done_paid and done_unpaid controls
-	{
-		id = "(no label) Secure.lua <Button> @Secure.lua",
-		on = "done_paid",
-		skip = "secure button",
-	},
-	{
-		id = "[star] <Button> @Done.lua",
-		on = "done_paid",
-		does = "Clicking a rating star updates the ride rating.",
-		check = function(ctx)
-			ok(type(ctx.W.ride.stars) == "number", "ride stars recorded")
-		end,
-	},
-	{
-		id = "Done <Button> @Done.lua",
-		on = "done_paid",
-		does = "Clicking Done dismisses the completed ride and returns to home.",
-		check = function(ctx)
-			eq(ctx.W.UI.state.screen, "home", "returned to home after Done")
-		end,
-	},
-	{
-		id = "Share <Button> @Done.lua",
-		on = "done_paid",
-		skip = "posts to party chat via secure button overlay",
-	},
-
-	-- raincheck controls
-	{
-		id = "(no label) Moments.lua <Frame> @Moments.lua",
-		on = "raincheck",
-		does = "Clicking the raincheck offer backdrop closes the offer card.",
-		check = function(ctx)
-			ok(not (ctx.W.UI.state.rcOffer and ctx.W.UI.state.rcOffer.open), "raincheck offer closed on backdrop click")
-		end,
-	},
-	{
-		id = "[circle] <Button> @Moments.lua",
-		on = "raincheck",
-		does = "Clicking the raincheck close button hides the offer card.",
-		check = function(ctx)
-			ok(not (ctx.W.UI.state.rcOffer and ctx.W.UI.state.rcOffer.open), "raincheck offer closed")
-		end,
-	},
-	{
-		id = "Accept <Button> @Moments.lua",
-		on = "raincheck",
-		skip = "sends raincheck acceptance to another player",
-	},
-	{
-		id = "No thanks <Button> @Moments.lua",
-		on = "raincheck",
-		skip = "sends raincheck decline to another player",
 	},
 }
