@@ -37,3 +37,56 @@ test("playtest F1: the docked big card follows the window within one frame while
 	top:GetScript("OnDragStop")(top)
 	T.clean(w)
 end)
+
+-- guard: in combat the secure card is never moved or re-anchored by a drag (the ticker stays the fallback)
+test("playtest F1: in combat the card is not moved or re-anchored while the window is dragged", function()
+	local w = T.newWorld()
+	local d = T.driver(w, T.ANITA, { spot = "Orgrimmar" })
+	T.settle(w)
+	local W = d.W
+	W.Char().wizard = true
+	W.UI.Toggle(true) w:advance(2) W.UI.SelectTab("Drive") w:advance(2)
+	local b = d.env.WuberDriveButton
+	T.ok(W.Drive.Button.Docked() and b:IsShown(), "control: docked")
+	local l0, b0 = b:GetLeft(), b:GetBottom()
+	w:enterCombat(d) w:advance(0.5)
+	local top = W.UI.state.top
+	top:GetScript("OnDragStart")(top)
+	local win = d.env.WuberFrame
+	local p, rel, rp, x, y = win:GetPoint(1)
+	win:ClearAllPoints()
+	win:SetPoint(p, rel, rp, x + 120, y - 80)
+	top:GetScript("OnDragStop")(top)
+	T.ok(b:GetLeft() == l0 and b:GetBottom() == b0, "the card stayed where it was in combat")
+	local bp = b:GetPoint(1)
+	local _, brel = b:GetPoint(1)
+	T.ok(brel == d.env.UIParent, "still anchored to the screen, not to the window's slot")
+	w:leaveCombat(d) w:advance(1)
+	local slot = W.Driver.Slot()
+	T.ok(math.abs(slot:GetLeft() * slot:GetEffectiveScale() - b:GetLeft() * b:GetEffectiveScale()) < 1, "after the fight the ticker puts the card back on its slot")
+	T.clean(w)
+end)
+
+-- guard: the card was already topmost; this keeps it so during the drag and after the drop
+test("playtest F1: the card stays the topmost frame at its centre while following and after the drop", function()
+	local w = T.newWorld()
+	local d = T.driver(w, T.ANITA, { spot = "Orgrimmar" })
+	T.settle(w)
+	local W = d.W
+	W.Char().wizard = true
+	W.UI.Toggle(true) w:advance(2) W.UI.SelectTab("Drive") w:advance(2)
+	local b = d.env.WuberDriveButton
+	local topmost = dofile(T.H.root .. "/tests/lib/topmost.lua")
+	local top = W.UI.state.top
+	top:GetScript("OnDragStart")(top)
+	local win = d.env.WuberFrame
+	local p, rel, rp, x, y = win:GetPoint(1)
+	win:ClearAllPoints()
+	win:SetPoint(p, rel, rp, x + 60, y - 40)
+	topmost.assertTopmost(T.H, d, b, "the card while the window is dragged", { mouseOnly = true })
+	top:GetScript("OnDragStop")(top)
+	w:advance(1)
+	topmost.assertTopmost(T.H, d, b, "the card after the drop", { mouseOnly = true })
+	T.ok(W.Drive.Button.Docked(), "still docked after the drop")
+	T.clean(w)
+end)

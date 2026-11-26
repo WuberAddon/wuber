@@ -918,10 +918,12 @@ local function buildWindow()
 		ui.moving = true
 		hideOverlays()
 		win:StartMoving()
+		W.Fire("WINDOW_DRAG", true)
 	end)
 	safeScript(top, "OnDragStop", function()
 		win:StopMovingOrSizing()
 		ui.moving = false
+		W.Fire("WINDOW_DRAG", false)
 		savePosition()
 		-- (AUD-186) a place the player chose may now be clear of the chat: the fold answers it at once
 		if UI.Fold then W.Safe("fold", UI.Fold.Apply) end
@@ -972,6 +974,7 @@ local function buildWindow()
 		if ui.moving then
 			win:StopMovingOrSizing()
 			ui.moving = false
+			W.Fire("WINDOW_DRAG", false)
 		end
 		if UI.Fold then W.Safe("fold", UI.Fold.Apply, true) end
 		if UI.RefreshMinimap then UI.RefreshMinimap() end -- (HUNT-46) the summon pulse comes back

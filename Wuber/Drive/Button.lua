@@ -193,6 +193,9 @@ local function wanted()
 end
 
 local function placeDocked(b, slot)
+	-- (issue 11) while the window is dragged out of combat the card is anchored to its slot, so it moves with
+	-- the window every frame; nothing here moves it until the drag ends
+	if state.following then return true end
 	local l, bt = N(slot:GetLeft()), N(slot:GetBottom())
 	local w, h = N(slot:GetWidth()), N(slot:GetHeight())
 	local se = N(slot:GetEffectiveScale())
@@ -607,6 +610,31 @@ function B.Place()
 	end
 	if B.onPlace then pcall(B.onPlace, state.dockedNow) end
 end
+
+-- (issue 11) the window is being dragged (on = true) or was let go. Out of combat the docked card is
+-- anchored to its slot for the drag, so it follows every frame; in combat nothing is moved or anchored (the
+-- 0.25 s ticker stays the fallback and re-places it once the fight is over).
+local function windowDrag(on)
+	local b = DR.button
+	if on then
+		if not b or W.InCombat() or not state.dockedNow or not state.docked then return end
+		local slot = state.docked
+		if not (slot.IsVisible and slot:IsVisible()) then return end
+		b:ClearAllPoints()
+		b:SetPoint("BOTTOMLEFT", slot, "BOTTOMLEFT", 0, 0)
+		state.following = true
+		return
+	end
+	if not state.following then return end
+	state.following = false
+	state.sig = nil
+	if W.InCombat() then
+		W.AfterCombat(function() B.Place() end)
+	else
+		B.Place()
+	end
+end
+W.Listen("WINDOW_DRAG", windowDrag)
 
 -- C's console hands the slot while it shows (nil otherwise). Out of combat only: a fight
 -- freezes the button where it is until it is over.
