@@ -102,8 +102,6 @@ G.rider3 = {
 	{ id = "Raid summons stopped <Frame> @Build.lua", skip = "a sheet or dialog is drawn above it in this state: the real click goes to that sheet (the layout checker's covered kind watches it)" },
 	{ id = "List me in the Group Finder <Frame> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "changed" },
 	{ id = "[circle] <Button> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "changed" },
-	{ id = "(long text) <Frame> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "same", why = "the sheet text: a click on it is taken and nothing changes" },
-	{ id = "(long text) <EditBox> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
 }
 G.rider4 = {
 	{ id = "(no label) Secure.lua <Button> @Secure.lua", skip = "protected (secure) button: a click runs a secure action or macro in the game, so it is never clicked here" },

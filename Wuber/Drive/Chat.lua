@@ -338,7 +338,7 @@ function DR.TemplateSpam(text)
 	text = str(text)
 	if not text then return nil end
 	local words = text:gsub("{%a+}", " ")
-	local why = W.SentenceSpam and W.SentenceSpam(words) -- (no "letters" rule; a place nickname like Org passes)
+	local why = W.SentenceSpam and W.SentenceSpam(words, true) -- (no "letters" rule; a place nickname like Org passes)
 	if why == "letters" then why = nil end
 	return why
 end

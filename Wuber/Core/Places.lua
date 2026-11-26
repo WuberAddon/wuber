@@ -325,10 +325,15 @@ end
 
 -- The word lists live in Core/Words.lua (W.Words.BLOCKED = W.SPAM_WORDS, ANYWHERE, ALLOWED_PLACES): edit them
 -- there. They are read on every check.
-local function spamSet()
+local function spamSet(own)
 	local set = {}
 	for _, w in ipairs(W.Words.BLOCKED) do
 		if type(w) == "string" and w ~= "" then set[w:lower()] = true end
+	end
+	if own and type(W.Words.ALLOWED_OWN) == "table" then
+		for _, w in ipairs(W.Words.ALLOWED_OWN) do
+			if type(w) == "string" then set[w:lower()] = nil end
+		end
 	end
 	return set
 end
@@ -342,7 +347,7 @@ end
 -- Why a service name is refused ("word", "digits", "letters", "link"), or nil if it is fine.
 -- Whole words only, so "Orgrimmar Express", "Goldshire Cabs" and "Wuber Network" pass;
 -- "g o l d" and "go ld" are caught by joining the short pieces.
-local function spamReason(text, sentence)
+local function spamReason(text, sentence, own)
 	-- Core/Words.lua not loaded (a /reload after an update that added it): refuse, never a weaker check or an error
 	local WD = W.Words
 	if type(WD) ~= "table" or type(WD.BLOCKED) ~= "table" or type(WD.ANYWHERE) ~= "table" or type(WD.ALLOWED_PLACES) ~= "table" then return "word" end
@@ -363,7 +368,7 @@ local function spamReason(text, sentence)
 	end
 	low = low:gsub("[^%w '%-]", " ")
 	if low:find("%d%d%d%d") then return "digits" end
-	local set = spamSet()
+	local set = spamSet(own)
 	local singles, run, runCount = 0, "", 0
 	local function endRun()
 		if runCount >= 2 then
@@ -399,8 +404,9 @@ function W.SpamReason(text)
 	return spamReason(text, false)
 end
 
-function W.SentenceSpam(text)
-	local why = spamReason(text, true)
+-- own = true: the driver's OWN advert line or message (W.Words.ALLOWED_OWN words, "WTS", pass there).
+function W.SentenceSpam(text, own)
+	local why = spamReason(text, true, own == true)
 	if why == "letters" then return nil end
 	return why
 end
