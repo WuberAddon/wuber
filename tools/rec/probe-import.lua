@@ -11,10 +11,14 @@
 --             with a string are in fileIdStrings)
 --   fileIdsAre  "number" | "string" | "mixed"   (what GetTexture answers for an addon's own file)
 --   atlases   [name] = { file, fileID, width, height, l, r, t, b } or { none = true }
+--   labels    { hash, scales, caps, rows } Wuber's own strings in their boxes: per scale GetStringWidth, GetUnboundedStringWidth, IsTruncated, GetNumLines
+--             (tests/lib/probe_learn.lua; L.cutFn replays "was it cut" for the strings the probe measured)
 --   widths    [lower-case font file name][size] = { adv = { [byte] = advance }, strings = { [text] = width }, imm, settled, lineH }
 --   hit       [scenario id] = { [cell number] = winner role }, hitMixed (cells with more than one winner), hitCoverage
 --   keys      the keysAuto answers, keysGuided = the rows of the typed test
 --   secrets   secretAccessors = { "<accessor>" = { frames that gave a secret } }, secretApi = { api name = true when secret }
+--   unfinished  (job 2907) the probes the run started (run.started) but never finished: { name, why, at }; printed by the command line
+--   fingerprint the build|interface|locale|UI scale the run was made on; hitRules = scenario id -> evidence-ledger rule id
 --   blocked   the ADDON_ACTION_BLOCKED / FORBIDDEN rows (event, addon, function, combat)
 -- Job 2894: --blocked-out <file> also turns the passive blocked log (run.blocked of WuberProbe, the Lab's L13.blocked list) and the Lab's
 --   L13.calls notes into the guard's evidence file (default tests/fixtures/probe/measured-blocked.lua): one row per
@@ -34,6 +38,25 @@ local function isNum(v) return type(v) == "number" end
 
 -- a stored marker is a value that is not data: "<nil>" etc.
 local function plainv(v) if v == NIL then return nil end return v end
+
+-- Job 2907 (write-ahead markers): the probes the run STARTED (run.started[name], written before the probe) that never finished
+-- (ran[name].done is written after it). Returns a list of { name, why, at }: why = "never finished" (the game hung, crashed or reloaded in the
+-- middle; run.at is the last checkpoint), "error", "aborted (combat)" or "skipped by the player" is NOT listed (a skip finishes the step).
+function PI.unfinished(run)
+	local out = {}
+	if type(run) ~= "table" or type(run.started) ~= "table" then return out end
+	local ran = type(run.ran) == "table" and run.ran or {}
+	for name in pairs(run.started) do
+		local row = type(ran[name]) == "table" and ran[name] or {}
+		if row.done ~= true then
+			local why = row.err and "error" or (row.aborted and ("aborted (" .. tostring(row.aborted) .. ")")) or "never finished"
+			local at = type(run.at) == "string" and run.at:match("^([^:]*):") == name and run.at or nil
+			out[#out + 1] = { name = name, why = why, at = at }
+		end
+	end
+	table.sort(out, function(a, b) return a.name < b.name end)
+	return out
+end
 
 function PI.convert(run, source)
 	if type(run) ~= "table" then return nil, "not a run" end
@@ -74,6 +97,17 @@ function PI.convert(run, source)
 			end
 		end
 	end
+	-- labels (job 2893): Wuber's real strings measured in their boxes at 2-3 scales (see tests/lib/probe_learn.lua "labels")
+	if type(p.labels) == "table" and type(p.labels.rows) == "table" then
+		local rows = {}
+		for _, r in ipairs(p.labels.rows) do
+			if type(r) == "table" and type(r.text) == "string" and type(r.font) == "string" and isNum(r.size) and isNum(r.box) then
+				rows[#rows + 1] = { text = r.text, font = baseName(r.font), size = r.size, box = r.box, maxLines = r.maxLines, wrap = r.wrap, raw = r.raw,
+					w = r.w, uw = r.uw, trunc = r.trunc, lines = r.lines }
+			end
+		end
+		fx.labels = { hash = p.labels.hash, scales = p.labels.scales, caps = p.labels.caps, rows = rows }
+	end
 	-- hit order: the winner of each cell (the one seen most)
 	local hit = p.hit
 	if type(hit) == "table" and type(hit.cells) == "table" then
@@ -92,6 +126,8 @@ function PI.convert(run, source)
 		table.sort(fx.hitMixed)
 		fx.hitCoverage = hit.coverage
 		fx.hitScenarios = hit.scenarios
+		fx.hitRules = {} -- scenario id -> the evidence-ledger rule id it measures (WuberProbe 1.1)
+		for id, sc in pairs(hit.scenarios or {}) do if type(sc) == "table" and type(sc.rule) == "string" then fx.hitRules[id] = sc.rule end end
 	end
 	-- keys
 	if type(p.keysAuto) == "table" then fx.keys = p.keysAuto end
@@ -111,6 +147,9 @@ function PI.convert(run, source)
 		for _, l in pairs(fx.secretAccessors) do table.sort(l) end
 		for name, r in pairs(sec.api or {}) do if type(r) == "table" and r.s then fx.secretApi[name] = true end end
 	end
+	local un = PI.unfinished(run)
+	if #un > 0 then fx.unfinished = un end
+	fx.fingerprint = run.fp
 	fx.blocked = run.blocked
 	fx.blockedN = run.blockedN
 	if type(p.taint) == "table" then fx.taint = p.taint end
@@ -283,6 +322,7 @@ local function main(argv, say)
 				local n = function(t) local c = 0 for _ in pairs(t or {}) do c = c + 1 end return c end
 				out(("  %s: %d file ids (%s), %d fonts, %d hit scenarios, %d blocked, %d facts%s"):format(it.name or "?", n(fx.fileIds), tostring(fx.fileIdsAre), n(fx.widths), n(fx.hit), fx.blockedN or 0, n(fx.facts),
 					it.refused and (" - REFUSED: " .. it.refused) or (it.path and (" - wrote " .. it.path) or "")))
+				for _, u in ipairs(fx.unfinished or {}) do out(("    probe %s: %s%s"):format(u.name, u.why, u.at and (" (last checkpoint " .. u.at .. ")") or "")) end
 				if it.refused then code = 1 end
 			end
 		end

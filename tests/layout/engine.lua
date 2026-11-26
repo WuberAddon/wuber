@@ -588,6 +588,7 @@ function E.check(c, opts)
 	for _, t in ipairs(shown) do
 		local fs = t.obj
 		local name = E.nameOf(fs)
+		if opts.collect then opts.collect(fs, t, name) end -- (job 2893) tools/rec/probe-labels.lua: every shown text with its box
 		-- cut short ("..."), or laid out before its font loaded
 		local okT, isT = pcall(fs.IsTruncated, fs)
 		local tr = H.truncation and H.truncation(fs)
