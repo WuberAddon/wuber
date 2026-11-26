@@ -77,6 +77,7 @@ do
 	allow("cut", "^tip_whole", '^"Aaaaaaaaaaaaaaa%-Bbbbbbbbbbbbbbbbbbb"', "the scene gives one rider a name too long for its place on purpose, to show the hover tip carrying the name whole")
 	allow("under", "^finding_grouped", "route", "Waiting for the driver: the route header sits at the radar's top left corner on purpose")
 	allow("under", "^confirm_dial_low", "destPin", "Confirm, the destination far to the top right of the map strip: the destination pin is part of the map the window's buttons lie on")
+	allow("under", "^raid", 'half under .-"%+%d+ more below"', "the raid page's scroll hint pill sits over the list's bottom edge on purpose (Raid.lua updateCue); the rows it covers are faded, the texts just past the view edge only touch it by a few pixels")
 	-- (worldmap_sea: tests/layout/allow.lua allows price tags beside pins, cut pin counts at the map edge and a tag over its
 	-- own pin. No allow here yet: in the fake game the row reports none of them, and an allow for the whole row would hide
 	-- real findings. Add one, scoped to its text, only when an in-game run reports it.)

@@ -336,7 +336,7 @@ screen({ id = "a_options_page", side = "rider", maxWait = 4,
 -- GL-04: the key binding "Open or close Wuber"
 ---------------------------------------------------------------------------
 
-screen({ id = "a_keybinding", side = "rider", maxWait = 4,
+screen({ id = "a_keybinding", side = "rider", maxWait = 6,
 	title = 'Key Bindings: "Open or close Wuber" is in the game\'s list and what its key runs opens and closes Wuber',
 	run = runOf("home"),
 	ready = function(W)
@@ -362,7 +362,7 @@ screen({ id = "a_keybinding", side = "rider", maxWait = 4,
 			d.at, d.phase = t, 2
 			return false
 		end
-		if t - d.at < 0.7 then return false end
+		if t - d.at < 2.6 then return false end -- the floating big button re-places itself up to 2 s after the window moves (Drive/Button.lua)
 		d.two = shown(win)
 		d.phase = 3
 		return true

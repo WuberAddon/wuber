@@ -736,10 +736,15 @@ local function look(W, F, meta)
 			if not t.hidden then watchNote(t.text, F.key, "text") end
 		end
 	end
-	for _, check in ipairs({ findCut, findOffscreen, findOverlap, findUnder, findButtons, findScrollbar, findTooltips }) do
+	for _, check in ipairs({ findCut, findOffscreen, findOverlap, findUnder, findScrollbar, findTooltips }) do
 		local ok, err = pcall(check, S, F)
 		if not ok then meta.err = show(err) end
 	end
+	-- (run 2, F7) two controls "half over" each other were read from rects taken before the page's rows had finished their layout:
+	-- the buttons are compared on a fresh read taken after the other checks
+	local okS, S2 = pcall(scan, W)
+	local okB, errB = pcall(findButtons, okS and S2 or S, F)
+	if not okB then meta.err = show(errB) end
 	return S
 end
 
