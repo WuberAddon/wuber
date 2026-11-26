@@ -186,7 +186,7 @@ function W.AdvertOwnText(text)
 	end
 	-- (the spam check reads the driver's own words, not what Wuber
 	-- filled in: the guild's name, the service name and the fare never trip it)
-	local why = W.SentenceSpam and W.SentenceSpam(W.AdvertWords(t))
+	local why = W.SentenceSpam and W.SentenceSpam(W.AdvertWords(t), true)
 	if why and why ~= "letters" then return nil, "spam", why end
 	-- the editor's limit counts the driver's own words; the tag and its space go in front on top of it
 	return W.Clean(W.ADVERT_TAG .. " " .. t, NETK.ADVERT_MAX + #W.ADVERT_TAG + 1)
