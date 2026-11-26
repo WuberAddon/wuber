@@ -47,7 +47,7 @@ GF.DRAFT_WORDS = {
 	card = "In the Group Finder, %s",                                              -- draft: the driver card line (%s = zone)
 	extra = "%d more listings mention Wuber: open the Group Finder",               -- draft: the count line
 	stillListed = "You are offline but still listed in the Group Finder",          -- draft: the reminder
-	steps = "Open the Group Finder with its key, choose Create Listing, paste the note, press Post.", -- draft: the sheet's steps
+	steps = "Click the note and press Ctrl+C. Open the Group Finder, go to List yourself, pick a Playstyle, click the Note box, press Ctrl+V, then List me.", -- draft: the sheet's steps
 	busy = "Searching...",                                                         -- draft: why the search button waits
 	nocategory = "No Group Finder category found",                                 -- draft: why the search button is off
 	nolfg = "The Group Finder is not available",                                   -- draft: why the search button is off
