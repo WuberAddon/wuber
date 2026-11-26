@@ -360,6 +360,7 @@ local function standInFixture()
 	H.fileIdFn, H.textMetrics, TL.STRETCH = nil, oldTM, oldStretch
 	L.restore(H, saved)
 	local fx = assert(PI.convert(run, "sim"))
+	fx.labels = nil -- (job 2893) the labels part is tested on its own (tests/rec/probe_z_labels_test.lua) and would make this file huge
 	fx.id = "standin"
 	fx.note = "SYNTHETIC: the probe pack run in a fake game set to invented truths (ids 7000000+, text 7.7% wider). Not real client data."
 	T.clean(w)

@@ -195,7 +195,7 @@ local function tour(cfg, res, sel)
 	local n, byShot, wordsOf, typeOf = 0, {}, {}, {}
 	c.env.Screenshot = function()
 		n = n + 1
-		local ok, hits, _, nwords, fonts = pcall(E.check, c, { TL = TL })
+		local ok, hits, _, nwords, fonts = pcall(E.check, c, { TL = TL, collect = Run.collectFn })
 		if not ok then res.broken[#res.broken + 1] = "the checker threw: " .. tostring(hits) hits = {} nwords = nil end
 		byShot[n] = hits
 		wordsOf[n] = nwords
@@ -268,7 +268,7 @@ SCENES[#SCENES + 1] = { id = "login_paused", side = "driver", run = function(cfg
 	W.Driver.SetPaused(true)
 	w:advance(1)
 	w:advance(math.max(0, w.fontReadyAt - w.time) + 3)
-	return E.check(c, { TL = TL }), w
+	return E.check(c, { TL = TL, collect = Run.collectFn }), w
 end }
 -- the window opened on the Drive tab while the font loads, then it arrives
 SCENES[#SCENES + 1] = { id = "login_drive", side = "driver", run = function(cfg, res)
@@ -284,7 +284,7 @@ SCENES[#SCENES + 1] = { id = "login_drive", side = "driver", run = function(cfg,
 	W.UI.SelectTab("Drive")
 	w:advance(2)
 	w:advance(math.max(0, w.fontReadyAt - w.time) + 3)
-	return E.check(c, { TL = TL }), w
+	return E.check(c, { TL = TL, collect = Run.collectFn }), w
 end }
 
 function Run.config(cfg, opts)
@@ -292,6 +292,34 @@ function Run.config(cfg, opts)
 	local t0 = os.clock()
 	local res = { hits = {}, errors = {}, broken = {}, notes = {}, words = {}, shots = 0, screens = opts.screens }
 	TL.STRETCH = opts.stretch and (1 + opts.stretch / 100) or 1 -- (tools/layout-check.lua --stretch N)
+	-- (job 2893) --text-rule flat: the first draft's flat 6%; --probe <fixture>: what a probe run measured decides "cut" for the strings it measured
+	-- (tests/lib/probe_learn.lua); opts.collect(fs, t, name): called for every shown text (tools/rec/probe-labels.lua)
+	TL.FLAT = opts.textRule == "flat" or nil
+	Run.collectFn = opts.collect
+	if opts.labels then -- every drawn string with a box: res.labels[key] = { text, font, size, box, maxLines, wrap, effs = { eff = true } }
+		res.labels = {}
+		local PL = dofile(root .. "/tests/lib/probe_learn.lua")
+		Run.collectFn = function(fs)
+			local path, size, text, box, maxLines, wrap, eff = H.textBox(fs)
+			if not box or text == "" then return end
+			local key = PL.labelKey(path, size, text, box, maxLines, wrap)
+			local row = res.labels[key]
+			if not row then
+				row = { text = TL.plain(text):gsub("\n", "\n"), font = (tostring(path or ""):gsub("\\", "/"):match("([^/]+)$") or ""):lower(), size = size, box = tonumber(("%.1f"):format(box)),
+					maxLines = maxLines or 0, wrap = wrap, effs = {} }
+				res.labels[key] = row
+			end
+			row.effs[("%.3f"):format(eff or 1)] = true
+		end
+	end
+	H.measuredCut, H.measuredCutSeen = nil, nil
+	if opts.probe then
+		local PL = dofile(root .. "/tests/lib/probe_learn.lua")
+		local fx = assert(PL.load(opts.probe))
+		local seen = {}
+		H.measuredCut, H.measuredCutSeen = PL.cutFn(fx, seen), seen
+		res.probe = { fx = fx, seen = seen }
+	end
 	res.shots = tour(cfg, res, opts.screens)
 	if opts.scenes ~= false then
 		for _, sc in ipairs(SCENES) do
@@ -308,6 +336,12 @@ function Run.config(cfg, opts)
 		end
 	end
 	res.secs = os.clock() - t0
+	if res.probe then -- the learner's count: how many of the strings the sweep drew were never measured
+		local PL = dofile(root .. "/tests/lib/probe_learn.lua")
+		res.probeNote = PL.coverageLine(res.probe.seen)
+		H.measuredCut = nil
+	end
+	TL.FLAT, Run.collectFn = nil, nil
 	return res
 end
 

@@ -11,6 +11,8 @@
 --             with a string are in fileIdStrings)
 --   fileIdsAre  "number" | "string" | "mixed"   (what GetTexture answers for an addon's own file)
 --   atlases   [name] = { file, fileID, width, height, l, r, t, b } or { none = true }
+--   labels    { hash, scales, caps, rows } Wuber's own strings in their boxes: per scale GetStringWidth, GetUnboundedStringWidth, IsTruncated, GetNumLines
+--             (tests/lib/probe_learn.lua; L.cutFn replays "was it cut" for the strings the probe measured)
 --   widths    [lower-case font file name][size] = { adv = { [byte] = advance }, strings = { [text] = width }, imm, settled, lineH }
 --   hit       [scenario id] = { [cell number] = winner role }, hitMixed (cells with more than one winner), hitCoverage
 --   keys      the keysAuto answers, keysGuided = the rows of the typed test
@@ -94,6 +96,17 @@ function PI.convert(run, source)
 				end
 			end
 		end
+	end
+	-- labels (job 2893): Wuber's real strings measured in their boxes at 2-3 scales (see tests/lib/probe_learn.lua "labels")
+	if type(p.labels) == "table" and type(p.labels.rows) == "table" then
+		local rows = {}
+		for _, r in ipairs(p.labels.rows) do
+			if type(r) == "table" and type(r.text) == "string" and type(r.font) == "string" and isNum(r.size) and isNum(r.box) then
+				rows[#rows + 1] = { text = r.text, font = baseName(r.font), size = r.size, box = r.box, maxLines = r.maxLines, wrap = r.wrap, raw = r.raw,
+					w = r.w, uw = r.uw, trunc = r.trunc, lines = r.lines }
+			end
+		end
+		fx.labels = { hash = p.labels.hash, scales = p.labels.scales, caps = p.labels.caps, rows = rows }
 	end
 	-- hit order: the winner of each cell (the one seen most)
 	local hit = p.hit

@@ -26,6 +26,9 @@
 --   lua tools/layout-check.lua --stretch 15       the same sweep with every text 15% wider (30: German runs about 30% longer):
 --                                                 the problems listed by screen, a count per screen, a total (tools only; the
 --                                                 normal run is unchanged without the flag)
+--   lua tools/layout-check.lua --text-rule flat   the first draft's flat "+6% at 12 px and under" instead of the measured ratios (a proof only: it over-flags)
+--   lua tools/layout-check.lua --probe tests/fixtures/probe/<fixture>.lua   strings the probe measured in their box are cut or not as the game answered
+--                                                 (tests/lib/probe_learn.lua); the others stay on the metric and the run says "N of M current strings unmeasured"
 --   lua tools/layout-check.lua --comfort          the small and large end of the window size slider: 0.65, 0.8 and 1.15 on two game windows (6 runs)
 --   lua tools/layout-check.lua --selftest         the checker's own rules on small made-up screens (seconds)
 --   lua tools/layout-check.lua --regress          the regression cases (tests/layout/regress.lua): old code from
@@ -119,6 +122,11 @@ do
 			end
 		elseif a == "--stretch" then opt.stretch = tonumber(args[i + 1]) i = i + 1
 			if not opt.stretch or opt.stretch <= 0 then die("--stretch N (percent wider, e.g. 15 or 30)") end
+		elseif a == "--text-rule" then opt.textRule = args[i + 1] i = i + 1
+			if opt.textRule ~= "flat" and opt.textRule ~= "measured" then die("--text-rule flat|measured") end
+			if opt.textRule == "measured" then opt.textRule = nil end
+		elseif a == "--collect-labels" then opt.labelsOut = args[i + 1] i = i + 1
+		elseif a == "--probe" then opt.probe = (args[i + 1] or ""):gsub("\\", "/") i = i + 1
 		elseif a == "--child" then opt.child = args[i + 1] i = i + 1
 		elseif a == "--jobs" then opt.jobs = tonumber(args[i + 1]) i = i + 1
 		elseif a == "--wuber" then opt.wuber = args[i + 1] i = i + 1
@@ -205,7 +213,8 @@ local function runChild(cfgText)
 	if not opt.noTopmost then dofile(root .. "/tests/layout/topmost.lua").wrap(H, E) end
 	if opt.daylightChild then return assert(loadfile(root .. "/tests/layout/daylight.lua"))(H, E, root).config(cfg, {}) end
 	local Run = assert(loadfile(root .. "/tests/layout/run.lua"))(H, E, root)
-	local res = Run.config(cfg, { screens = opt.screens, scenes = not opt.noScenes, verbose = opt.verbose, stretch = opt.stretch })
+	local res = Run.config(cfg, { screens = opt.screens, scenes = not opt.noScenes, verbose = opt.verbose, stretch = opt.stretch, textRule = opt.textRule, probe = opt.probe, labels = opt.labelsOut ~= nil })
+	if res.probeNote then res.notes[#res.notes + 1] = res.probeNote end
 	return res
 end
 
@@ -215,6 +224,15 @@ local function emit(res)
 	for _, h in ipairs(res.hits) do
 		out[#out + 1] = table.concat({ "HIT", h.shot, h.kind, h.key, h.what, h.detail, h.allowed or "", h.known and "known" or "" }, "\t")
 	end
+	local function lit(v)
+		if type(v) == "table" then
+			local parts = {}
+			for k, x in pairs(v) do parts[#parts + 1] = "[" .. lit(k) .. "]=" .. lit(x) end
+			return "{" .. table.concat(parts, ",") .. "}"
+		elseif type(v) == "string" then return (("%q"):format(v):gsub("\\\n", "\\n"):gsub("\t", "\\t"):gsub("\r", "\\r"))
+		else return tostring(v) end
+	end
+	for _, row in pairs(res.labels or {}) do out[#out + 1] = "LABEL\t" .. lit(row) end
 	for _, x in ipairs(res.words or {}) do out[#out + 1] = table.concat({ "WORDS", x.shot, x.n, x.budget, x.kind }, "\t") end
 	for _, e in ipairs(res.errors) do out[#out + 1] = "ERR\t" .. tostring(e):gsub("[\r\n]+", " / ") end
 	for _, b in ipairs(res.broken) do out[#out + 1] = "BROKEN\t" .. tostring(b):gsub("[\r\n]+", " / ") end
@@ -313,6 +331,9 @@ local function childCmd(cfg)
 	if opt.noScenes then parts[#parts + 1] = "--no-scenes" end
 	if opt.noTopmost then parts[#parts + 1] = "--no-topmost" end
 	if opt.stretch then parts[#parts + 1] = "--stretch" parts[#parts + 1] = tostring(opt.stretch) end
+	if opt.labelsOut then parts[#parts + 1] = "--collect-labels" parts[#parts + 1] = "1" end
+	if opt.textRule then parts[#parts + 1] = "--text-rule" parts[#parts + 1] = opt.textRule end
+	if opt.probe then parts[#parts + 1] = "--probe" parts[#parts + 1] = q(opt.probe) end
 	return table.concat(parts, " ") .. " 2>&1"
 end
 
@@ -358,6 +379,7 @@ end
 
 -- merge: one line per screen, frame and problem; its sizes and windows listed
 local merged, order = {}, {}
+local labelRows = {} -- (job 2893) --collect-labels: every string a run drew with a box
 local errors, broken, notes, failed, shots = {}, {}, {}, {}, 0
 local allowedN, knownN, knownSeen = 0, 0, {}
 local wordsOf, wordsOrder = {}, {}
@@ -392,6 +414,10 @@ for _, r in ipairs(results) do
 			local m = wordsOf[f[2]]
 			if not m then m = { shot = f[2], n = 0, budget = tonumber(f[4]) or 0, kind = f[5] } wordsOf[f[2]] = m wordsOrder[#wordsOrder + 1] = f[2] end
 			m.n = math.max(m.n, tonumber(f[3]) or 0)
+		elseif f[1] == "LABEL" then
+			local chunk = (loadstring or load)("return " .. tostring(f[2]))
+			local row = chunk and chunk()
+			if type(row) == "table" then labelRows[#labelRows + 1] = row end
 		elseif f[1] == "ERR" then errors[#errors + 1] = r.cfg .. ": " .. tostring(f[2])
 		elseif f[1] == "BROKEN" then broken[#broken + 1] = r.cfg .. ": " .. tostring(f[2])
 		elseif f[1] == "NOTE" then notes[f[2]] = true
@@ -407,6 +433,32 @@ local function keys(t)
 	for k in pairs(t) do out[#out + 1] = k end
 	table.sort(out, function(a, b) return (tonumber(a) or 0) < (tonumber(b) or 0) or (tonumber(a) == tonumber(b) and a < b) end)
 	return table.concat(out, ",")
+end
+-- (job 2893) --collect-labels <file>: the distinct strings (text, font, size, box, maxLines, wrap) with the effective scales they were drawn at;
+-- tools/rec/probe-labels.lua turns the file into the probe's label list
+if opt.labelsOut then
+	local PL = dofile(root .. "/tests/lib/probe_learn.lua")
+	local byKey, keyList = {}, {}
+	for _, row in ipairs(labelRows) do
+		local k = PL.labelKey(row.font, row.size, row.text, row.box, row.maxLines, row.wrap)
+		local m = byKey[k]
+		if not m then m = { text = row.text, font = row.font, size = row.size, box = row.box, maxLines = row.maxLines, wrap = row.wrap, effs = {} } byKey[k] = m keyList[#keyList + 1] = k end
+		for e in pairs(row.effs or {}) do m.effs[e] = true end
+	end
+	table.sort(keyList)
+	local fh = assert(io.open(opt.labelsOut, "wb"))
+	fh:write("-- layout-check --collect-labels: strings drawn with a box (generated)\nreturn {\n")
+	for _, k in ipairs(keyList) do
+		local m = byKey[k]
+		local effs = {}
+		for e in pairs(m.effs) do effs[#effs + 1] = e end
+		table.sort(effs)
+		fh:write(("\t{ text = %q, font = %q, size = %s, box = %s, maxLines = %s, wrap = %s, effs = { %s } },\n"):format(m.text, m.font, tostring(m.size), tostring(m.box),
+			tostring(m.maxLines or 0), tostring(m.wrap ~= false), table.concat(effs, ", ")))
+	end
+	fh:write("}\n")
+	fh:close()
+	print(("collected %d strings into %s"):format(#keyList, opt.labelsOut))
 end
 local bad = routeBad
 local printed = {}
@@ -449,7 +501,7 @@ if opt.words then
 		print(("WORDS %s %d budget %d %s"):format(m.shot, m.n, m.budget, m.kind))
 	end
 end
-for n in pairs(notes) do if opt.verbose then print("note: " .. n) end end
+for n in pairs(notes) do if opt.verbose or n:find("^probe labels:") then print("note: " .. n) end end -- (job 2893) the learner's unmeasured count always shows
 -- (a run that went wrong is never a verdict: always shown, exit 2)
 for _, e in ipairs(errors) do io.stderr:write("layout-check: Lua error in the fake game: " .. e .. "\n") end
 for _, b in ipairs(broken) do io.stderr:write("layout-check: broken run: " .. b .. "\n") end
