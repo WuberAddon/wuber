@@ -1921,6 +1921,12 @@ function Frame:SetFlattensRenderLayers(v) end
 function Frame:SetID(id) st(self).id = id end
 function Frame:GetID() return st(self).id or 0 end
 function Frame:IsProtected() local s = st(self) return isProtected(self), s.secure == true end
+-- (conformance) false only for a protected frame (a secure one, or one holding a secure child) while the player is in combat
+function Frame:CanChangeProtectedState()
+	local s = st(self)
+	if s.client.player.combat and isProtected(self) then H.rule("combat.can-change-protected") return false end
+	return true
+end
 -- (conformance, PF-065: TradeFrameTradeButton on build 71037) no access constraints on the game's own frames
 function Frame:HasAccessConstraints() return false end
 function Frame:GetChildren()
