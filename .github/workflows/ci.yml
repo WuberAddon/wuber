@@ -1,0 +1,147 @@
+# Checks on every pull request and on pushes to main. Needs no secrets and starts no AI tool.
+# Needs a real Lua 5.1 (LuaJIT is NOT a substitute: tests/README.md). Ubuntu's lua5.1 package is PUC-Rio 5.1.5
+# (installed in a few seconds; nothing to build or cache).
+# tools/contract-check.py is left out on purpose: it reads recordings that are not in this repository.
+# The transcript comparison is also left out (the baseline file is about 110 MB and is not stored here).
+# The suite needs no old addon: tests/fixtures/addons/OldDriver stands in for one.
+#
+# Jobs (all start at once; "all checks" waits for them and is the one to require):
+#   quick          scrub check + its tests, check.lua                      (about 1 minute)
+#   suite (x8)     tools/ci-shard.sh K 8: one eighth of the tests each, its failing-test names uploaded
+#   layout (x3)    tools/layout-check.lua, one game window (3 sizes) each
+#   layout-extra   the Daylight pass and the route walks
+#   all checks     merges the failing-test lists and fails if any job failed
+name: checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  WUBER_LUA: lua5.1
+jobs:
+  quick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.1
+        run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
+      - name: Scrub check (no personal data in the tree)
+        run: python3 scrub-check.py . --patterns scrub-patterns.public.txt
+      - name: Scrub checker's own tests
+        run: python3 test_scrub_check.py
+      - name: Syntax, globals and bytecode check
+        run: lua5.1 tools/check.lua
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.1
+        run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
+      - name: Tests, shard ${{ matrix.shard }} of 8
+        run: bash tools/ci-shard.sh ${{ matrix.shard }} 8
+      - name: Failing tests of this shard
+        if: always()
+        run: |
+          echo "failing tests in shard ${{ matrix.shard }}/8: $(grep -c . tests/out/failed-${{ matrix.shard }}-of-8.txt || true)"
+          cat tests/out/failed-${{ matrix.shard }}-of-8.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: failed-suite-${{ matrix.shard }}
+          path: tests/out/failed-${{ matrix.shard }}-of-8.txt
+          if-no-files-found: warn
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        window: ["2662x2089", "1920x1080", "3840x2160"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.1
+        run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
+      - name: Layout check, window ${{ matrix.window }} at 3 sizes
+        run: |
+          set -o pipefail
+          mkdir -p tests/out
+          w=${{ matrix.window }}
+          at='@'
+          lua5.1 tools/layout-check.lua --no-daylight --no-routes --jobs 3 --config "$w${at}1" --config "$w${at}1.5" --config "$w${at}2.2" 2>&1 | tee tests/out/layout-$w.log
+      - name: Failing layout lines
+        if: always()
+        run: |
+          w=${{ matrix.window }}
+          { grep -E ' \| ' tests/out/layout-$w.log || true; grep -E '^GAUNTLET|result [0-9]' tests/out/layout-$w.log | tail -n 2; } > tests/out/failed-layout-$w.txt
+          cat tests/out/failed-layout-$w.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: failed-layout-${{ matrix.window }}
+          path: tests/out/failed-layout-${{ matrix.window }}.txt
+          if-no-files-found: warn
+  layout-extra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lua 5.1
+        run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
+      - name: Layout check, Daylight pass
+        run: lua5.1 tools/layout-check.lua --daylight-only
+      - name: Layout check, route walks
+        run: lua5.1 tools/layout-check.lua --routes-only
+  all-checks:
+    needs: [quick, suite, layout, layout-extra]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: failed-*
+          path: failed
+          merge-multiple: true
+        continue-on-error: true
+      - name: Merge the failing-test lists and decide
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "job results: $RESULTS"
+          echo "== failing tests (all shards) =="
+          cat failed/failed-*-of-*.txt 2>/dev/null | sort | tee merged-failed.txt
+          echo "== failing layout lines (all windows) =="
+          cat failed/failed-layout-*.txt 2>/dev/null || true
+          echo "== $(grep -c . merged-failed.txt) failing tests in total =="
+          for r in $RESULTS; do
+            if [ "$r" != success ]; then echo "a job did not succeed ($r)"; exit 1; fi
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: failed-merged
+          path: merged-failed.txt
+          if-no-files-found: ignore
+  # Fallback, switched off. Turn it on only if the Linux job cannot run tests that call cmd.exe.
+  checks-windows-fallback:
+    if: ${{ false }}
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.1"
+      - run: lua tools/check.lua
+      - run: lua tests/run.lua

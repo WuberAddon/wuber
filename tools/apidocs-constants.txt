@@ -1,0 +1,2 @@
+# tools/apidocs-constants.txt (DRAFT): NAME<TAB>real value<TAB>source. Checked against the fake's globals.
+WOW_PROJECT_ID	18	Blizzard_ProjectConstants/Camelot/ProjectConstants.lua#L1-L2 (WOW_PROJECT_CAMELOT = 18)

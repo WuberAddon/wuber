@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: Ritual Rides (retired - now in Wuber)
+## Notes: Ritual Rides is now part of Wuber. This empty addon only keeps your saved Ritual Rides data loadable so Wuber can copy it over. Delete this folder once every account has logged in with Wuber 2.0.
+## Author: Ritual Rides
+## Version: 1.5.0
+## SavedVariables: RitualRidesDB
+
+Core.lua

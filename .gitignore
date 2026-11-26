@@ -1,0 +1,16 @@
+# generated / local-only
+tests/out/
+tests/transcripts/baseline.txt
+tests/transcripts/after*.txt
+*.zip
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+node_modules/
+.wuber-status.txt
+lab/out/
+
+# private scrub list: never committed
+.scrub-patterns.private.txt
+scrub-patterns.private.txt

@@ -1,0 +1,2 @@
+# Old (Wuber 2.2.1) files not yet split into modules (tools/check.lua): the module checks
+# (W.Module, size cap) skip them. The list shrinks with every restructure step; empty at the end.

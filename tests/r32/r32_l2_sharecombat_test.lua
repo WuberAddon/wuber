@@ -1,0 +1,26 @@
+local T = ...
+-- Round 32 group L (wave 2), HUNT-97: the Share pill is wide enough for "Share after combat".
+local test, eq, ok = T.test, T.eq, T.ok
+test("r32 l2: the Share pill widens for 'Share after combat' and goes back", function()
+	local w = T.newWorld()
+	local r = T.rider(w)
+	w:addBot("Sly Fox", { spot = "Orgrimmar" })
+	T.settle(w)
+	local W = r.W
+	W.UI.Toggle(true)
+	w:advance(3)
+	local pill = W.Theme.Pill(W.UI.GetTab("Ride"), "Share", "violet", 92, 30)
+	W.UI.Share.Register(pill, function() return "a line" end, { label = "Share" })
+	w:group({ "Wuber TestCharacter", "Sly Fox" })
+	w:advance(1.5)
+	W.UI.RefreshNow()
+	eq(pill:GetWidth(), 92, "plain width")
+	w:enterCombat(r)
+	w:advance(1.2)
+	eq(pill.label:GetText(), "Share after combat", "its words")
+	ok(pill:GetWidth() >= 120, "wider in combat: " .. tostring(pill:GetWidth()))
+	w:leaveCombat(r)
+	w:advance(1.5)
+	eq(pill:GetWidth(), 92, "back to plain width")
+	T.clean(w)
+end)

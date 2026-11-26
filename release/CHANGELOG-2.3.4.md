@@ -1,0 +1,393 @@
+# Wuber 2.3.4 (in progress)
+
+Everything since 2.3.2. (2.3.3 was never released: its changes are in here.)
+
+This version adds new files: restart the game once after installing (a /reload is not enough).
+
+## New
+- Login tips: the first time you open Wuber after logging in, a small card inside the phone shows one short tip, each tip once, with Show me, Next tip and Don't show again. Never in combat or during a ride. Driver tips only show for Warlocks and players who have used Drive.
+- Settings > Riding has a Login tips switch. /wuber tips turns tips on and shows one now; /wuber tips off turns them off.
+- World map: each continent is cut to its land and the two sit close together, with the sea cut out. The continent you are on is brighter, with its name in gold, and gets more room on a narrow window. Pins, price tags and names are bigger, and price tags never cover a pin, your dot or a name.
+- World map: a route that crosses the sea shows your side, then an arrow at the edge saying "continues by zeppelin" or "continues by boat".
+- `/wuber why` lists what Wuber is hiding right now and why, one line each: the login tip, the Skip the bird card, the first-open guide, the update notice, the Invite to Wuber pill, Your usual, bounty offers and a held milestone card. A /reload is enough (no new file).
+- Summon times: Wuber now times a driver's summons, from the rider's request to their arrival. After 3 whole rides the driver's Wuber tells riders the average of its last 20 (only rides asked for while the driver was ready, summoned, and paid by trade). The Fly or summon card and the Skip the bird card then count with that driver's own time instead of the standard 30 seconds. A driver on an older Wuber, or with fewer than 3 rides, is counted with 30 seconds as before.
+- Summon times, for riders: a driver who is open with nobody waiting shows "Usually about 45 sec" on their card in the list, and the booking card's grey line ends "· usually about 45 sec" (a minute or more reads "about 2 min").
+- Summon times, for drivers: the Drive console's "Today's takings" card shows "Your summons: about 45 sec" under the gold figure once three summons are counted. Its tooltip says how many summons the average is from and gives the time from cast to arrival.
+
+## Fixed
+
+### Riding: finding a driver, booking, the ride, paying
+- Auto-accept now joins your driver's group even when their "invited" message arrives before the game's invite box.
+- If a driver drops you after you have joined their group, Wuber now tells you the ride was declined instead of waiting for a portal.
+- The pay card stays readable, just dimmed, while a stranger opens a trade with you.
+- When you give change in the trade, only what you keep counts as the fare. The change is no longer shown as a tip.
+- After a /reload in the middle of a ride, the driver's live cast, the clicker count and the danger warning show again.
+- After you have paid part of a fare, the pay card and the strip by the trade window ask for what is still owed, not the whole fare.
+- On the narrow booking card, the place name above the card no longer sits on top of the destination pin when the Fly or summon dial shows: the pin moves aside, and the route line ends at the pin.
+- On the Ride tab, the PvP warning card sits under the "You're 2nd in line" line instead of on top of it.
+- On the booking screen, the gold knob of the Fly or summon dial no longer sits on the first line of the verdict.
+- The trade toast names the same amount as the pay card and the strip: the fare plus the tip you chose, or what is left after a part payment.
+- The amber "Summoner is in ..." warning on the Accept summon screen now looks at the Warlock who really cast the summon.
+- A busy driver's price change, pause or going offline now reaches every rider who found them by whisper, not only the first 16.
+- A rider who books again while their summon is under way (or while a raincheck holds the ride) is told the driver is busy, and the first ride keeps working: its cancel, its payment and its rating still count.
+- A raincheck is no longer used up by a later plain summon after the rider cancelled the raincheck ride.
+- A rider who just paid for a whisper ride and then books in Wuber gets a fresh ride, not one that ends as done at once.
+- Typing a driver's name in "Where to?" and pressing Enter no longer warns "No place called ...".
+- If you join another group after asking for a summon, the Ride screen and the "Waiting for ... to accept" card now tell you to leave it so the driver can invite you.
+- In a fight the Share pill reads "Share after combat" in full.
+- A first open of Wuber on a driver's booking screen (from a map pin, a toast or the Skip the bird card) stays on that screen. The login tip waits until you next see Home.
+- After a /reload a rider still waiting to accept the summon goes back to "joined" after the wait, so you can summon again.
+- A ride that waited through a fight no longer gets a longer wait for the invite.
+- A rating still reaches the driver when the ride had already left the driver's list.
+- A founder's answer no longer names drivers not seen for over 30 days, and contacts not heard for over 14 days are no longer asked.
+- A ride message sent right after a burst now goes out in about a second, not about four.
+- If the game refuses the invite accept, its invite box stays up so you can click Accept yourself.
+- A driver you met long ago shows up again when another player mentions him or when he advertises in Trade, even if you already know more than 40 drivers.
+- If asking the driver for a raincheck failed to send, the Ask for a raincheck button stays available instead of vanishing for that ride.
+- The booking card for a busy driver shows the whole grey line, including the wait, instead of cutting it off.
+- A hidden driver who signs off no longer shows as online again when you press "Show all hidden drivers".
+- A pay reminder you cancelled with Escape is no longer counted as sent when you whisper that rider about something else later.
+- On a ride at price 0, a trade opened by a stranger shows the "isn't your driver" warning card, not only the toast.
+- The booking card for a driver who went offline no longer shows the earlier driver's price, route and fly-or-summon dial.
+- Picking a tip on the pay card while the trade window is open updates the gold amount on the strip under the trade.
+- A rider you mark as paid by hand no longer shows "free" when no gold was seen.
+- The waiting spinner on the ride screen keeps turning after a look at Home and back.
+- The Share pill no longer covers the "isn't your driver" warning when a stranger opens a trade.
+- Hovering your rider level chip now shows its tooltip, and the booking card no longer drops its trade line when you are in a group.
+- The Request and Cancel buttons no longer flash over Wuber's window while it is closing.
+- The Wuber pay screen now still opens after combat when a trade came and went during the fight before your ride arrived.
+- If your driver turns on Show ride passphrase while you wait in their group, you now see the two words even when they are on a different copy of the world.
+- Hovering the Founder chip or crown on a founder's driver card now shows its tooltip.
+- Accepting a raincheck says "Raincheck kept" only once the driver could get your answer; if the driver has logged off, the offer comes back so you can answer again.
+- When a summon costs the same as flying, the booking and pay cards say "Flying here costs 23s · the summon costs the same" (they said it "saves you free"); after the ride: "Flying here would cost 23s · the summon cost the same".
+- After a part payment the pay card says how much of the fare is left under the big figure, for example "25s left of 50s + 5s tip" (the old line added up to more than the figure). A long line gets smaller or wraps; it is never cut.
+- The star tooltip tells the truth: "Rate your ride. Your driver is told the stars. You see your ratings in Trips."
+- In a fight, the Request button sends your request also when the booking card was already open when the fight began (it only said "Can't request in combat").
+- The Fly or summon card says "about 30 sec" or "about 2 min" for the summon, like its fly side (no tilde). A long line wraps instead of being cut.
+- Home's driver list shows one scroll bar instead of two side by side.
+- Home no longer offers "Ride again" on the YOUR USUAL card to the city you are already standing in.
+- The Home search heading no longer runs into the "N open · M online" count for a long place name.
+- The empty Home screen's pulsing rings come back after you clear a search.
+- Clicking a driver's toast or map pin after a ride has ended opens the booking card straight away.
+- The right-click menu of a driver card closes when you close Wuber or leave Home.
+- A busy driver's card no longer draws "Busy · N waiting" over a long line, and "Busy · N waiting · Group full" is no longer cut.
+- Hovering or clicking the small shield on a driver card behaves like the card itself.
+- Pressing a card's Founder chip or crown and letting go off the card no longer books the driver.
+- The unfolded Fly or summon card makes room when its verdict takes two lines, so it no longer lands on the small line under it.
+- The route header on the unfolded booking card no longer lets the zeppelin tag stick out past the pill.
+- A Horde rider booking from Undercity to Booty Bay sees "zeppelin" on the route header instead of "boat".
+- The route header on an open booking card follows you indoors.
+- The Fly or summon card no longer says "saves 0" when the summon costs the same as the flight.
+- The Fly side keeps its boat or zeppelin wording when the game gives no map position.
+- On a crew summon the "Trade ..." toast names the summoner you pay, the same as the pay card.
+- With two raincheck offers waiting, answering the first no longer hides the second, and the "Raincheck kept" toast names the right driver.
+- A raincheck offer you could not accept (three already held) comes back later instead of being lost until you log in again.
+- A driver opening at a place where you had both a bounty and a watch gives one toast, not two.
+- The first-open tips are no longer hidden behind the Wuber window when the world map is open.
+- Leaving Home and coming straight back no longer makes the first tip appear early or restart.
+- The Fly or summon dial's gold knob no longer points the wrong way after you close one driver's card and open another quickly.
+
+### Driving: the queue and invites
+- A driver who steps outside their town or city (Orgrimmar into Durotar, Auberdine into Darkshore) no longer loses the riders waiting for that place.
+- When you ask a rider where they want to go and they reply with just a place you summon to, they are now queued and invited without a click.
+- With two stations open, clicking a rider who asked for somewhere you don't serve now invites them, instead of leaving them on the list.
+- After you switch off your own station, a rider asking for the one station still open is now queued instead of being told it is elsewhere.
+- A rider who leaves the group, or is removed from it, while the summon box is up is no longer shown as waiting in the group.
+- With two or more stations, a rider who whispers "summon from Ironforge to UC" is queued for Undercity, and "from Undercity to Org" for Orgrimmar.
+- With several stations open, a buyer in public chat who asks for another of your open stations is now listed and invited.
+- A helper who leaves an open crew, or is removed from it, no longer counts as Open.
+- A solo driver's rider who pays and leaves the party at once is no longer blocked as a non-payer.
+- A rider who asked for a summon more than 15 minutes before you closed is no longer invited the moment you reopen.
+- With "Invite riders who whisper me" switched off, a click on a queued rider's name invites them, and the big button says "click a name in the list to invite" instead of promising an invite that never came.
+- With two or more stations, a rider who answers "Where to?" with one of your stations is no longer dropped as "moved" when you walk to that station.
+- A returning rider whose old station has closed is queued at an open station and asked "Where to?", instead of being dropped with a "we moved" whisper.
+- With two stations, a rider standing in another town of the same zone (the Crossroads while the station is Ratchet) waits for the summon instead of being marked as arrived.
+- When the game hides spell ids, a finished summon with a long cast is no longer booked as failed (the rider was then summoned twice).
+- A rider whose name reads "Unknown" for a moment (a loading screen, a party turned into a raid) keeps their row, price and place in the driver's list.
+- A rider who whispers "I'm in the badlands" (or any "in the <place>") is invited, not held as if they wanted to go there.
+- A rider who asks for a summon "from UC to Orgrimmar" while the driver is loading in is invited once the driver arrives, instead of being left as a lead.
+- A rider who pays and leaves the group straight away is no longer blocked as a non-payer.
+- A fare that only shows up in your purse a moment late is now counted as paid.
+- A rider who leaves the group just before paying by trade is still shown as paid.
+- A whisper asking for another place that starts like your short place name is no longer invited as a buyer.
+- A rival's advert with "can invite" or "can use" in it is no longer mistaken for a buyer.
+- A blocked player who whispers you from a server node is answered at their plain name instead of a long name with the realm attached.
+- In chat-box whisper mode, a rider asked to be summoned by a Warlock without Wuber still gets the driver's greeting.
+- After a /reload, a paid rider is removed from the group 60 s after paying, even if the thanks was not sent.
+- A first-time rider who paid just before a /reload no longer shows as "2nd ride with you" in the driver's list.
+- A rider whose Wuber request was refused after the chat line had already invited him no longer sits on the driver's list as "invited" for up to 90 seconds.
+- A rider whose name starts with an accented letter gets the whole letter on the queue row's disc.
+- Drivers whose character name was not ready at login now get their saved queue back, and Hardcore realms whose name ends in HC are recognised.
+- A customer note no longer loses its last accented letter when you press Save.
+- A queue row's tooltip says "Click: options." wherever a click opens the options menu (a "came with" helper row said "Click: invite them.", an idle row "Click: nothing to do yet.").
+- The PvP nearby tooltip no longer says a hostile or at-war zone brings the warning (the zone is not read any more).
+- The Note sheet's Save button no longer keeps pink-red text after "Remove note?" times out, is cancelled, or the sheet is reopened.
+- The Riders header no longer says "1 asking" when the only rider has already paid.
+- With another addon driving and the retire card showing, request cards no longer run off the bottom of the driver window.
+
+### The big button and Drive console
+- The runner's big button now asks the Warlock to summon again as soon as a summon fails, instead of waiting up to 30 seconds.
+- With two stations open, the big button's tooltip for the "Where to?" question now reads as a sentence, and the button says "Ask" instead of "Tell".
+- The fare line at the top of the Drive console ("50s to Thunder Bluff") is no longer cut short beside a badge and a full day's take.
+- Pressing Open (or opening again after Close) with an enemy player already close now shows "PvP nearby" and warns your riders. Before, only enemies who came close after you opened were counted.
+- On a rider's row in the Drive list the gold gift mark sits at the bottom left of the ring, clear of the Pioneer badge.
+- On Home with nobody listed, "Why can't I see anyone?" no longer sits on the "Your usual" line.
+- The floating Drive console keeps clear of the opened-out phone and stays on the screen: it shows fewer riders (the "+N more in Wuber's Drive tab" line counts the rest), and only then does the button go alone. With no clear place at all the button sits in the screen corner that covers least, never on the Earnings Me | Crew switch.
+- When another driver addon takes over, Wuber's big button leaves the screen even with "Keep it on screen when closed" on.
+- Back on the Drive console from Customers or Messages, Advertise works at once.
+- The big Drive button no longer cuts off the last job when several are owed: the title wraps onto a second line.
+- In the Drive console, a rider's price or "free" no longer sits over the "Next click sends" pill of the same row.
+- Home's "You're open as a driver" chip no longer cuts off the place, price and state when they are long: it wraps onto a second line.
+- The big button stays where you drop it when you move it beside the open window.
+- The big button no longer flashes up for a moment after a fight if you closed Wuber during it.
+- With two stations, the floating mini console shows each rider's station chip straight away.
+- The "..." on a rider row in the floating mini console opens the window on Drive with that rider's menu, instead of seeming to do nothing.
+- The time or amount on the right of a queue row is now always drawn at the same size on every row.
+- `/wuber drive bind escape` says "Escape can't be the big button's key. The key was removed." (it said the button was on ESCAPE).
+- The Drive console's take no longer flickers between two sizes every second on a big day.
+- A crew helper's status strip keeps the word "today" and the full-size take.
+- The grey glow round the status dot no longer shows in raid mode while summons are stopped.
+- The Join the Wuber community card no longer cuts its second line short with "...".
+- The Advertise button no longer lies unseen over Crew or Earnings for a second after you open them, and works the moment a sheet closes.
+- Clicking the dimmed Pause button while you are closed no longer pauses you or makes the next Open start paused.
+- Place matches on the Price and place card no longer stick out past the card's right edge, and long place names show at their normal size.
+- Price and place saves the place you typed (or cleared) instead of the old one.
+- "Hide this driver" stays red and "Just open the console" stays grey after the mouse has touched them.
+
+### Adverts and messages
+- After two failed tries to join Wuber's network, the chat line says you may see fewer drivers. It used to say you can't see drivers, though they still show by whisper.
+- Advertise no longer plans a post into a Trade channel you cannot use outside a capital.
+- The grey line over the "My advert line" box wraps instead of being cut off, so you can read "click Advertise" and "Wuber adds [Wuber] in front".
+- The "Time to advertise" reminder comes again after you close and reopen.
+- After the captain resets the advert to default, crew windows go back to Wuber's own advert line.
+- An advert of 191 to 200 characters reaches crew windows whole instead of cut at 190.
+- A driver's own advert of 193 to 200 characters is no longer cut short when posted in chat.
+- A non-Warlock runner with nobody to summon no longer posts a public advert when Open is refused, and any advert that goes out starts the 15-minute wait.
+- The Messages preview now shows a too-long whisper at its full length, and an emptied message box previews Wuber's default wording.
+- The Advert reminder tooltip says the Advertise button turns violet (it said gold).
+- The "Post an advert when I go online" tooltip names the channels it really uses (your Advert channels, the one posted to longest ago first) and your own advert from Messages.
+- The empty Blocked screen says when riders who leave without paying are not blocked by themselves: with that switch off in Settings it says so.
+- A refused Save on the Messages screen no longer draws its red reason on top of the Reset and Save buttons.
+- The "Ask a summoner" message preview shows a Warlock name before the colon.
+- Going Back from the unfolded Messages screen no longer flickers.
+
+### Crews and several Warlocks
+- A crew Warlock's checklist no longer says "only the leader can invite" when a Mage or other non-Warlock runner leads the group and invites riders fine.
+- A crew member's Crew screen keeps showing the Warlock captain as a Warlock while the captain is out of the group.
+- A Warlock without Wuber who stands in the runner's town no longer adds a second station named after the zone, so riders are not asked "Where to?" for nothing.
+- After an open crew leader reloads, the riders in the group stay on every crew window, in the order they asked. Friends who came along to click the portal stay listed as that.
+- A crew Warlock's window that comes back (a login or a crash) after the rider landed now opens the trade with them and sends the pay reminder.
+- Logging in a character that does not drive no longer whispers your alert character, so it is not listed there as crew.
+- On the Crew screen a Warlock's line ("not heard lately · not in your group") wraps onto a second line and the card grows. It is no longer cut short.
+- A crew Warlock's window stays Open when a helper leads the group and the captain has stepped out of it.
+- A Warlock removed from the crew who stays in the party no longer counts in the crew's Soul Shard line.
+- With "Whoever clicks first" on, a crew Warlock who is not ticked as a summoner no longer gets the Summon button.
+- A runner is no longer told to ask a Warlock to summon a rider who is offline while an online rider waits.
+- In a full crew of eight helpers the eighth now shows in every member's crew list, and a ninth player who taps Yes is told they are not in the crew.
+- A runner who is not a Warlock, with no place typed, now advertises the city the crew's Warlock summons to. Riders who booked it were refused before.
+- A raincheck a crew window learns about later no longer counts under Earnings "given today", and a valid raincheck no longer shows as void in the crew's windows.
+- A crew member who saves a message sees "Saved", not "your crew uses it too".
+- A crew member's "Remove riders after the thanks" switch is greyed and says it follows the captain.
+- A crew helper who leaves the party while a rider is paying no longer blocks that rider as a non-payer.
+- A raincheck offer that is declined or runs out no longer uses up one of the crew's three a day.
+- A helper who accepts a second captain's offer leaves the first captain's crew, and that captain is told.
+- A rider who is already in another group disappears from the rest of the crew's windows straight away instead of showing as invited for 90 s.
+- A crew member who fought at another station and then left the group no longer triggers a false "Hot drop" warning for riders.
+- The low Soul Shard warning comes back after you make a shard and spend it again.
+- A crew offer nobody answered clears after 5 minutes instead of saying "Waiting for X to tap Yes" for the whole session.
+- When a rider in your group cancels and books again, every Warlock in the crew has the new ride and its fare, not just the one who took the booking.
+- A group member without Wuber who lets go of the portal early, then clicks again and holds it, is counted as a helper.
+- Marking two of your own Warlock windows within seconds of each other no longer delays them sharing their customer notes.
+- When two of your own windows ask for your customer notes at the same time, each now gets them once instead of the second one waiting and getting them all again.
+- A long blocked list is now shared with the whole crew, not just the first 40 names.
+- The Crew screen no longer tells a player who is not a Warlock that they summon, and no longer shows the Warlock sentence on their empty Just you card.
+- A crew Warlock whose helper leads the group is told to ask for the lead: "Mia leads the group: only the leader can invite. Ask Mia to make you leader." (the card promised a hand-over that no longer happens by itself).
+- The Crew card offers "my account" only while "Share notes with my own accounts" is on. That switch's tooltip says "Off: they stay on this account."
+- The "No answer: ... may not have Wuber" line in the crew setup no longer runs behind the Add anyway button, and the button's words are whole.
+- If a Warlock friend says Yes while you are on "Who summons?", she shows ticked as main caster, and Done no longer clears your summoner list.
+- A Warlock added with "Add anyway" is kept as a summoner, so you can pick them in "Who summons?".
+- Someone you unticked in "Pick your crew" stays unticked when others join.
+- A typed name whose crew offer is refused is no longer added to the crew lists.
+- In the crew setup, the choice you picked in Step 1 keeps its highlight when the mouse moves away.
+
+### Raid summons
+- Raid summons are no longer booked as failed on an account that has done a crew summon before: the raider leaves the list and "Summoned tonight" counts.
+- When the first Warlock on the raid's summoner list is offline, the next Warlock is given the waiting raider, and the runner is no longer told to ask the offline one.
+- A raider who has been summoned and has landed no longer reads "You're on the summon list" on their own Ride tab.
+- A summoner in the runner's own raid crew no longer sees a "Request a summon" card that did nothing.
+- In Raid mode the "Ready to summon?" card no longer shows the red "only the leader can invite" line or the red "Crew not set up yet" line. Raid summons need neither.
+- After the runner stops and restarts raid summons, the crew's windows and the raiders' own windows list only the new run's raiders.
+- The Raid summons screen no longer shows a "Not here (0) below" button when nobody is away (on the narrow window it sat on the "Raid summons are stopped" message).
+- On the Raid summons console, Skip is no longer offered for a rider left over from selling.
+- The "Not here below" pill on the raid summons screen no longer floats over Settings or an open sheet.
+- A raider who types "nvm summon" or "cancel summon" is taken off the raid summon list, "no summon" no longer adds them, and "nvm" also works while raid summons are paused.
+- A raider claimed by a summoner without Wuber who never casts is freed after 40 s, even when another Warlock began a channel on that raider.
+- The raid summon button no longer stays stuck on "CLICK THE PORTAL" after you switch from selling to raid summons mid-summon.
+- The raid summon button no longer targets and summons a raider who has just arrived at the spot.
+- A raider who never accepted the summon is no longer stuck as "waiting" in the raid list after a reload or crew sync.
+- A crew Warlock who presses Start or Stop in raid mode reads "Your captain starts and stops the raid summons." (Start showed the word "member", Stop said nothing and played the close sound).
+- After a long raid queue was shown, the Sell summons rider rows no longer stop answering clicks and tooltips.
+- Ticking a Warlock who is already in your crew in Pick summoners makes him a summoner straight away, instead of waiting for a yes that never came.
+- A refused tick on Pick summoners no longer leaves the switch's knob on the ON side.
+- Pick summoners no longer lets you drag the list past its last row.
+- Ticking a Warlock without Wuber when the crew is full no longer claims he summons.
+
+### The map and flights
+- The "Skip the bird" card shows on every flight-map open where a summon beats flying, spells out the saving (the summon's price, what flying costs in gold and time, and what the summon really costs), stays up for 10 seconds, and its Don't show again says where to turn it back on (Settings > Riding > Flight master tip).
+- The "Skip the bird" card no longer puts Open Wuber on top of "Don't show again" or runs into the minimap, whatever the screen shape or UI scale.
+- The Skip the bird card sits beside the Wuber window, or on top of it, so its buttons can always be clicked.
+- In the World view the "continues by boat" arrow and its label are drawn on top of the maps, and a price tag is never put on the label.
+- In the World view the pins of places close together (Ratchet and the Crossroads) are spread apart, and a click books the driver whose pin it is.
+- The Skip the bird card says "The summon costs the same as flying" when the two prices are equal. It used to say "saves free of gold".
+- A bounty pinned in the first seconds after login is sent as soon as Wuber is on its network. It used to count as sent and wait 5 minutes.
+- Changing a pinned bounty to another place within a minute now reaches drivers. They used to keep showing the first place.
+- "Ride here" on the world map opens that place's drivers even when the last ride's Done card was still up.
+- Settings, Help and Home's OpenMap hint no longer say that pins and your route need the OpenMap addon: they also show on the game's own world map. The OpenMap row no longer promises that the map glides to a driver.
+- A window too narrow for the World view is no longer shown the "Tap World" tip.
+- A shared flight-price retry no longer re-runs every frame (a small CPU cost).
+- The glowing destination pin on the booking card no longer hides under the sheet when the place is low on the map.
+- Flight times are now learned even when the game reports the landing a moment early, and the flight after one like that is no longer lost.
+- Cancelling a pledge you had just swapped for another place now clears the first place from drivers' lists too.
+- The World view no longer shows coins for riders' wishes once you switch off "Show what riders want".
+- The flight line on the unfolded Fly or summon card no longer loses its copper at large UI scale: it wraps onto a second line.
+- A bounty you pinned before a /reload still tells you "Your bounty ended" when a driver starts serving that place.
+- With World chosen on the booking card, opening a second driver from a pin or toast no longer draws the Here map over the World map.
+- Flights on one continent show the flight master's fare instead of a route by boats over the sea and back (Auberdine to Theramore, Stormwind to Booty Bay).
+- From Gnomeregan and west Dun Morogh, Wuber shows a flight price and route again.
+- Flight times shown as "about" are no longer stretched by flights whose estimate route uses a boat or zeppelin.
+- Home's zone map says "Click to see this driver" for a driver who is not open (it said "Click to request" for every pin), and the World view calls a paused driver "paused", not "busy".
+- On Home's map during a ride, the dotted route starts at your dot and ends at the right place.
+- The portal backdrop in the unfolded side pane is no longer stretched tall when there is no map art.
+- Hovering a bounty coin on the World view shows its "Wanted: <place>" tooltip.
+- When you and other riders want the same place, the World view shows one coin with the combined count instead of two stacked coins.
+- Ctrl-clicking a town on a continent map books that town, not whatever sits under the cursor after the map zooms in.
+
+### Earnings, Trips and stats
+- The Done screen says "You saved about 14 min of flying" when the time was worked out and not timed by a real flight, as Trips already does.
+- Selling an item to someone for gold while you are open no longer counts as summon pay.
+- On Earnings, an hour you were open for under 30 minutes shows no gold-per-hour rate and no longer sets the brightest square. It stays a dim gold if it took gold.
+- The Shift complete card shows a best hour when the crew took the gold, and its open time leaves out the time you were paused.
+- On the folded Trips screen the "Scroll for your trips" pill no longer covers the "Milestones" heading: a heading the pill would touch is left out until you scroll past it.
+- On Trips, opening Settings no longer leaves the "Scroll for your trips" pill floating over the Settings page.
+- Trips no longer lists a ride you ended without paying, as the Done screen says. Such a ride no longer shows as "Your usual" on Home either.
+- On Earnings, an hour you were open is never painted violet. Violet means buyers asked while you were closed.
+- A finished ride you already rated (or ended without paying) no longer comes back as the Done screen after a /reload.
+- A rating given after a /reload on the finished Done screen now shows in your Trips history.
+- Opening Settings over Earnings no longer leaves the "Scroll for more" pill floating over the Settings page.
+- A driver who shut the game while open and logs in hours later no longer gets a shift card counting the offline hours.
+- The Wrapped summary slide says "1 place" and "1 summon" instead of "1 places" and "1 summons".
+- The Wrapped summary no longer shows a "Longest hop" from a zone to itself.
+- Right-clicking the Wrapped chip now opens the month before the latest, as its tooltip says, instead of repeating the latest month.
+- The monthly recap no longer lists long-visited places as new in the oldest month once only your last 100 rides are kept.
+- "Try this hour" now only suggests hours in which buyers asked while you were closed.
+- The end-of-shift card no longer briefly shows Post to party dimmed as "Share after combat" after a fight.
+- The Reset stats tooltip says what it resets (the counters of /wuber drive stats and of this session) and that the Earnings totals stay.
+- `/wuber drive stats` and Earnings count a ride marked as paid by hand the same way (a hand mark that carried an amount was missing from the stats).
+- Wrapped no longer shows a rider level for an old month when it cannot work it out (only your last 100 rides are kept).
+- The Spent chip on the Trips tab widens for a long amount instead of shrinking its text.
+- On the folded Trips tab a milestone no longer sits under the "Scroll for more" pill.
+- Tapping a busy square on the Earnings busy-hours card after a quiet one no longer shows its numbers in tiny type.
+- Tapping a square on an empty busy-hours card no longer flashes a white frame and a pill.
+- The busy-hours card's white frame no longer jumps back to an old square.
+- Azeroth Wrapped no longer says "free taken" on the Behind the Portal slide when you took no gold that month.
+- Clicking the milestone card with Settings open closes Settings and shows your trips.
+- The star end of the Wrapped chip on the Trips tab clicks and shows its tooltip like the rest of the chip.
+
+### Settings and help
+- Settings: "Check my game" scrolls its results into view whole, and a setting found by search opens with its row at the top instead of cutting the row above.
+- "Invite public chat buyers" shows its real setting at once after Yes, Cancel or closing the warning, and can be clicked again.
+- The gold ring from a tip's Show me button no longer stays on screen when you switch to another tab.
+- Home's list scroll bar no longer draws over the Settings and Help cards.
+- Settings' scroll bar no longer cuts through the Help page.
+- Settings, Check my game, with the window folded: the line under the results is no longer cut off.
+- Wuber opens again exactly where you left it after you dragged it while it was two panes wide. It used to open about 200 pixels to the right, every time and after a reload.
+- The Report a bug window no longer shows the old summoning addon's word in its events and errors lists.
+- "Show me" on the tip "Press Open and riders come to you" rings the Open button on the Drive screen, not the Drive tab.
+- Help > Show a tip no longer brings up the first-open guide at the same time.
+- Settings > Driving, "Largest group" on auto shows the number Wuber really keeps (10 with two helpers, not 5).
+- After an update that adds files, a /reload now shows "Restart the game to finish updating Wuber." whichever part is missing.
+- Asking for a tip just after closing one no longer makes the new tip flash and disappear.
+- When the game had no free popup slot, turning on public invites said nothing; it now tells you the warning can't be shown right now.
+- Settings > Test no longer claims the alert was sent while the game is blocking addon messages.
+- One press of Escape closes the bug report window, even though the report is selected in a box.
+- Opening Wuber right after logging in no longer briefly claims it cannot reach the network while it is still joining.
+- Pressing Reset on Window position during a fight no longer claims the window is back: it moves after combat and then says so.
+- A player's Name-Realm typed into the bug report note is left out, as the window says; a known player's realm is left out too.
+- The first-open tips run on one narrow pane; the window only opens out to two panes after you finish them.
+- If the game won't switch friendly nameplates on, Settings now keeps the message that tells you to press Shift+V.
+- Pressing Test the alert on the alert character itself now shows just the banner, not a "Test sent" note on top.
+- Typing /wuber emblem on|off or mine on|off now moves the switches in an open Settings page straight away.
+- The Effects tip says what Off leaves on: "Only the minimap button still pulses, while your summon is up or the big button has a click for you."
+- The Settings gear on the Drive tab ("Every driving option") shows the driving options to anyone, also before you are set up as a driver.
+- Settings > Window "Reset" also puts "Always narrow" back to Auto, as its toast says.
+- Check my game no longer says everything passed above a crossed driver line: "All 14 game checks passed. 1 driver line needs a look: see your Drive tab."
+- The Change button for "Who summons" in the Driving settings no longer blends into its row after you hover it.
+- With Settings search results showing, opening Help no longer leaves the results' scroll bar drawn over the Help page.
+- The Settings home card for the window shows the window's real size instead of 100% when you have not changed it.
+- A waiting "Press..." key capture for the big button ends on Clear, when a fight starts or when Settings closes, so the next key is no longer swallowed.
+- "I have a second account to alert" opens Settings at the Alert character row on the unfolded window too.
+- Opening Settings while Help is up shows Settings instead of leaving it behind Help.
+- Pressing Esc in an empty Settings search box shows the "Search settings" hint again.
+- Settings offers the founder crown tile and the Pioneer emblem switch even when the game was slow to give your name at login.
+- Dragging the phone clear of your chat box unfolds the page again, instead of leaving it narrow with the "Kept narrow" tip.
+- The bug report no longer replaces the word "unknown" with "player 1", and hides a stranger's name that carries a server tail.
+- Check my game no longer reports the map as broken inside a dungeon.
+- Check my game says when the game refused the leave-group call, instead of naming it as missing.
+- Running Check my game again and again no longer leaves extra hidden frames behind.
+
+### Chat commands (/wuber ...)
+- /wuber drive status marks only real problems with the red "!!". Plain information lines have a grey "--".
+- /wuber drive bell with a name it cannot use now says why, instead of saying the alert character is set.
+- /wuber why no longer wrongly says there is no room for the Skip the bird card in the first moment after the flight map opens.
+- /wuber price no longer accepts a price above 9,999g 99s 99c: it tells you the highest fare instead.
+- /wuber drive log shows 0c, not "free", when you took nothing.
+- /wuber drive stats and the console count raiders over the same six hours.
+- /wuber drive status in raid mode no longer claims "Driving open".
+- /wuber drive add in raid mode adds a raid summon row.
+- /wuber drive bell test always says what happened.
+- /wuber drive msg <kind> reset now restores the default message, and /wuber drive spell with no word no longer erases your saved spell name.
+- `/wuber drive on` and `/wuber drive off` say why they were refused in the Start button's plain words (they printed a code such as "Can't open: lead.").
+- `/wuber why` says "Login tip: one shows when you log in, not again after a /reload. /wuber tips shows one now." after a /reload, and names your usual driver when they are paused or not open at your usual place.
+- `/wuber emblem` calls the art a portal (it said orb). The look is still named Orb.
+
+### Notifications and effects
+- A long alert on the alert character now wraps onto two or three lines in a taller banner, instead of running off both edges of the screen.
+- With Auto-accept on, no toast tells you to accept an invite that Wuber has already accepted for you.
+- A long toast grows taller to show its whole sentence instead of being cut off after two lines (the advert tip, and "No more flight master tips...").
+- A /reload while your summon is up no longer plays the full-screen portal again.
+- With two stations open, the alert character hears "Click the summoning portal" for a summon at either station.
+- With two watched places, each place gets its own "drivers are online" toast with its own place and count.
+- A rider booked before PvP danger starts now sees the "Hot drop" warning as soon as the driver's advert reports it.
+- The Hot drop warning's "fought enemy players X min ago" keeps counting up between the driver's beacons.
+- The minimap button keeps pulsing for a waiting summon after you open Wuber and close it again.
+- When two riders pay you by trade within a few seconds of each other, each payment gets its coin burst.
+- The minimap button no longer flashes magenta for a moment when a driver's click is due: it pulses gold.
+- The alert banner and the "1 alert" box show a tooltip that says what a click does.
+- Toasts now stay at the top of the screen when Wuber is closed, and move out of the way if you open Wuber while one is showing.
+- A watched-place alert that came due during combat now shows when combat ends instead of being lost.
+- Crowns and driver badges over other players' nameplates no longer draw on top of Wuber's buttons and text.
+- The Pioneer emblem preview now works in instances and with emblems off, emblem badges no longer draw over Drive button text, and hiding your own emblem reaches other players at once.
+- Effects on Light plays no full-screen effects, as its text says (it played smaller ones).
+- The minimap button's tooltip offers "Shift-right-click: pause or resume driving" only while you are open to drive.
+- Founders keep the gold portal and the crown, and riders keep their seed drivers, when the game gives no realm name (game build 71037), for a character that logged in at least once while the game still named its realm. A character that never did is not helped yet.
+- A founder's own crown no longer pops back into view when the camera is zoomed fully into first person.
+- A tip from a rider whose name carries a realm shows one coin shower, not coins followed by a smaller burst.
+- Turning on friendly nameplates from Settings keeps the toast that says Shift+V turns them off.
+- Setting Effects to Off stops a milestone effect that is already playing.
+- The emblem preview no longer covers a founder's own crown.
+- With crowns and badges off, the emblem preview no longer floats over empty space.
+- Wuber notices a half-loaded driver file after an update and asks for a restart.
+
+## Behind the scenes
+- The layout check now covers the login tip card (folded and unfolded, longest tip) and the World map with a sea route and its arrow.
+- The layout check now covers the "Skip the bird" card on the flight map, and flags a label half over a button.
+- The test game now ignores a texture's own fade change during an animation, as the game does. It found six lines to fix next round (tests/fixtures/alpha-known.txt).
+- The Skip the bird card keeps its full message; the card grows to fit.
+- Each fix has its own test in tests/r27 (round 27), tests/r28 (round 28), tests/r29 (round 29), tests/r30 (round 30), tests/r31 (round 31), tests/r32 (round 32), tests/r33 (round 33), tests/r34 (round 34), tests/r37 (round 37), tests/r46 (round 46), tests/r47 (round 47) or tests/r48 (round 48) that failed before the fix and passes after it.
+- The flight recorder's tools and tests are in (tools/rec, tests/rec).
+- tools/tests-for.lua can run in several worktrees at once.
+- The layout check now shows the booking card with the Fly or summon dial up (its game knew no flight time before, so the dial was hidden in every booking shot), also with a driver's own average of 59 and 900 seconds.
+- Round 28 took in the 2.3.3 fixes of round 26b from master, the fake game corrected from recorded play (branch rec) and the Google review's whole-addon mode (branch tools-audit).
+- Round 29 took in the bug hunt's tools and promise checks (tools/hunt, tests/promises; not part of the suite), the recorder tests that skip without the recorder addon and stay out of the behaviour transcript, and the audit checker's brief.
+- Round 33 took in the bug hunt's second and third sweeps (tools/hunt, tests/hunt, tests/promises; tools and tests only, not part of the suite).
+- A check that runs at login now also reports a module that names itself as a dependency (BRK-01), and the checking tool (tools/check.lua) fails such a file (REV-r48-1). No shipped module does, so nothing changes for players.

@@ -1,0 +1,23 @@
+diff --git a/Wuber/UI/Driver/Sheets.lua b/Wuber/UI/Driver/Sheets.lua
+new file mode 100644
+--- /dev/null
++++ b/Wuber/UI/Driver/Sheets.lua
+@@ -0,0 +655,18 @@
++	card.title:SetWidth(INNER - 60)
++	card.title:SetText("Your old summoning addon is still on")
++	card.text = para(card, "caption", "muted", INNER - 32, 3)
++	card.text:SetPoint("TOPLEFT", card, "TOPLEFT", 16, -44)
++	card.text:SetText("Your price, crew, messages, blocked list and earnings are copied into Wuber. Switch the old addon off and Wuber drives from now on.")
++	card.go = T.Pill(card, "Switch it off and reload", "primary", INNER - 32, 40)
++	card.go:SetPoint("BOTTOMLEFT", card, "BOTTOMLEFT", 16, 46)
++	safeScript(card.go, "OnClick", function()
++		if inCombat() then toast("After the fight", "warn") return end
++		if disableRR() and type(ReloadUI) == "function" then
++			ReloadUI()
++			return
++		end
++		card.failed = true
++		card.text:SetText("Untick your old summoning addon in the AddOns list (Esc > AddOns), then type /reload.")
++		card.text:SetTextColor(T.RGB("red"))
++	end)
++	T.Tip(card.go, "Switch it off", "Turns your old summoning addon off and reloads your interface. Wuber then drives with everything it had.")

@@ -1,0 +1,21 @@
+# promise id<TAB>the other job's id (the shared bug list)<TAB>one-line why<TAB>optional: the plain line the row covers. Read by
+# tools/hunt/sweep.lua at the join: a finding of one of these promises is KNOWN (no repro file, not shrunk). With a fourth
+# column only a finding with exactly that line is known (another line of the promise is NEW). Without it the whole promise
+# is known and FAILURES.md says "whole promise, line not checked": give the line when you can.
+leads.c010_bird_no_zero_saving	AUD-17	Skip the bird card says the summon saves "free" of gold when the prices are equal (Bird.lua:235)
+bird.no_empty_saving	AUD-17	same line: the card says the summon saves "free" of gold when the prices are equal
+leads.c068_usual_counts_unpaid	AUD-18	an unpaid ride becomes Your usual (W.Usual, Favourites.lua:204)
+home.usual_ignores_unpaid	AUD-18	Home offers a driver from unpaid rides as Your usual
+leads.c018_bounty_cancel_reaches_drivers	AUD-43	A replaced then cancelled bounty is never cancelled for the first place (Bounty.lua:141)
+leads.c089_advert_cut_by_tag	HUNT-56	the same cut as leads.c003 (an advert of 193 to 200 characters loses its last words)
+adverts.own_line_posted_whole	HUNT-56	the same cut, found by the adverts promise
+leads.c021_bug_error_realm	HUNT-62	the realm left in a bug report error line (the cited test is phone.bug_report_hides_realm_names)
+looks.light_no_fullscreen	HUNT-18	Effects Light still plays full-screen effects (the cited test is leads.c075)
+trips.only_paid_listed	HUNT-22	unpaid rides listed in Trips (the cited test is leads.c137)
+miles.card_tap_opens_trips	HUNT-13	the first-open tip moves the phone to Home; this is the milestone-card surface of the same bug
+minimap.right_click_driver_console	HUNT-13	the minimap right-click surface of the same bug (the first-open tip moves the phone to Home)
+coachsteps.each_step_points_at_something	HUNT-07	the floating big Drive button sits over the tips' Next button
+coachsteps.got_it_is_final	HUNT-07	the floating big Drive button sits over the tips' Next button
+queue.lead_click_invites	HUNT-122	Invite riders who whisper me off: a tap on a grey chat lead only queues them (HUNT-12, a queued rider's tap, was fixed in round 30)
+trips.wrapped_card_due	HUNT-13	the first-open tip moves the phone to Home, so the Trips tab click is undone
+maps.world_you_pin	HUNT-07	the floating Drive console covers the phone on a small effective screen
