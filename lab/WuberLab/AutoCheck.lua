@@ -19,6 +19,10 @@
 --                screen with no line cut, then its OnLeave. Secure (protected) frames are never touched.
 --     verify     a screen's own verdict (AutoSteps.lua): a safe button pressed and its result, a tooltip's words
 --                       Lists that scroll (Settings' sections, T.Scroll lists) are looked at from top to bottom.
+--                       (job 2913) Targeted: the Steps note (WuberLabBarSteps.auto, from "<!-- auto: home_bounty home -->" in
+--                       STEPS-*.md) names the screens a run needs; with no words the run walks only those, folded and
+--                       unfolded, with the same checks, and shoots each named screen once (plus any look). "/lab auto all"
+--                       or a note naming none: every screen. The start line says about how many seconds it takes.
 --   L.AutoStop()        /lab auto stop
 --
 -- It NEVER presses anything that talks to other players: the only clicks are the named, local ones in
@@ -965,6 +969,7 @@ end
 function hooks.wantShot(e)
 	if not run then return true end
 	if run.allShots then return true end
+	if run.shotNamed and e.s and run.shotNamed[tostring(e.s.id):lower()] then return true end -- (job 2913) a screen the STEPS file names
 	if run.lookKeys and run.lookKeys[e.key] then return true end
 	local db = L.db
 	if type(db) ~= "table" then return true end
@@ -1050,7 +1055,7 @@ function hooks.done(reason, last)
 		stepsFile = r.stepsFile, reason = reason, planned = last and last.planned or 0, done = #r.screens, minutes = math.floor(secs / 6 + 0.5) / 10,
 		screen = r.screen, window = r.window, api = r.api, noTruncated = r.noTruncated, distinct = r.distinct, taintLog = r.taint,
 		counts = { pass = c.pass or 0, look = c.look or 0, skip = c.skip or 0, info = c.info or 0 },
-		screens = r.screens, results = r.results, steps = r.steps, shots = shots, subset = r.subset, watch = watched }
+		screens = r.screens, results = r.results, steps = r.steps, shots = shots, subset = r.subset, targeted = r.targeted, planSecs = r.planSecs, watch = watched }
 	saved.speed = L.SpeedTake and L.SpeedTake() or nil -- (speed job 2749) the timing pass's rows (AutoSpeed.lua)
 	if db then db.autoCheck = saved end
 	L.lastAuto = saved
@@ -1085,15 +1090,31 @@ function L.AutoEstimate(screens, allShots)
 	return math.ceil(n * (math.max(L.PHOTO_WAIT + 2 * L.PHOTO_POLL + L.PHOTO_GAP + 0.1, L.PHOTO_APART + 0.2) + L.AUTO_SHOT_WAIT + 0.25)), n
 end
 
+-- the screens of a list of ids, in run order (for the time estimate)
+function L.AutoScreensOf(ids)
+	local want, out = {}, {}
+	for _, id in ipairs(ids or {}) do want[id] = true end
+	for _, s in ipairs(L.AutoScreens()) do if want[s.id] then out[#out + 1] = s end end
+	return out
+end
+
 -- words -> screen ids: "steps" (the extra screens), "ride" / "drive" / "settings" (the tour's sides), an id or its start
-local function resolve(words)
+-- exact (a STEPS file names screens): a word that is a screen's whole id means that screen only ("home" is not home_bounty)
+local function resolve(words, exact)
 	local want, unknown = {}, {}
+	local all = L.AutoScreens()
 	for _, w in ipairs(words) do
 		local hit = false
-		for _, s in ipairs(L.AutoScreens()) do
+		local whole = false
+		if exact then
+			for _, s in ipairs(all) do if s.id:lower() == w then whole = true end end
+		end
+		for _, s in ipairs(all) do
 			local id = s.id:lower()
 			local side = s.side == "rider" and "ride" or (s.side == "driver" and "drive" or s.side)
-			if (w == "steps" and s.auto) or (w == side and not s.auto) or id == w or id:sub(1, #w) == w then
+			if whole then
+				if id == w then want[s.id] = true hit = true end
+			elseif (w == "steps" and s.auto) or (w == side and not s.auto) or id == w or id:sub(1, #w) == w then
 				want[s.id] = true
 				hit = true
 			end
@@ -1121,24 +1142,40 @@ function L.AutoStart(opts)
 	end
 	local W = L.W()
 	L.speedRows = nil
+	local steps = rawget(_G, "WuberLabBarSteps")
+	-- (job 2913) A targeted check: with no words of its own, the run walks only the screens the Steps note names
+	-- (WuberLabBarSteps.auto, from "<!-- auto: home_bounty home -->" in STEPS-*.md). /lab auto all (opts.full) or a note
+	-- with no names: every screen, as before. Each named screen also gets its one screenshot.
+	local words, exact, named = opts.words, false, nil
+	if type(words) ~= "table" or #words == 0 then
+		words = nil
+		if not opts.full and type(steps) == "table" and type(steps.auto) == "table" and #steps.auto > 0 then
+			words, exact, named = steps.auto, true, {}
+			for _, w in ipairs(words) do named[tostring(w):lower()] = true end
+		end
+	end
 	local only
-	if type(opts.words) == "table" and #opts.words > 0 then
-		local ids, unknown = resolve(opts.words)
+	if words then
+		local ids, unknown = resolve(words, exact)
 		if #unknown > 0 or #ids == 0 then
 			say("Auto check: no screen called " .. table.concat(unknown, ", ") .. " (steps, ride, drive, settings, or a screen id)")
 			return false, "unknown screen"
 		end
 		only = ids
+		if type(opts.shotWords) == "table" and #opts.shotWords > 0 then
+			named = {}
+			for _, w in ipairs(opts.shotWords) do named[tostring(w):lower()] = true end
+		end
 	end
 	local up, win = rawget(_G, "UIParent"), winOf(W)
-	local steps = rawget(_G, "WuberLabBarSteps")
 	local cvar = rawget(_G, "C_CVar")
 	local getCVar = type(cvar) == "table" and cvar.GetCVar or rawget(_G, "GetCVar")
 	local okT, taint = pcall(function() return getCVar("taintLog") end)
 	run = { results = {}, screens = {}, byKey = {}, toasts = {}, counts = {}, steps = {}, things = {}, distinct = 0, t0 = L.Now(),
 		taint = okT and str(taint) or nil,
 		allShots = opts.shots == true,
-		started = math.floor(L.Epoch and L.Epoch() or 0), wuber = str(W.VERSION), subset = only and table.concat(opts.words, " ") or nil,
+		started = math.floor(L.Epoch and L.Epoch() or 0), wuber = str(W.VERSION), subset = only and table.concat(words, " ") or nil,
+		targeted = (opts.words == nil or #opts.words == 0) and only ~= nil or nil, shotNamed = named,
 		stepsFile = type(steps) == "table" and str(steps.name) or nil,
 		screen = ("%.0f x %.0f, UI scale %.2f"):format(num(m(up, "GetWidth")) or 0, num(m(up, "GetHeight")) or 0, num(m(up, "GetEffectiveScale")) or 0),
 		window = win and ("%.0f x %.0f, scale %.2f"):format(num(m(win, "GetWidth")) or 0, num(m(win, "GetHeight")) or 0, num(m(win, "GetScale")) or 0) or "?",
@@ -1162,6 +1199,11 @@ function L.AutoStart(opts)
 			r.toasts[#r.toasts + 1] = tostring(text)
 			return undo(text, ...)
 		end)
+	end
+	if only then
+		local secs, n = L.AutoEstimate(L.AutoScreensOf and L.AutoScreensOf(only) or nil, run.allShots)
+		run.planSecs = secs
+		say(("Auto check of %d screens only%s: about %d s"):format(#only, run.targeted and " (the ones this run's Steps note names)" or "", secs))
 	end
 	L.Log("auto", "start: " .. run.screen .. "; window " .. run.window .. "; " .. run.api)
 	return true
