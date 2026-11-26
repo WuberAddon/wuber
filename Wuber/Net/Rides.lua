@@ -46,7 +46,7 @@ local SAVED = { "id", "driver", "addr", "driverKey", "service", "dest", "price",
 	"eta", "rated", "stars", "paid", "from", "reason", "summonAccepted", "inviter",
 	"destWire", "destOk", "saved", "savedHow", "fromZone", "position", "tier", "rides",
 	"origGroup", "wasGrouped", "waitingOut", "autoAccepted", "payClicked", "noAddon",
-	"startedAt", "arrivedAt", "arrivedZone", "unpaid", "endedBy", "flightCost", "flightExact", "paidSoFar",
+	"startedAt", "arrivedAt", "arrivedZone", "unpaid", "removed", "endedBy", "flightCost", "flightExact", "paidSoFar",
 	"payee", "payto", "summoner", "summonedBy", "crew",
 	"voucher", "voucherCover", "voucherTaken", "voucherRefused", "fare", "raincheck", "paidAt", "endedAt", "showPass", "arrivalSent" } -- (2.3.0: raincheck; round 9: showPass; 2.4: arrivalSent)
 
@@ -124,6 +124,19 @@ local function finish(r, state, reason)
 	fireRide(r)
 	return true
 end
+
+-- Removed from the group (the game's own line) while the summon box is up: the ride is over, unpaid, and the
+-- ended page says why (r.removed). Leaving by oneself says another line and changes nothing here.
+W.On("CHAT_MSG_SYSTEM", function(text)
+	local line = rawget(_G, "ERR_UNINVITE_YOU")
+	local r = W.ride
+	if type(line) ~= "string" or text ~= line then return end
+	if not (W.RideActive() and r.state == "portal" and r.summonUp) then return end
+	r.removed = true
+	r.unpaid = not r.paid or nil
+	r.endedBy = "removed"
+	advance(r, "done")
+end)
 
 -- A driver who logged off without saying so: the game answers our whisper with "No player
 -- named ...". Drop the driver at once, and end a ride still waiting on them (no resend, no C).
