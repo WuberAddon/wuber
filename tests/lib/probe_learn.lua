@@ -223,7 +223,23 @@ function L.accessorMap(map)
 	return out
 end
 
+-- (job 2908) the protection rule a fixture's propagation rows (S secure button, kid parented to S, tied anchored to S, ctl alone, box = parent of S)
+-- answer: { child, anchored, parent } = whether a plain frame under / anchored to / holding a secure frame is protected (IsProtected true). nil without rows.
+function L.protectRule(fx)
+	local r = fx.protect
+	if type(r) ~= "table" or type(r.S) ~= "table" or r.S.prot ~= true then return nil end
+	local function prot(row) return type(row) == "table" and row.prot == true end
+	local out = { child = prot(r.kid), anchored = prot(r.tied), parent = prot(r.box), control = prot(r.ctl) }
+	-- CreateFrame under a protected frame in a fight: refused when the dummy step's S:CreateFrame failed (N25-F: under the world map in a fight)
+	for _, row in ipairs(type(fx.dummy) == "table" and fx.dummy.fight or {}) do
+		if row.op == "S:CreateFrame" and (row.ok == false or row.took == false) then out.createUnder = true end
+	end
+	return out
+end
+
 function L.apply(H, fx)
+	local pr = L.protectRule(fx)
+	if pr and pr.control == false then H.protectRule = pr end
 	if nonEmpty(fx.fileIds) then H.fileIds = fx.fileIds end
 	if fx.labels then H.measuredCut = L.cutFn(fx) end
 	if nonEmpty(fx.widths) then H.measuredWidths = L.widthFn(fx) end
@@ -235,7 +251,7 @@ end
 
 function L.reset(H)
 	H.fileIds, H.fileIdFn, H.measuredWidths = nil, nil, nil
-	H.keyRules, H.secretApi = nil, nil
+	H.keyRules, H.secretApi, H.protectRule = nil, nil, nil
 	H.measuredCut = nil
 	H.setSecretAccessors(nil)
 end
@@ -243,13 +259,14 @@ end
 -- what a run has loaded now (so a test can reset or apply and put it back)
 function L.save(H)
 	return { fileIds = H.fileIds, fileIdFn = H.fileIdFn, measuredWidths = H.measuredWidths, keyRules = H.keyRules, secretApi = H.secretApi, measuredCut = H.measuredCut,
-		secretAccessors = H.secretAccessorsMap }
+		secretAccessors = H.secretAccessorsMap, protectRule = H.protectRule }
 end
 
 function L.restore(H, saved)
 	L.reset(H)
 	H.fileIds, H.fileIdFn, H.measuredWidths, H.keyRules, H.secretApi = saved.fileIds, saved.fileIdFn, saved.measuredWidths, saved.keyRules, saved.secretApi
 	H.measuredCut = saved.measuredCut
+	H.protectRule = saved.protectRule
 	if saved.secretAccessors then H.setSecretAccessors(saved.secretAccessors) end
 end
 
