@@ -372,6 +372,21 @@ local function friendlyPlatesOn()
 	return false
 end
 
+-- true only when the game's Sound in Background setting is known to be off ("0"); read each time, never cached
+local function soundInBgOff()
+	local cc = rawget(_G, "C_CVar")
+	local g1 = type(cc) == "table" and type(cc.GetCVar) == "function" and cc.GetCVar or nil
+	local g2 = rawget(_G, "GetCVar")
+	local raw
+	for _, g in ipairs({ g1 or false, g2 or false }) do
+		if raw == nil and type(g) == "function" then
+			local ok, r = pcall(g, "Sound_EnableSoundWhenGameIsInBG")
+			if ok and r ~= nil then raw = r end
+		end
+	end
+	return raw ~= nil and S(raw) == "0"
+end
+
 local function turnOnPlates()
 	if inCombat() then
 		UI.Toast("Leave combat first", "warn")
@@ -999,8 +1014,9 @@ local function buildDriving2(drive, dy)
 	dy = section(drive, dy + 4, "Driving: more")
 	local bellY = dy
 	local bellField, bellRow
+	local BELL_TIP = "A character you have logged in on another account: it flashes, beeps and shows a banner when one of your windows needs a click. Empty: off."
 	dy, bellField, bellRow = fieldRow(drive, dy, "drive.bell", "Alert character", "A character on another account.",
-		"A character you have logged in on another account: it flashes, beeps and shows a banner when one of your windows needs a click. Empty: off.",
+		BELL_TIP,
 		function()
 			local db = W.db and W.db.drive
 			return type(db) == "table" and type(db.bell) == "table" and S(db.bell.name) or ""
@@ -1013,6 +1029,12 @@ local function buildDriving2(drive, dy)
 			UI.UpdateSettings()
 		end, { placeholder = "Name-Realm (empty: off)", max = 40 })
 	st.bellY = bellY
+	T.Tip(bellField.edit, "Alert character", function()
+		if soundInBgOff() then
+			return BELL_TIP .. "\nSound in Background is off in the game's sound settings, so the bell is silent while another window is in front"
+		end
+		return BELL_TIP
+	end)
 	dy = dy + grow(bellRow, 36)
 	bellField:ClearAllPoints()
 	bellField:SetPoint("BOTTOMLEFT", bellRow, "BOTTOMLEFT", 8, 48)
