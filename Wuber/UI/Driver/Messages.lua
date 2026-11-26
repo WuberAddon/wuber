@@ -516,7 +516,8 @@ D.screens.messages = function(parent)
 		if s.rows[1] and s.rows[1]:IsShown() then fitView(s, true) end
 	end)
 	s.onBack = function()
-		if s.kind and not s.isWide() then
+		-- (playtest) in Simple mode only the advert line is reachable: Back leaves the screen instead of showing the list
+		if s.kind and not s.isWide() and (type(W.Advanced) ~= "function" or W.Advanced() == true) then
 			s.list()
 			return true
 		end
