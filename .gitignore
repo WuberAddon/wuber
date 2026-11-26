@@ -1,6 +1,7 @@
 # generated / local-only
 tests/out/
 tests/transcripts/baseline.txt
+tests/transcripts/baseline.txt.*
 tests/transcripts/after*.txt
 *.zip
 __pycache__/

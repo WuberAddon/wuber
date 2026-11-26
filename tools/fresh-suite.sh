@@ -54,7 +54,8 @@ git -C "$clone" checkout -f --detach "$sha" || exit 2
 if [ -n "$(git -C "$clone" ls-files --eol | grep -m1 'i/lf.*w/crlf')" ]; then
   git -C "$clone" rm -q -r --cached . >/dev/null && git -C "$clone" reset -q --hard "$sha" || exit 2
 fi
-git -C "$clone" clean -fdx -q || exit 2
+# -ff: a test (arch guard self-test) leaves a nested git repo in tests/out, which a single -f keeps (job 2947)
+git -C "$clone" clean -ffdx -q || exit 2
 if [ -e "$clone/tests/out" ] && [ -n "$(ls -A "$clone/tests/out")" ]; then
   echo "fresh-suite: tests/out is not empty in $clone"; exit 2
 fi
