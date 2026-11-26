@@ -1110,7 +1110,7 @@ local function buildWindow8(rest, y)
 	wr, y = row(rest, y, "Wide pages", "Some pages open out to two panes.",
 		"Auto: pages that need room (the drivers, booking, trips, settings and the Drive screens) open wide when your game "
 		.. "window has room. Always narrow: Wuber stays phone-sized. The button at the top of the window opens or closes a page too.", 84)
-	local resetW = 64
+	local resetW = 80 -- (gauntlet #43) the label's room is the width less the height: 64 left 34, too little for "Reset" at a big window scale
 	local seg = T.Segmented(wr, {
 		{ value = "auto", label = "Auto", tip = "Open wide where it helps, when there is room." },
 		{ value = "narrow", label = "Always narrow", tip = "Always phone-sized." },
