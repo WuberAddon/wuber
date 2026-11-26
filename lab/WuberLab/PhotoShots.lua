@@ -1614,12 +1614,12 @@ L.PHOTO_SCREENS = {
 	{ id = "settings_bug", side = "settings", unfold = true, title = "Settings: Report a bug (in This window)", run = function(W)
 		return settings(W, function(UI, P) return L.PhotoOpenSetting(UI, P, "Report a bug") end)
 	end },
-	{ id = "settings_invite", side = "settings", unfold = true, title = "Settings: Driving, Invite public chat buyers (off by default)", run = function(W)
-		return settings(W, function(UI, P) return L.PhotoOpenSetting(UI, P, "Invite public chat buyers") end)
+	{ id = "settings_invite", side = "settings", unfold = true, title = "Settings: Driving, Invite public chat riders (off by default)", run = function(W)
+		return settings(W, function(UI, P) return L.PhotoOpenSetting(UI, P, "Invite public chat riders") end)
 	end },
-	{ id = "settings_invite_warning", side = "settings", unfold = true, title = "Settings: the warning asked before Invite public chat buyers turns on", run = function(W)
+	{ id = "settings_invite_warning", side = "settings", unfold = true, title = "Settings: the warning asked before Invite public chat riders turns on", run = function(W)
 		return settings(W, function(UI, P)
-			local r = L.PhotoOpenSetting(UI, P, "Invite public chat buyers")
+			local r = L.PhotoOpenSetting(UI, P, "Invite public chat riders")
 			if r ~= true then return r end
 			local DR = W.Drive
 			if not fn(DR, "SetAutoPublic") then return "no DR.SetAutoPublic" end
