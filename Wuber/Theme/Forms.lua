@@ -333,10 +333,23 @@ function T.EdgeFade(view, opts)
 		local t = edge == "top" and self.top or self.bottom
 		return t:IsShown() and true or false
 	end
+	-- the bar between two 0.2 s updates (it follows a smooth scroll every frame): it asks only the list's own
+	-- offset (the source), and paints only when the offset or the range moved; the view's height is the one the
+	-- last update read. A list with no source (T.Scroll) paints its bar itself each time it moves (place).
+	function fd.Follow(self)
+		if not (self.source and self.viewH) then return end
+		local off, max = self.source()
+		off, max = tonumber(off) or 0, tonumber(max) or 0
+		if off == self.fOff and max == self.fMax then return end
+		self.fOff, self.fMax = off, max
+		paintBar(self, math.max(0, off), math.max(0, max - off), self.viewH)
+	end
 	function fd.Update(self)
 		local lvl = tonumber(Try(view, "GetFrameLevel")) or 1
 		if (tonumber(Try(holder, "GetFrameLevel")) or 0) ~= lvl + self.lift then Try(holder, "SetFrameLevel", lvl + self.lift) end
 		local above, below, h = amounts(self)
+		self.viewH = h
+		if self.source then self.fOff, self.fMax = above, above + below end
 		paintBar(self, above, below, h)
 		local size = math.max(4, math.min(self.size, math.floor(h / 4)))
 		self.top:SetHeight(size)
@@ -349,7 +362,7 @@ function T.EdgeFade(view, opts)
 		fd.wait = fd.wait - (tonumber(elapsed) or 0)
 		if fd.wait > 0 then
 			-- the bar follows the smooth scroll every frame (the fades 5 times a second)
-			if fd.thumb then pcall(fd.Bar, fd) end
+			if fd.thumb then pcall(fd.Follow, fd) end
 			return
 		end
 		fd.wait = 0.2
