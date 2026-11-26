@@ -21,16 +21,26 @@ local SCREENS = {
 	"wizard_summoner",
 }
 
+local function rowKey(row)
+	return row.srcMatch and (row.id .. "|" .. row.srcMatch) or row.id
+end
+
 local function findScreen(ctx, id)
 	for _, s in ipairs(Lib.screens(ctx)) do
 		if s.id == id then return s end
 	end
 end
 
-local function findControl(ctx, id)
+local function findControl(ctx, row)
 	for _, ctl in ipairs(Lib.controls(ctx)) do
-		if ctl.id == id then return ctl end
+		if ctl.id == row.id and (not row.srcMatch or ctl.src:find(row.srcMatch)) then
+			return ctl
+		end
 	end
+end
+
+local function matchesRow(ctl, row)
+	return ctl.id == row.id and (not row.srcMatch or ctl.src:find(row.srcMatch))
 end
 
 local function sentCount(w)
@@ -39,46 +49,49 @@ end
 
 for _, row in ipairs(PROBES) do
 	if not row.skip then
-		test("b4 probe: " .. row.id .. " (" .. row.on .. ")", function()
+		local label = row.srcMatch and (row.id .. " [" .. row.srcMatch .. "]") or row.id
+		test("b4 probe: " .. label .. " (" .. row.on .. ")", function()
 			local ctx = Lib.newWorld()
 			local s = findScreen(ctx, row.on)
 			ok(s ~= nil, "screen exists: " .. row.on)
 			local shown, why = Lib.show(ctx, s)
 			ok(shown, "screen shown: " .. row.on .. " (" .. tostring(why) .. ")")
-			local ctl = findControl(ctx, row.id)
-			ok(ctl ~= nil, "control found: " .. row.id .. " on " .. row.on)
-			ok(not ctl.protected, "non-skip control must not be protected: " .. row.id)
+			if row.setup then row.setup(ctx, findControl) end
+
+			local ctl = findControl(ctx, row)
+			ok(ctl ~= nil, "control found: " .. label .. " on " .. row.on)
+			ok(not ctl.protected, "non-skip control must not be protected: " .. label)
 
 			local good, taker = Lib.judgeTaker(ctx, ctl)
-			ok(good, row.id .. " on " .. row.on .. ": click covered by " .. Lib.describe(taker))
+			ok(good, label .. " on " .. row.on .. ": click covered by " .. Lib.describe(taker))
 
 			local err0 = #ctx.w.errors
 			local sent0 = sentCount(ctx.w)
 			local before = { sig = Lib.signature(ctx), ctl = ctl }
 			ctx.c:clickOn(ctl.f)
 			ctx.w:advance(1)
-			before.afterSig = Lib.signature(ctx)
 
 			local pass, msg = row.check(ctx, before)
-			ok(pass == true, row.id .. " (" .. row.on .. "): " .. (msg or row.does))
-			eq(#ctx.w.errors - err0, 0, row.id .. ": no Lua errors")
-			eq(sentCount(ctx.w) - sent0, 0, row.id .. ": no network/chat sends")
+			ok(pass == true, label .. " (" .. row.on .. "): " .. (msg or row.does))
+			eq(#ctx.w.errors - err0, 0, label .. ": no Lua errors")
+			eq(sentCount(ctx.w) - sent0, 0, label .. ": no network/chat sends")
 		end)
 	end
 end
 
 test("b4 probe gate: every control on the 13 driver screens has one probe row", function()
-	local byId = {}
+	local byKey = {}
 	local dupes = {}
 	for _, row in ipairs(PROBES) do
-		if byId[row.id] then
-			dupes[#dupes + 1] = row.id
+		local k = rowKey(row)
+		if byKey[k] then
+			dupes[#dupes + 1] = k
 		end
-		byId[row.id] = row
+		byKey[k] = row
 	end
 	eq(#dupes, 0, "duplicate probe rows: " .. table.concat(dupes, ", "))
 
-	local seen = {}
+	local matched = {}
 	local missing = {}
 	for _, sid in ipairs(SCREENS) do
 		local ctx = Lib.newWorld()
@@ -87,17 +100,23 @@ test("b4 probe gate: every control on the 13 driver screens has one probe row", 
 		local shown, why = Lib.show(ctx, s)
 		ok(shown, "screen shown: " .. sid .. " (" .. tostring(why) .. ")")
 		for _, ctl in ipairs(Lib.controls(ctx)) do
-			seen[ctl.id] = sid
-			if not byId[ctl.id] then
-				missing[#missing + 1] = ctl.id .. " (on " .. sid .. ")"
+			local hit = nil
+			for _, row in ipairs(PROBES) do
+				if matchesRow(ctl, row) then
+					hit = row
+					matched[rowKey(row)] = sid
+				end
+			end
+			if not hit then
+				missing[#missing + 1] = ctl.id .. " [" .. ctl.src .. "] (on " .. sid .. ")"
 			end
 		end
 	end
 
 	local stale = {}
 	for _, row in ipairs(PROBES) do
-		if not seen[row.id] then
-			stale[#stale + 1] = row.id
+		if not matched[rowKey(row)] then
+			stale[#stale + 1] = rowKey(row)
 		end
 	end
 	table.sort(missing)
