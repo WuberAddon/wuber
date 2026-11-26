@@ -386,7 +386,7 @@ end)
 local counted = setmetatable({}, { __mode = "k" })
 W.Listen("DRIVE_STATE", function(c, was)
 	if type(c) ~= "table" then return end
-	-- the same row back below paid is a new ride (a repeat rider; BRIEF17 C6): it counts again
+	-- the same row back below paid is a new ride (a repeat rider): it counts again
 	if counted[c] and DR.Rank and DR.Rank(c.state) < DR.Rank("paid") then counted[c] = nil handPaid[c] = nil end
 	if c.state ~= "paid" or counted[c] or locked() then return end
 	counted[c] = true

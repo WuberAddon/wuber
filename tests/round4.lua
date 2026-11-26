@@ -1225,7 +1225,7 @@ end)
 
 test("drive: Trade and LookingForGroup: a buyer for your place is invited and offered the price; another place is not", function()
 	local w, ana, bea, cal = team()
-	-- (2.3.2, BRIEF19 R4: off by default, on after a warning; switched on here as a player would)
+	-- (2.3.2: off by default, on after a warning; switched on here as a player would)
 	for _, c in ipairs({ ana, bea, cal }) do DRof(c).opts().autoPublic = true end
 	DRof(ana).SetDest("Ratchet")
 	w:advance(2)
@@ -1387,7 +1387,7 @@ test("drive: public lines: portal words, one-letter typos, and direction (only t
 		["lf portal to dalaran"] = "elsewhere", ["wts portal"] = nil, ["wtb portal"] = "noplace",
 		["need sum uc > org"] = "elsewhere", ["wtb summon at uc"] = "elsewhere",
 	}
-	-- (BRIEF22 P1: a place after "to" that is not mine is somewhere else, known or not: Dalaran too)
+	-- (a place after "to" that is not mine is somewhere else, known or not: Dalaran too)
 	for line, want in pairs(uc) do eq(DR.PublicWant(line), want, line) end
 	-- one letter off a topic word counts; real words never do
 	for _, line in ipairs({ "wtb portel to uc", "lf poratl uc", "wtb portale uc", "wtb warlcok uc" }) do
@@ -1433,7 +1433,7 @@ end)
 
 test("drive: a rider who leaves without paying is blocked in all three windows and told why when they ask again", function()
 	local w, ana, bea, cal = team()
-	-- (2.3.2, BRIEF19 R4: on, so "Trade: not invited" below is the block's doing, not the default's)
+	-- (2.3.2: on, so "Trade: not invited" below is the block's doing, not the default's)
 	for _, c in ipairs({ ana, bea, cal }) do DRof(c).opts().autoPublic = true end
 	ask(w, ana, "Dan Miller")
 	summon(w, ana, bea, cal)
@@ -1492,7 +1492,7 @@ end)
 
 test("drive: Services and World: buyers there are invited", function()
 	local w, ana = team()
-	DRof(ana).opts().autoPublic = true -- (2.3.2, BRIEF19 R4: off by default)
+	DRof(ana).opts().autoPublic = true -- (2.3.2: off by default)
 	DRof(ana).SetDest("Ratchet")
 	w:advance(1)
 	w:addBot("Dan Miller", { acceptsInvites = false })
@@ -1620,7 +1620,7 @@ end)
 
 test("drive: skip: the name the button is about to whisper is dropped, nothing said; shift blocks", function()
 	local w, ana = team()
-	DRof(ana).opts().autoPublic = true -- (2.3.2, BRIEF19 R4: off by default)
+	DRof(ana).opts().autoPublic = true -- (2.3.2: off by default)
 	w:addBot("Dan Miller", { acceptsInvites = false })
 	channel(ana, "wtb summon uc", "Dan Miller", "Services", 3)
 	w:advance(3)
@@ -1643,7 +1643,7 @@ end)
 
 test("drive: log: payments by the cashier's window, buyers by every window, open minutes per hour", function()
 	local w, ana, bea, cal = team()
-	-- (2.3.2, BRIEF19 R4: off by default, on after a warning; switched on here as a player would)
+	-- (2.3.2: off by default, on after a warning; switched on here as a player would)
 	for _, c in ipairs({ ana, bea, cal }) do DRof(c).opts().autoPublic = true end
 	ask(w, ana, "Dan Miller")
 	summon(w, ana, bea, cal)
@@ -2668,7 +2668,7 @@ do
 		local w = H.NewWorld()
 		local a = w:addClient(ANITA, { spot = "Undercity", class = "WARLOCK", allowMissing = true })
 		local A = a.W.Drive
-		A.opts().autoPublic = true -- (2.3.2, BRIEF19 R4: off by default, on after a warning)
+		A.opts().autoPublic = true -- (2.3.2: off by default, on after a warning)
 		A.SetOpen(true)
 		eq(A.PublicWant("wtb summon uc"), "match", "match")
 		eq(A.PublicWant("WTS summons to UC"), nil, "seller")
@@ -3125,7 +3125,7 @@ test("scenario 13: earnings: rides over two days and hours -> LogTotals, Hours, 
 end)
 
 test("scenario 13b: the heatmap tool reads WuberDB and RitualRidesDB without double counting (node tests/heatmap.test.js)", function()
-	-- (SPEC5 paths: no "cd &&" or "$?": node runs the file by its path; it prints RESULT: OK only
+	-- (no "cd &&" or "$?": node runs the file by its path; it prints RESULT: OK only
 	-- when every check passed)
 	local p = io.popen('node "' .. T.dir .. '/heatmap.test.js" 2>&1')
 	local out = p and p:read("*a") or ""
@@ -3144,7 +3144,7 @@ test("scenario 14: migration and lock: RR 1.4.1 drives and the engine waits; the
 	c.W.db.coach = true -- (the first-open tips would sit over the tab bar)
 	c.W.Driver.Toggle() -- the Drive tab (provider view + retire card)
 	w:advance(3)
-	-- (SPEC5 rrmentions: the card never names the old addon)
+	-- (the card never names the old addon)
 	ok(#c:findText("Your old summoning addon is still on") > 0, "the retire card (" .. list(c:visibleTexts()) .. ")")
 	local blocked = {}
 	local ev = c.env.CreateFrame("Frame")
@@ -3291,7 +3291,7 @@ test("realm names: a rider whose name arrives as Name-Realm is invited and whisp
 		local w = H.NewWorld({ senderFormat = format })
 		local lock = w:addClient(ANITA, { spot = SPOT, class = "WARLOCK" })
 		local r = rider(w)
-		DRof(lock).opts().autoPublic = true -- (2.3.2, BRIEF19 R4: off by default, on after a warning)
+		DRof(lock).opts().autoPublic = true -- (2.3.2: off by default, on after a warning)
 		DRof(lock).SetOpen(true)
 		w:advance(15)
 		-- a whisper, a public line and an R, each with the sender as the game spells it

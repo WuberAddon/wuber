@@ -12,7 +12,7 @@
 --   data { rideId, name }, through DR.Alert)
 -- Standalone: no
 -- Test: tests/drive/raincheck_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.8; owner F)
+-- From: new in Wuber 2.3.0
 --
 -- A raincheck is one free summon later from the same crew, given instead of a refund when a ride
 -- PAID BY TRADE failed before the rider arrived. Wuber never refunds and never moves gold.
@@ -264,7 +264,7 @@ W.Listen("DRIVE_PAID", function(name, copper, tip, cashierKey, mine, how, price)
 	local e = entryOf(c, true)
 	if not e then return end
 	-- the rider is here already (arrived, then paid: the usual ride): that ride never qualifies,
-	-- even when they leave the group before the next tick (auto-leave; BRIEF17 C3)
+	-- even when they leave the group before the next tick (auto-leave)
 	if c.state == "arrived" or c.arrivedAt then arrivedEntry(e) end
 	local fare = tonumber(c.fullFare or price or c.price) or 0
 	if fare > e.fare then e.fare = fare end

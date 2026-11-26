@@ -1,6 +1,6 @@
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
--- r54 B follow-up (Google review CA-1, 24 Nov): a founder with NO badge saved at all (nil, the state of a fresh character) is
+-- r54 B follow-up (an outside review CA-1, 24 Nov): a founder with NO badge saved at all (nil, the state of a fresh character) is
 -- summed up on Settings as "Founder (automatic)", like the empty pick; a non-founder with none saved stays "none".
 local function summary(c, w)
 	c.W.db.coach = true

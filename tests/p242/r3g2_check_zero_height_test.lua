@@ -1,4 +1,4 @@
--- p242 r3 G2 (Google, fitLine): a font that has not loaded reports a string height of 0, and 0 is truthy in Lua:
+-- p242 r3 G2 (a review, fitLine): a font that has not loaded reports a string height of 0, and 0 is truthy in Lua:
 -- the row stayed 20 high under a wrapped line. 0 is unknown: the row is sized from the words.
 local T = ...
 local test, ok = T.test, T.ok

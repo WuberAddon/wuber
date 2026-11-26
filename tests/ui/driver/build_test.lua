@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Build (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of UI.Driver.Build (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. The console's footer (no second Settings) and the raid
 -- controls' summoner picker (its label fits its pill).
 local T = ...

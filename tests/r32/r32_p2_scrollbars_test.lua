@@ -1,7 +1,7 @@
 local T = ...
 local test, eq, ok, H = T.test, T.eq, T.ok, T.H
 
--- Round 32 group P: Google review G1 (r25 and r26) re-checked: Home's and Settings' scroll bars stay out of
+-- Round 32 group P: an outside review G1 (r25 and r26) re-checked: Home's and Settings' scroll bars stay out of
 -- Settings and Help. Already fixed by round 27 (3af4ac6); this pins the real frame state after the screen visits.
 
 local function visitAll(w, UI)

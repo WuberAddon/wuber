@@ -1,4 +1,4 @@
--- tools/layout-check.lua: the layout checker (BRIEF21 S11). Deterministic, no AI, no pictures.
+-- tools/layout-check.lua: the layout checker. Deterministic, no AI, no pictures.
 -- Runs Wuber Lab's photo tour in the fake game (the same screens and demo data as the in-game tour, through
 -- tools/preview's real font metrics) at several game windows and Wuber sizes, and at every shot walks the
 -- drawn Wuber regions (shown, alpha > 0, on its window) and fails on:

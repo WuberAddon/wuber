@@ -248,7 +248,7 @@ local function pillPaint(b)
 	if not b.inactive then
 		if b.pressed then fill = st.press elseif b.hover then fill = st.hover end
 	end
-	-- (BRIEF22 G1) a pill lit by its own pill (b.lit: tabs, Earnings periods; b.chosen: segments) keeps its
+	-- a pill lit by its own pill (b.lit: tabs, Earnings periods; b.chosen: segments) keeps its
 	-- fill hidden: it is not repainted (it would only be covered by the lit pill)
 	if not (type(b.lit) == "table" or type(b.chosen) == "table") then b.fill:SetColor(fill) end
 	-- a colour the screen gave the label itself (b.ownColour) outlives hover and press; an inactive pill uses its own
@@ -277,7 +277,7 @@ function T.Pill(parent, text, style, w, h, name, template)
 	local b = CreateFrame("Button", name, parent, template)
 	b:SetSize(w, h)
 	b.style = STYLES[style] and style or "dark"
-	b.fill = T.PillFill(b, STYLES[b.style].bg, h, "BACKGROUND", 0) -- (BRIEF22 G1) its first alpha is its style's
+	b.fill = T.PillFill(b, STYLES[b.style].bg, h, "BACKGROUND", 0) -- its first alpha is its style's
 	b.glow = noGlow() -- (Design 1) no glow on hover; the name stays for callers
 	-- the fill follows the pill's height (capsule up to 32 high, a rounded rectangle above)
 	Try(b, "HookScript", "OnSizeChanged", function(self, _, hh)
@@ -381,7 +381,7 @@ end
 function T.Chip(parent, text, colour)
 	local f = CreateFrame("Frame", nil, parent)
 	f:SetSize(60, 20)
-	f.fill = T.PillFill(f, "raised", 20, "BACKGROUND", 1) -- (BRIEF22 G1) made at the alpha it keeps
+	f.fill = T.PillFill(f, "raised", 20, "BACKGROUND", 1) -- made at the alpha it keeps
 	f.dot = T.Circle(f, 6, colour or "white", "ARTWORK")
 	f.dot:SetPoint("LEFT", f, "LEFT", 8, 0)
 	f.label = T.Text(f, "caption", colour or "white", "LEFT", "medium")
@@ -892,7 +892,7 @@ end
 -- labelW (the value's room on the right, default 60; a long value such as "every 15 min" gives it more) }.
 -- A real Slider (the game drags its thumb), drawn as a track, a violet fill, a knob and the
 -- value on the right. The mouse wheel steps it only once it was clicked, until the mouse leaves
--- (BRIEF22 S1: before that the wheel scrolls the page). s:Set(v) changes it without onChange.
+-- (before that the wheel scrolls the page). s:Set(v) changes it without onChange.
 function T.Slider(parent, width, opts)
 	opts = opts or {}
 	local lo, hi, step = opts.min or 0, opts.max or 1, opts.step or 0
@@ -983,7 +983,7 @@ function T.Slider(parent, width, opts)
 		end)
 		if not ok then W.Error("slider", err) end
 	end)
-	-- (BRIEF22 S1) the wheel steps a slider only after it was clicked (or dragged), until the mouse
+	-- the wheel steps a slider only after it was clicked (or dragged), until the mouse
 	-- leaves it. Until then the slider takes no wheel, so the game sends the wheel to the page under
 	-- it and the page scrolls: a wheel that passes over a slider never changes it.
 	local function wheelOn(self, on)
@@ -1009,7 +1009,7 @@ end
 
 -- T.Segmented(parent, choices, value, onChange(value), width, height): a pill split into
 -- choices ({ { value =, label =, tip = } }); the chosen one is violet with ink words. s:SetValue(v), s:Paint().
--- (BRIEF20 B1) the chosen part is lit by its own opaque pill (b.chosen), shown or hidden; the parts'
+-- the chosen part is lit by its own opaque pill (b.chosen), shown or hidden; the parts'
 -- own fills stay hidden. In the game a fill kept its alpha when the choice changed while it was not
 -- drawn (a clear part stayed clear, a lit one turned solid white). Looks: s.onStyle (a T.PILL_STYLES
 -- name; "chosen" by default, which is no pill style but the look below) and s.litFor(b) (a colour for the lit pill)
@@ -1189,7 +1189,7 @@ function T.Crown(parent, size, seed)
 end
 
 -- The still, face-on icon of a badge id: Media\badge_<id> (64 x 64, full colour, one small file that
--- loads at once), or nil for an id that is not in W.BADGES. BRIEF18 01:25: on a driver card the
+-- loads at once), or nil for an id that is not in W.BADGES. on a driver card the
 -- spinning sheet could be caught edge-on or still loading and read as a plain white blob.
 function T.BadgeTexture(id)
 	if type(id) ~= "string" or id == "" then return nil end
@@ -1227,7 +1227,7 @@ function T.DriverBadge(parent, id, size, still)
 end
 
 ---------------------------------------------------------------------------
--- Pioneers (BRIEF15): Wuber's first riders and drivers, from the shipped lists only (W.PioneerKind).
+-- Pioneers: Wuber's first riders and drivers, from the shipped lists only (W.PioneerKind).
 -- Cosmetic: a small pin disc by the name and one tooltip line. The founder look wins: a founder
 -- gets no Pioneer badge. With the shipped (empty) lists nothing is ever made.
 ---------------------------------------------------------------------------

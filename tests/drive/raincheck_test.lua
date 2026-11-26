@@ -1,4 +1,4 @@
--- Tests of Drive.Raincheck (SPEC7 5.8; owner F). Loaded by tests/run.lua with its helper table T.
+-- Tests of Drive.Raincheck. Loaded by tests/run.lua with its helper table T.
 -- The rider's side (kind V, R field 7, A's last field) is Net.Raincheck's (owner E): here the
 -- engine is driven the way that wire hands it over (ride.voucher into onRequest, V into
 -- DR.RaincheckHeard) and W.SendIOU / W.AcceptRequest are spies.
@@ -750,7 +750,7 @@ test("drive.raincheck: given counts only taken ones: declined or lapsed offers a
 end)
 
 
--- BRIEF17 C3: a rider who arrives first, pays by trade and leaves the group before the next
+-- a rider who arrives first, pays by trade and leaves the group before the next
 -- 1-second tick (auto-leave does) arrived: the ride never qualifies, in any crew window.
 test("drive.raincheck: arrived, paid, then left at once (auto-leave): never eligible (BRIEF17 C3)", function()
 	local s = scene()
@@ -774,7 +774,7 @@ test("drive.raincheck: arrived, paid, then left at once (auto-leave): never elig
 	T.clean(s.w)
 end)
 
--- BRIEF17 C6: a repeat rider (a done row asked again) starts a fresh ride: nothing of the last
+-- a repeat rider (a done row asked again) starts a fresh ride: nothing of the last
 -- ride's 2.1-2.3 state is left on the row, and the second paid ride counts in the lifetime stats.
 test("drive.queue: a repeat rider's row starts clean; the second paid ride counts too (BRIEF17 C6)", function()
 	local s = scene()

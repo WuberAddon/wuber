@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Earnings (BRIEF19 F5, F6). Loaded by tests/run.lua with its helper table T.
+-- Tests of UI.Driver.Earnings. Loaded by tests/run.lua with its helper table T.
 -- The period pill matches the totals in every path, in the game's terms (tour #47-#52); the tapped
 -- hour's pill fits its words (tour #49, #50); narrow Earnings says there is more below (tour #47).
 local T = ...
@@ -220,7 +220,7 @@ test("ui.driver.earnings: B8 fair split rows share one size and the coins have a
 	T.clean(w)
 end)
 
--- (BRIEF22 L1) the texts of a page the view's bottom edge slices at the top of the page (what the layout
+-- the texts of a page the view's bottom edge slices at the top of the page (what the layout
 -- checker calls "clipped": partly in, partly out)
 local function slicedAtBottom(sc, content)
 	local out, bottom = {}, sc:GetBottom()

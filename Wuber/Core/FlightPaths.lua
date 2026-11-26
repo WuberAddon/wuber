@@ -9,7 +9,7 @@
 -- Events: listens (none); fires (none)
 -- Standalone: no
 -- Test: tests/core/flightpaths_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 sections 3.3, 3.4, 4.3; owner B)
+-- From: new in Wuber 2.3.0
 --
 -- Data only (nothing runs, listens or saves):
 --   W.TAXI_PATHS[a .. ":" .. b] = { x1, y1, x2, y2, ... }   one shape per pair of flight masters
@@ -17,7 +17,7 @@
 --       continent only; Douglas-Peucker simplified at 30 yards. Look up "lo:hi" and reverse the
 --       points for the other direction.
 --   W.TAXI_BOUNDS[continentID] = { minX, minY, maxX, maxY }  the box of that continent's nodes and
---       shapes (the world map's fallback projection, SPEC7 3.3 step 3)
+--       shapes (the world map's fallback projection)
 
 local _, W = ...
 local Mod = W.Module("Core.FlightPaths", {})

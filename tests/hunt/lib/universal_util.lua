@@ -35,7 +35,7 @@ U.HUNT_ALLOW = {
 	{ kind = "boxes", key = "^Earnings%.lua:%d+ empty over Earnings%.lua:%d+ picked", reason = "empty Earnings: the 'Open for a few hours' note is drawn on the empty heatmap (its picked cell) on purpose" },
 	{ kind = "straddle", key = "^Earnings%.lua:%d+.- straddles Earnings%.lua:%d+.-picked", reason = "empty Earnings: the note is drawn on the empty heatmap (its picked cell) on purpose" },
 	-- the big Drive BUTTON (not its console list) lifted above the opened-out phone when no clear place is left beside it:
-	-- the documented fallback (Drive/Button.lua 340-344, 434-440, BRIEF18). The console list over the phone stays reported (HUNT-92).
+	-- the documented fallback (Drive/Button.lua 340-344, 434-440). The console list over the phone stays reported (HUNT-92).
 	{ kind = "windows", key = "^WuberDriveButton over WuberFrame$", reason = "no clear place beside the opened-out phone: the big button goes above it (Drive/Button.lua, BRIEF18)" },
 	-- Finding your driver: the route pill sits over the radar's top left corner on purpose (Rider/Confirm.lua:641, "the route header")
 	{ kind = "boxes", key = "^Booking%.lua:%d+.- over Confirm%.lua:%d+", reason = "Finding your driver: the route pill lies over the radar's corner on purpose (Confirm.lua:641)" },

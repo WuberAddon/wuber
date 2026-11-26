@@ -168,7 +168,7 @@ D.screens.sheet = function(parent)
 		s.save:SetActive(okPrice and not why)
 		return okPrice and not why
 	end
-	-- 2+ stations: each Warlock summons where they stand; no place to choose (SPEC4 4)
+	-- 2+ stations: each Warlock summons where they stand; no place to choose
 	s.multi = T.Text(b, "sub", "white", "LEFT", "medium")
 	s.multi:SetWidth(320)
 	s.multi:SetText("Each Warlock summons to where they stand")
@@ -281,7 +281,7 @@ D.screens.sheet = function(parent)
 		local c = Char() or {}
 		s.price:SetText(money((K.Price and K.Price()) or N(c.price) or 5000))
 		s.dest = S(c.dest) ~= "" and S(c.dest) or nil
-		-- (2.3, SPEC7 5.3) "Serve it" from what riders want: that place chosen
+		-- (2.3) "Serve it" from what riders want: that place chosen
 		local want = type(arg) == "table" and S(arg.dest) or nil
 		if want and want ~= "" then s.dest = W.Clean(want, 40) end
 		s.mode = s.dest and "choose" or "here"
@@ -298,7 +298,7 @@ D.screens.sheet = function(parent)
 end
 
 ---------------------------------------------------------------------------
--- Raid summons: "Pick summoners" (SPEC4 3.1, 4): the raid's Warlocks, tick who summons
+-- Raid summons: "Pick summoners": the raid's Warlocks, tick who summons
 ---------------------------------------------------------------------------
 
 -- the raid's Warlocks (DR.RaidWarlocks(): key, name, shards, app), me first when I'm one
@@ -486,7 +486,7 @@ D.screens.menu = function(parent)
 	item("oops", "Oops, wrong invite", "Says sorry and removes them", "close", "glow")
 	item("drop", "Take off the list", "Nothing is said (right-click)", "close", "muted")
 	item("block", "Block...", "Never serve them again (shift-right-click)", "lock", "red")
-	-- raid summons (SPEC4 3.2): no money, no blocks
+	-- raid summons: no money, no blocks
 	item("top", "Move to top", "Summoned next, before the others (click)", "summon", "glow")
 	item("rdrop", "Take off the list", "Nothing is said (right-click)", "close", "muted")
 	-- the block step: a reason, then Block
@@ -546,7 +546,7 @@ D.screens.menu = function(parent)
 		end
 		if not s.raid and c.state == "lead" then list[#list + 1] = "invite" end
 		local iou = isAdv and not s.raid and D.RaincheckRide and D.RaincheckRide(c) ~= nil
-		-- (2.3, SPEC7 5.8) a paid ride that failed before they arrived: one free summon later
+		-- (2.3) a paid ride that failed before they arrived: one free summon later
 		-- (the row is made the first time it is offered)
 		if iou and not s.items.raincheck then
 			item("raincheck", "Give raincheck", "One summon later at no charge from your crew, instead of a refund", "coin", "glow")
@@ -594,7 +594,7 @@ D.screens.menu = function(parent)
 		s.c = c
 		s.blocking = nil
 		s.raid = K.RaidMode and K.RaidMode() == true
-		-- (BRIEF15) a Pioneer rider's header says so first (the shipped list only)
+		-- a Pioneer rider's header says so first (the shipped list only)
 		local look = T.PioneerLook(S(c and c.name))
 		local pioneer = look and T.PIONEER[look].word or nil
 		if s.raid then
@@ -604,7 +604,7 @@ D.screens.menu = function(parent)
 			return
 		end
 		if c and c.iouOnly then
-			-- (2.3, SPEC7 5.8) from the raincheck alert: only "Give raincheck"
+			-- (2.3) from the raincheck alert: only "Give raincheck"
 			local yes, why = nil, nil
 			if D.RaincheckRide then yes, why = D.RaincheckRide(c) end
 			sh:SetTitle(S(c.name) or "Rider", yes and "Paid by trade · the summon failed before they arrived"
@@ -615,7 +615,7 @@ D.screens.menu = function(parent)
 		local reason = (c and (N(c.paid) or 0) == 0 and (c.state == "arrived" or c.state == "waiting")) and "didn't pay" or "blocked by hand"
 		s.reason:SetText(reason)
 		local sub = S(c and c.wuberLabel) or (c and c.source == "wuber" and "Booked through Wuber") or nil
-		-- (2.3, SPEC7 5.7) the app rider's passphrase in the header
+		-- (2.3) the app rider's passphrase in the header
 		local pass = D.Passphrase and D.Passphrase(c) or nil
 		if pass then sub = (sub and (sub .. " · ") or "") .. pass end
 		if pioneer then sub = pioneer .. (sub and (" · " .. sub) or "") end
@@ -713,7 +713,7 @@ local function hoursText(minutes)
 end
 
 
--- (2.3, SPEC7 5.5) The fair split under the tiles: "Farra · 9 clicks · 1g 40s" per person (from
+-- (2.3) The fair split under the tiles: "Farra · 9 clicks · 1g 40s" per person (from
 -- the cut taken when the shift closed: D.lastShift.cut), the rule in small words, "Wuber never
 -- moves gold", and "Post to party" (a share pill: the secure WuberShareButton posts it on the
 -- player's click, once per card). Without a crew's casts or clicks the card is as in 2.2.
@@ -800,7 +800,7 @@ local function buildSplit(s, b, sh)
 	return p
 end
 
--- (BRIEF20 B8) how tall the shift card may be: its top stays under the driver status strip (the real
+-- how tall the shift card may be: its top stays under the driver status strip (the real
 -- client drew it over the strip's words). nil when the console's rects are not known yet.
 local function roomUnderStrip()
 	local ui = D.ui
@@ -873,11 +873,11 @@ function D.PaintSplit(s, sh)
 			l = { name = T.Text(b, "sub", "white", "LEFT", "medium"), what = T.Text(b, "sub", "gold", "RIGHT", "bold") }
 			l.name:SetWidth(230)
 			l.what:SetWidth(86)
-			l.name.wuberMin = T.SIZE.sub -- (BRIEF20 B8) one size for every row: never shrunk to fit
+			l.name.wuberMin = T.SIZE.sub -- one size for every row: never shrunk to fit
 			l.what.wuberMin = T.SIZE.sub
 			p.lines[i] = l
 		end
-		-- (BRIEF20 B8) one size: a line too long for 230 px drops its casts and clicks, never shrinks
+		-- one size: a line too long for 230 px drops its casts and clicks, never shrinks
 		local who = x.key == W.myKey and "You" or W.Short(x.name)
 		local words = " · " .. D.CutWords(x.casts, x.clicks)
 		if T.MeasureText(who .. words, "sub", "medium") * 1.04 > 230 then words = "" end

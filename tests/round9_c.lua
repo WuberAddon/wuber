@@ -1,4 +1,4 @@
--- Round 9 (the 2.3.0 fix round, BRIEF9), agent C (driver): tests of the driver-side fixes that have no
+-- Round 9 (the 2.3.0 fix round), agent C (driver): tests of the driver-side fixes that have no
 -- module test of their own. Test names start "r9 c:". Loaded by run.lua with the module tests' helpers.
 local T = ...
 local H, test, eq, ok, list = T.H, T.test, T.eq, T.ok, T.list
@@ -161,7 +161,7 @@ test("r9 c: S4 the closed card in the Drive tab says Tap Open below; floating ov
 	w:advance(1)
 	eq(plain(b.title.wuberText), "Raid summons stopped", "raid")
 	eq(plain(b.sub.wuberText), "Tap Start below to begin raid summons", "docked: Start below")
-	-- the floating button (Wuber's window closed): (BRIEF20 B5) its console with the Open pill is right
+	-- the floating button (Wuber's window closed): its console with the Open pill is right
 	-- under it, so "tap Open below"; the button alone (B.Solo) names the Drive tab (tests/drive/button_test.lua)
 	W.Drive.SetMode("sell")
 	W.UI.Toggle(false)

@@ -1,7 +1,7 @@
 -- Module: UI.Driver.Mini
 -- Purpose: Crew-offer card (UI.CrewOffer), the floating mini console, driver toasts and alerts,
---   UI.ShowDrive / DriveSlot / DriveSummary / DriveWantsClick. (BRIEF19 R6) the crew offer keeps off the
---   chat frame and (BRIEF20 B4) the action bars (UI.ClearOfHud, at run time). (round 31) the console shows the
+--   UI.ShowDrive / DriveSlot / DriveSummary / DriveWantsClick. the crew offer keeps off the
+--   chat frame and the action bars (UI.ClearOfHud, at run time). (round 31) the console shows the
 --   rows its place has room for (DR.Button.MiniRows, at run time).
 -- API: UI.CrewOffer, D.UpdateMini, UI.ShowDrive, UI.DriveSlot, UI.DriveSummary, UI.DriveWantsClick,
 --   D.SyncMini, D.MiniTicking
@@ -129,8 +129,8 @@ local function buttonBoxes()
 	return #out > 0 and out or nil
 end
 
--- (BRIEF19 R6) at the top of the screen, unless the chat frame is there (a UI pack moved it);
--- (BRIEF20 B4) or an action bar or the party frames; (issue 102) or the big button and its console
+-- at the top of the screen, unless the chat frame is there (a UI pack moved it);
+-- or an action bar or the party frames; (issue 102) or the big button and its console
 local function placeOffer(f)
 	local x, y = 0, OFFER_TOP
 	local OFFER_H = f:GetHeight() or OFFER_H
@@ -154,7 +154,7 @@ function UI.CrewOffer(fromName, service)
 	local svc = S(service)
 	f.raid = svc == "raid"
 	if f.raid then
-		-- raid summons (SPEC4 3.1): a Warlock in the raid is asked to summon for it
+		-- raid summons: a Warlock in the raid is asked to summon for it
 		f.kicker:SetText("Wuber · raid summons")
 		f.title:SetText("Summon for " .. who .. "'s raid?")
 		f.text:SetText("You'll get a big button that summons the next raider. No charge, for your own raid; stop any time.")
@@ -243,7 +243,7 @@ local function buildMini()
 	end)
 	f.more = T.Text(f, "caption", "muted", "CENTER", "medium")
 	f.more:SetWidth(284)
-	-- (2.3, SPEC7 5.4) the small fuel gauge between Pause and Close
+	-- (2.3) the small fuel gauge between Pause and Close
 	if type(D.FuelGauge) == "function" then f.fuel = D.FuelGauge(f, 24, 16, "caption") end
 	f:Hide()
 	st.mini = f
@@ -266,7 +266,7 @@ end
 local function placeMini(f, b)
 	local l, bt = N(Try(b, "GetLeft")), N(Try(b, "GetBottom"))
 	local bw, be = N(Try(b, "GetWidth")), N(Try(b, "GetEffectiveScale"))
-	-- (BRIEF18) the button's layer too: above the window when it cannot clear it, never under
+	-- the button's layer too: above the window when it cannot clear it, never under
 	local strata = S(Try(b, "GetFrameStrata")) or "MEDIUM"
 	if f.placed and l == f.pl and bt == f.pb and bw == f.pw and be == f.pe and strata == f.ps then return true end
 	f.pl, f.pb, f.pw, f.pe, f.placed = l, bt, bw, be, nil
@@ -334,7 +334,7 @@ function D.UpdateMini()
 	local canPause = not D.CanPause or D.CanPause()
 	local pauseWord = canPause and (dr("IsPaused") == true and "Resume" or "Pause") or "Warlocks pause"
 	local closeWord = raid and (open and "Stop" or "Start") or (open and "Close" or "Open")
-	-- (BRIEF18 item 2) laid out from measured geometry: 8 | pill | gap | gauge | gap | pill | 8, the gauge between the pills
+	-- laid out from measured geometry: 8 | pill | gap | gauge | gap | pill | 8, the gauge between the pills
 	if f.fuel and D.PaintFuel then call(D.PaintFuel, f.fuel) end -- (design 1 J) the words first: their width is the gauge's
 	local gw = f.fuel and (N(f.fuel:GetWidth()) or 24) or 0
 	local gap = f.fuel and MINI_GAP or 6
@@ -402,7 +402,7 @@ function D.UpdateMini()
 	else
 		f.more:Hide()
 	end
-	-- (BRIEF20 B5, shots 83 and 88) closed or stopped, Pause does nothing: hidden (not dimmed), and
+	-- closed or stopped, Pause does nothing: hidden (not dimmed), and
 	-- the line is 8 | gauge | gap | Open (or Start) | 8
 	f.pause:SetShown(open)
 	local gx = math.floor(wdt / 2)
@@ -437,7 +437,7 @@ end
 -- Toasts and alerts
 ---------------------------------------------------------------------------
 
--- (2.3, SPEC7 5.8) a rider asks for a raincheck: DRIVE_ALERT(text, "raincheck", data), data =
+-- (2.3) a rider asks for a raincheck: DRIVE_ALERT(text, "raincheck", data), data =
 -- { rideId, name } (or the ride id, then the name). A click opens "Give raincheck" for that ride.
 local function raincheckAlert(text, data, name)
 	local ride, who

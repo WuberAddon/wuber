@@ -1,7 +1,7 @@
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
--- Round 32, group B wave 2 (AUD-28, Google C41b-3): a group member whose name reads "Unknown" for a moment
+-- Round 32, group B wave 2 (AUD-28, a reviewer C41b-3): a group member whose name reads "Unknown" for a moment
 -- (loading screen, party-to-raid) is not gone. The driver's row for them used to be dropped (DRIVE_REMOVED,
 -- "left") and rebuilt from scratch when the name came back, losing price, tries and state.
 

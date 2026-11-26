@@ -1,4 +1,4 @@
--- Tests of Net.Update (round 11, BRIEF11): "a newer Wuber is out". Loaded by tests/run.lua with its
+-- Tests of Net.Update (round 11): "a newer Wuber is out". Loaded by tests/run.lua with its
 -- helper table T. Parsing and comparing versions; who is believed (the founder alone on the founders'
 -- ruleset, else two different players; never a name in a payload); the cap on remembered players;
 -- the saved field (small, cleared once up to date); the toast (once per session, only when idle,

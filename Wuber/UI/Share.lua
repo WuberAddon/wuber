@@ -10,9 +10,9 @@
 -- Events: listens (none); fires (none)
 -- Standalone: no
 -- Test: tests/ui/share_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.0; owner A)
+-- From: new in Wuber 2.3.0
 --
--- How a page uses it (SPEC7 5.0):
+-- How a page uses it:
 --   UI.Share.Register(pill, textFn, opts)
 --     pill: a T.Pill in the page's primary pane (never the side pane); textFn() -> the line to
 --     share now, or nil when there is nothing to share (not arrived yet, already shared: the

@@ -1,8 +1,8 @@
 -- Module: UI.Window
 -- Purpose: The app window: screens table, scale, raise, position, tabs (UI.AddTab/GetTab/SelectTab), screen
 --   routing (wantedScreen, goTo), buildWindow, UI.Refresh/RefreshNow, UI.Toggle/Show/IsShown/SetSearch,
---   start-up listeners and the login build. (BRIEF19 R6) the default place keeps the handset off the chat frame
---   and (BRIEF20 B4) the action bars (UI.ClearOfHud, UI.Toasts, at run time); a saved place (W.db.pos) is never moved.
+--   start-up listeners and the login build. the default place keeps the handset off the chat frame
+--   and the action bars (UI.ClearOfHud, UI.Toasts, at run time); a saved place (W.db.pos) is never moved.
 -- API: UI.WantedScale, UI.ApplyScale, UI.MigrateScale, UI.Raise, UI.AddTab, UI.GetTab, UI.SelectTab,
 --   UI.HideOtherScreens, UI.Dismiss, UI.Refresh, UI.RefreshNow, UI.Toggle, UI.Show, UI.IsShown,
 --   UI.SetSearch, UI.PlaceWindow, UI.PaintGear, UI.SyncClose, UI.HEAD_H, UI.TABBAR_H, UI.HEAD_ROW, UI.HeadRoom, UI.HeadPush,
@@ -47,7 +47,7 @@
 -- Events: listens Listen DRIVERS, Listen FLIGHTS, Listen RIDE, Listen SETTINGS, Listen FOLD, Listen DRIVE_OFFER,
 --   Listen DRIVE_CREW, Listen DRIVE_MODE, On PLAYER_REGEN_DISABLED,
 --   On PLAYER_REGEN_ENABLED, Listen NETWORK, Listen PROVIDER, On GLOBAL_MOUSE_DOWN, On GROUP_ROSTER_UPDATE,
---   On ZONE_CHANGED_NEW_AREA, login; fires PAGE (the page key changed: SPEC7 2.1); reads UI.Moments'
+--   On ZONE_CHANGED_NEW_AREA, login; fires PAGE (the page key changed); reads UI.Moments'
 --   pops through MomentsMod.popCount()
 -- Standalone: no
 -- Test: tests/ui/window_test.lua
@@ -124,7 +124,7 @@ local function applyScale()
 	-- (round 12, item 8) only a real change: opening, Settings and the Fold never call SetScale
 	local s = wantedScale()
 	if math.abs((N(win:GetScale()) or 0) - s) > 0.0001 then win:SetScale(s) end
-	-- the Fold: does an unfolded window still fit at this size? (SPEC7 2.3)
+	-- the Fold: does an unfolded window still fit at this size?
 	if UI.Fold and win:IsShown() then W.Safe("fold", UI.Fold.Apply) end
 end
 UI.ApplyScale = applyScale
@@ -154,9 +154,9 @@ local function raise()
 end
 UI.Raise = raise
 
--- (BRIEF19 R6) The default place: the middle of the screen, unless the handset would cover the
+-- The default place: the middle of the screen, unless the handset would cover the
 -- chat frame there (a narrow or square game window, or a UI pack moved the chat): then the
--- nearest place beside, under or over the chat. (BRIEF20 B4) and clear of the action bars, micro
+-- nearest place beside, under or over the chat. and clear of the action bars, micro
 -- menu and party frames too (UI.ClearOfHud), with room to breathe; none clear: the place that
 -- covers the least. In window units from the screen's centre. The player's own place (W.db.pos)
 -- is never moved.
@@ -190,7 +190,7 @@ local function placeWindow()
 	win:SetPoint("CENTER", UIParent, "CENTER", x, y)
 end
 
--- (BRIEF19 R6) Puts the window at its place now: the saved one, else the default (the middle,
+-- Puts the window at its place now: the saved one, else the default (the middle,
 -- clear of the chat frame). Out of combat only; false when it did nothing.
 function UI.PlaceWindow()
 	if not ui.win or W.InCombat() then return false end
@@ -218,7 +218,7 @@ local function savePosition()
 	end
 end
 
--- PAGE (SPEC7 2.1): the page key (UI.Fold.Page) changed: the tab, the screen, the window shown.
+-- PAGE: the page key (UI.Fold.Page) changed: the tab, the screen, the window shown.
 -- UI.Fold unfolds or folds on it.
 local function notePage()
 	local F = UI.Fold
@@ -406,7 +406,7 @@ function UI.HeadPush(frame)
 end
 
 -- (design 2, C) the chosen tab has a violet glyph and a violet word, the others are grey; no pill. Only colours
--- change, never an alpha or a texture shown or hidden ((BRIEF20 B1) in the game a texture keeps the alpha it had
+-- change, never an alpha or a texture shown or hidden (in the game a texture keeps the alpha it had
 -- when the tab changed while the window was shut), on every change and at open.
 local function paintTab(b)
 	local c = b.tabName == ui.tab and "accent" or ((b.hover or b.wuberPressed) and "white" or "offText")
@@ -569,7 +569,7 @@ local function addTabNow(name, buildFn)
 	for _, tab in ipairs(ui.tabs) do
 		if tab.name == name then return tab.body end
 	end
-	-- the primary pane (SPEC7 2.5): WIN_W wide even when the window unfolds
+	-- the primary pane: WIN_W wide even when the window unfolds
 	local body = CreateFrame("Frame", nil, ui.win)
 	-- (design 2, C) from the top of the screen down to the tab bar: as high as it always was
 	body:SetPoint("TOPLEFT", ui.win, "TOPLEFT", 0, 0)
@@ -951,7 +951,7 @@ local function buildWindow()
 		-- (2.3.2 C1) the first-show text refresh used to be a HookScript, which this SetScript dropped
 		pcall(onShowRefresh)
 		pcall(syncTabs)
-		pcall(paintTabs) -- (BRIEF20 B1) the lit tab at open, whatever changed while shut
+		pcall(paintTabs) -- the lit tab at open, whatever changed while shut
 		ui.dirty = true
 		UI.FlashMinimap(false)
 		-- the Fold: this page's width at once (no tween while the window zooms in)

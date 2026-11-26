@@ -1,5 +1,5 @@
 -- Tests of Drive.Raid (raid summons engine). Loaded by tests/run.lua with its helper table T.
--- Round 17 (BRIEF17 C2): a raider's own window (not crew) follows the runner's queue as a mirror:
+-- Round 17: a raider's own window (not crew) follows the runner's queue as a mirror:
 -- it is never told "Click the summoning portal" (that alert is for the crew's windows), and a
 -- mirrored queue is forgotten when the player leaves the group.
 local T = ...

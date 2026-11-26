@@ -1,4 +1,4 @@
--- tests/tools/transcript_test.lua: the transcript's version normalisation (BRIEF21 S1). One baseline
+-- tests/tools/transcript_test.lua: the transcript's version normalisation. One baseline
 -- serves master ("a.b.c-dev") and a stamped release tree ("a.b.c"): the build's -dev version is written
 -- as <ver>, and a stamped tree's windows run as its -dev build. A fresh copy of tests/lib/transcript.lua
 -- is loaded here (its own state), so the suite's recorder is not touched.

@@ -1,5 +1,5 @@
 local T = ...
--- Round 32 group D wave 2 (AUD-108, Google C48b-2): with two open stations the portal call is rung
+-- Round 32 group D wave 2 (AUD-108, a reviewer C48b-2): with two open stations the portal call is rung
 -- by the first helper at the casting station, not by a crew member standing at the other one.
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok
 local BEA, CAL, WUB = "Bea Jones", "Cal Brown", "Wuber Rocks"

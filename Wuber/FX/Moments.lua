@@ -91,7 +91,7 @@ function FX.OnRide(r)
 	end
 end
 
--- The founder's own cast (SPEC7 5.13): when the cast watcher says the founder is casting for a rider
+-- The founder's own cast: when the cast watcher says the founder is casting for a rider
 -- (DRIVE_RITUAL phase "c", caster = me) the gold portal opens on their own screen too. data.caster, when
 -- given, must be me (a key, or "me"/true); a missing caster means the watcher's own cast. Net.Portal
 -- decides (W.FounderSummon{own}: a W.CREATOR character on the founders' ruleset; any doubt: nothing).

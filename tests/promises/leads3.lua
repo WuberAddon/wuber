@@ -1,4 +1,4 @@
--- Promises from the bug hunt's third lead list (owner: LEADS-3). Each is a Google lead (two places of Wuber that disagree)
+-- Promises from the bug hunt's third lead list (owner: LEADS-3). Each is a review lead (two places of Wuber that disagree)
 -- that a read of the code showed to be a real player-facing difference. Ids: leads.c###_short_name.
 return function(Hunt)
 	local function shown(ctx)

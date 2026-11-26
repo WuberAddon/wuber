@@ -72,7 +72,7 @@ Run from the repository root (or your worktree). `lua5.1` is Lua 5.1.
 
 ## Git
 
-- Work on a branch in your own worktree (`claude/<n>`, `google/<n>`, `author/<topic>`), never on main.
+- Work on a branch in your own worktree (`claude/<n>`, `author/<topic>`), never on main.
 - Commit messages start with `#<issue>`. One logical change per commit, check.lua green, relevant tests green.
 - **Generated files** (`ARCHITECTURE.md`, seed and flight blocks): a feature branch never regenerates or commits them.
 - No pushes to main, no force pushes, no tags and no releases. Those are the maintainer's.

@@ -1,4 +1,4 @@
--- r52 group P: Google audit #11 (FX/Effects.lua onUpdate mutated `live` while iterating it with pairs).
+-- r52 group P: an outside audit #11 (FX/Effects.lua onUpdate mutated `live` while iterating it with pairs).
 -- Promise: whatever badges show, hide or finish, no flipbook skips or double-steps and no "invalid key to 'next'" error.
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok

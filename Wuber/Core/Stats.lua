@@ -67,7 +67,7 @@ local function countTrip(t, trip)
 	t.spent = t.spent + math.max(0, tonumber(trip.price) or 0)
 	t.saved = t.saved + math.max(0, tonumber(trip.saved) or 0)
 	t.savedValue = t.savedValue + math.max(0, tonumber(trip.savedValue) or 0)
-	-- the flight costs a summon spared (SPEC5): only what a flight master showed (exact); a cost
+	-- the flight costs a summon spared: only what a flight master showed (exact); a cost
 	-- from before that rule is left out (review 2.2 #10: never a number we can't back)
 	local fc = tonumber(trip.flightCost)
 	if fc and fc > 0 and tonumber(trip.flightExact) == 1 then

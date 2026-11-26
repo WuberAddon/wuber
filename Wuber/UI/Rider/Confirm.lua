@@ -7,7 +7,7 @@
 -- Sets: HomeMap's m.avoid and m.visBottom on its strip
 -- Later: UI.Fold (Register: the unfolded "confirm" page, Confirm and Finding), UI.Rider.WorldMap
 --   (Build, Show, Wanted: the side pane's Here/World control, the route and the destination's ring)
--- Unfolded (SPEC7 2.8 "confirm"): booking on the left as folded (the dial 324 x 96 plus the
+-- Unfolded: booking on the left as folded (the dial 324 x 96 plus the
 -- savings pill when they fit), the trip on the map on the right (Confirm's map docked; the World
 -- view first, else the rider's last pick on Here/World: round 12). Finding keeps the map on the right. The secure
 -- Request pill never leaves the left pane. (2.3.2, I29) "About this driver" sits in the booking column under the
@@ -86,7 +86,7 @@ local function leaveGroup()
 	W.After(0.5, function() UI.Refresh(true) end)
 end
 
--- A held raincheck this driver would take (SPEC7 5.8): id, cover (copper), or nil. The rider's
+-- A held raincheck this driver would take: id, cover (copper), or nil. The rider's
 -- copy grants nothing; the driver's book decides when the request comes (R field 7).
 local function raincheckFor(d)
 	local R = W.Raincheck
@@ -256,7 +256,7 @@ local function buildConfirm(body)
 	s.saved:EnableMouse(true)
 	T.Tip(s.saved, "Against flying", function() return s.savedTip end)
 	s.saved:Hide()
-	-- the dial (SPEC7 5.1): Fly <-> Summon, in place of the pill when flying is known
+	-- the dial: Fly <-> Summon, in place of the pill when flying is known
 	s.dial = Booking.Dial(card, INNER, 88)
 	-- (Simple mode) one wrapped text line in place of the dial
 	local ds = T.Card(card, INNER, 36, { colour = "card", radius = 14, shadow = false })
@@ -505,7 +505,7 @@ local function buildConfirm(body)
 		elseif card.crown then
 			card.crown:Hide()
 		end
-		-- (BRIEF15) a Pioneer Driver's badge on the avatar's corner (the shipped list only; a founder: none)
+		-- a Pioneer Driver's badge on the avatar's corner (the shipped list only; a founder: none)
 		local pb = T.ShowPioneer(card, "pioneer", T.PioneerLook(d.key), 16, card.row, true)
 		if pb then
 			pb:ClearAllPoints()
@@ -640,7 +640,7 @@ local function buildConfirm(body)
 		end
 		Mod.sideUpdate()
 	end
-	-- the unfolded page (SPEC7 2.8; Finding shares it)
+	-- the unfolded page (Finding shares it)
 	local F = UI.Fold
 	if type(F) == "table" and type(F.Register) == "function" then
 		Mod.side.conf = s
@@ -954,7 +954,7 @@ function Mod.foldedAbout(s, blocks, d, again)
 	for i, b in ipairs(blocks) do
 		if b.frame == s.card.row then at = i end
 	end
-	-- (r19, F3) with the flight card and a PvP warning both up the card was dropped (Google's
+	-- (r19, F3) with the flight card and a PvP warning both up the card was dropped (a reviewer's
 	-- shot 8). Tiers: as is; then a tighter card, one line only. The
 	-- "how you pay" row always stays (what you trade matters more); if neither fits, About is hidden.
 	local tight = false

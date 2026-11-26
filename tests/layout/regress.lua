@@ -1,4 +1,4 @@
--- The layout checker's regression cases (tools/layout-check.lua --regress; BRIEF21 S11): this week's real layout
+-- The layout checker's regression cases (tools/layout-check.lua --regress): this week's real layout
 -- bugs, each run on its OLD code (the Wuber folder at the commit before its fix, from git) must fail with its
 -- known problem, and today's code (this checkout) must not show it. Needs git and tar on the PATH.
 --   lua tools/layout-check.lua --regress [--screen <case id>] [--verbose] [--jobs N]

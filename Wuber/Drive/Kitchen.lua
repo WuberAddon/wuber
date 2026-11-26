@@ -9,7 +9,7 @@
 --   rider's ST (DR.SendState: ride id, flag v) to the crew windows, once per ride (2.3.0 riders only)
 -- Standalone: no
 -- Test: tests/drive/kitchen_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.10; owner F)
+-- From: new in Wuber 2.3.0
 --
 -- Every crew window hears the same DRIVE_RITUAL(name, phase, data) (Drive.Queue's facts, Drive.Cast's
 -- target); only the window on the network (DR.NetDriver()) tells the rider, and only a rider who

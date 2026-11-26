@@ -426,7 +426,7 @@ local function summonable(c, unit, station)
 	if call("Online", unit) == false then return false, "offline" end
 	if call("Here", unit) then return false, "already here" end
 	if not atStation(c, station) then return false, "another station" end
-	-- (BRIEF18 c) never a rider for a place we left (DR.PlaceStale: not summoned, not paying)
+	-- never a rider for a place we left (DR.PlaceStale: not summoned, not paying)
 	if call("PlaceStale", c) == true then return false, "place changed" end
 	return true
 end
@@ -550,7 +550,7 @@ local function begin(guid, channel)
 	call("Changed")
 end
 
--- 2.3.0 (SPEC7 5.5): a group member without Wuber who holds my portal 2 s or more is a helper;
+-- 2.3.0: a group member without Wuber who holds my portal 2 s or more is a helper;
 -- this window (the caster's) names them in HELP's field 2, once per summon
 local function heldHelpers(cast, t)
 	for key, h in pairs(cast.holds or {}) do
@@ -635,7 +635,7 @@ W.On("UNIT_SPELLCAST_SENT", function(unit, target, _, spellID)
 	target = str(target)
 	if target then
 		DR.castSent = { name = target, at = now() }
-		-- 2.3.0 (SPEC7 5.10): this window targets a rider for the summon
+		-- 2.3.0: this window targets a rider for the summon
 		local c = findName(target)
 		if c and mode() ~= "raid" then
 			W.Fire("DRIVE_RITUAL", c.name, "t", { mine = true, key = c.key, rider = c.name, caster = W.myKey,

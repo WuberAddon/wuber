@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Demand (SPEC7 5.3; owner D). Loaded by tests/run.lua with its helper table T.
+-- Tests of UI.Driver.Demand. Loaded by tests/run.lua with its helper table T.
 -- The contract, then what the driver sees of riders' bounties: the folded console's line, the
 -- sheet with "Serve it" (only where the driver stands), the unfolded "Wanted nearby" card, and
 -- the Driving setting "Show what riders want". W.Bounty.Demand (Net.Bounty) is stubbed here.

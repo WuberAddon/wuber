@@ -270,7 +270,7 @@ local function onlineToast(kind, driver, count)
 			text = d.short .. " is online · " .. money(d.price) .. " to " .. d.dest
 		end
 	else
-		-- a pinned bounty's place is served now (SPEC7 5.3): say so; the bounty ends
+		-- a pinned bounty's place is served now: say so; the bounty ends
 		local bplace = ui.bountyPlace
 		local B = W.Bounty
 		local mine = type(B) == "table" and type(B.Mine) == "function" and call(B.Mine) or nil
@@ -316,7 +316,7 @@ W.Listen("FAV_ONLINE", function(driver, count) onlineToast("fav", driver, count)
 W.Listen("WATCH_HIT", function(driver, count) onlineToast("watch", driver, count) end)
 
 ---------------------------------------------------------------------------
--- A raincheck offered (SPEC7 5.8): "Anita offers a raincheck: one free summon, up to 50s, until
+-- A raincheck offered: "Anita offers a raincheck: one free summon, up to 50s, until
 -- 25 Nov. Accept / No thanks". Active only once the driver's Wuber gets the Accept.
 ---------------------------------------------------------------------------
 

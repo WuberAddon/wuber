@@ -91,6 +91,8 @@ return {
 		differs = "OPEN: the real client may say ADDON_ACTION_FORBIDDEN, not BLOCKED (FAKE-GAPS job 2860)" },
 	{ id = "combat.secure-frozen", what = "a protected frame (a secure button, or a frame holding one) cannot be shown, hidden, moved or changed in combat",
 		evidence = "one-real-case", source = "Logs/taint.log of 19 Nov: 7 blocked actions; the 'Paused during combat' label (B6)", build = "71037", bug = "B6", was = "guess" },
+	{ id = "combat.protected-child", what = "a plain frame parented to a secure frame, or anchored to one, is protected too (IsProtected true, so no Show/Hide/SetPoint in a fight); only when a probe fixture taught it (H.protectRule)",
+		evidence = "guess", source = "job 2908: WuberProbe protprop (own secure button, a plain child, an anchored frame); no real run yet, the stand-in is synthetic", bug = "B6", fed_by = "protect" },
 	{ id = "combat.protected-propagation", what = "a plain frame becomes protected when it holds a secure child (the fake: any descendant)",
 		evidence = "guess", source = "FAKE-GAPS job 2860 OPEN 'which frames count as protected'; the pay pill under TradeFrame", bug = "B6" },
 	-- frames
