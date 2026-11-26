@@ -5,12 +5,12 @@
 # The transcript comparison is also left out (the baseline file is about 110 MB and is not stored here).
 # The suite needs no old addon: tests/fixtures/addons/OldDriver stands in for one.
 #
-# Jobs (all start at once; "all checks" waits for them and is the one to require):
+# Jobs (all start at once; "all-checks" waits for them and is the one to require):
 #   quick          scrub check + its tests, check.lua                      (about 1 minute)
-#   suite (x8)     tools/ci-shard.sh K 8: one eighth of the tests each, its failing-test names uploaded
+#   suite (x16)    tools/ci-shard.sh K 16: one sixteenth of the tests each, its failing-test names uploaded
 #   layout (x3)    tools/layout-check.lua, one game window (3 sizes) each
 #   layout-extra   the Daylight pass and the route walks
-#   all checks     merges the failing-test lists and fails if any job failed
+#   all-checks     merges the failing-test lists and fails if any job failed
 name: checks
 on:
   pull_request:
@@ -39,31 +39,31 @@ jobs:
         run: lua5.1 tools/check.lua
   suite:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     steps:
       - uses: actions/checkout@v4
       - name: Install Lua 5.1
         run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
-      - name: Tests, shard ${{ matrix.shard }} of 8
-        run: bash tools/ci-shard.sh ${{ matrix.shard }} 8
+      - name: Tests, shard ${{ matrix.shard }} of 16
+        run: bash tools/ci-shard.sh ${{ matrix.shard }} 16
       - name: Failing tests of this shard
         if: always()
         run: |
-          echo "failing tests in shard ${{ matrix.shard }}/8: $(grep -c . tests/out/failed-${{ matrix.shard }}-of-8.txt || true)"
-          cat tests/out/failed-${{ matrix.shard }}-of-8.txt || true
+          echo "failing tests in shard ${{ matrix.shard }}/16: $(grep -c . tests/out/failed-${{ matrix.shard }}-of-16.txt || true)"
+          cat tests/out/failed-${{ matrix.shard }}-of-16.txt || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: failed-suite-${{ matrix.shard }}
-          path: tests/out/failed-${{ matrix.shard }}-of-8.txt
+          path: tests/out/failed-${{ matrix.shard }}-of-16.txt
           if-no-files-found: warn
   layout:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
