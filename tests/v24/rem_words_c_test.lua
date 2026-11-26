@@ -125,7 +125,7 @@ test("v24 words c: 4 Earnings: 'an hour' line, short stats line with its tooltip
 	ok(tip, "the stats line has a tooltip")
 	eq(plain(part(tip.title, e.statsHit)), stats, "its title is the short line")
 	local body = plain(part(tip.text, e.statsHit))
-	ok(body:find("88 buyers asked", 1, true), "the body has the buyers asked: " .. body)
+	ok(body:find("88 riders asked", 1, true), "the body has the buyers asked: " .. body)
 	ok(body:find(" tips", 1, true), "and the tips: " .. body)
 	-- no tips: only the buyers
 	W.Drive.LogTotals = function() return { rides = 1, copper = 5000, tips = 0, open = 60, asks = 1 } end

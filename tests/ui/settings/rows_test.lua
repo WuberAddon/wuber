@@ -118,15 +118,15 @@ test("ui.settings.rows: BRIEF18 00:55 the two invite switches say what each cove
 	ok(t1:find("app requests", 1, true), "its tooltip names the other way in (the 20 rewrites, W-7): " .. t1)
 	ok(t1:find("A place you don't summon to waits in your list", 1, true), "and says who is never invited: " .. t1)
 	local l2, d2, t2 = texts("drive.autoPublic")
-	eq(l2, "Invite public chat buyers")
+	eq(l2, "Invite public chat riders")
 	ok(d2:find("chat channels you read", 1, true), "the line names the channels: " .. d2)
-	ok(t2:find("Wuber can misread chat, so it asks first", 1, true) and t2:find("Off: click a name to invite", 1, true),
+	ok(t2:find("Wuber can misread chat, so it asks you once when you switch this on", 1, true) and t2:find("Off: click a name to invite", 1, true),
 		"its tooltip keeps the safety fact and the off case (the 20 rewrites, W-5): " .. t2)
 	T.clean(w)
 end)
 
 
-test("ui.settings.rows: BRIEF19 R4 Invite public chat buyers: off by default, says not whispers, asks before it turns on", function()
+test("ui.settings.rows: BRIEF19 R4 Invite public chat riders: off by default, says not whispers, asks before it turns on", function()
 	local w = T.newWorld()
 	local d = T.driver(w, T.BOB)
 	T.settle(w)
@@ -187,7 +187,7 @@ test("ui.settings.rows: R4 review #6 the warning can't be shown: the switch stay
 	d.W.UI.Toast = real
 	eq(t.on, false, "still off")
 	eq(d.W.Drive.opts().autoPublic, false)
-	eq(table.concat(toasts, " / "), "Invite public chat buyers: off (the warning can't be shown right now).")
+	eq(table.concat(toasts, " / "), "Invite public chat riders: off (the warning can't be shown right now).")
 	T.clean(w)
 end)
 

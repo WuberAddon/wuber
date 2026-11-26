@@ -288,7 +288,7 @@ test("v24 gauntlet: no never-invite or unclear line is invited by a whisper", fu
 	eq(#wrong, 0, #wrong == 0 and "no wrong whisper invites" or formatWrong("whisper", wrong))
 end)
 
-test("v24 gauntlet: no never-invite or unclear line is invited from public chat, even with Invite public chat buyers on", function()
+test("v24 gauntlet: no never-invite or unclear line is invited from public chat, even with Invite public chat riders on", function()
 	local data = loadFixture()
 	local w, a, DR, faction = openDriver("Orgrimmar", true)
 	local genName = makeNameGen()

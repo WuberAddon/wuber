@@ -187,7 +187,7 @@ local function buildChart(s, ch, top)
 			end
 			parts[#parts + 1] = plural(N(d.rides) or 0, "ride")
 			parts[#parts + 1] = hoursText(open) .. " open"
-			parts[#parts + 1] = plural(N(d.asks) or 0, "buyer", "buyers") .. " asked"
+			parts[#parts + 1] = plural(N(d.asks) or 0, "rider", "riders") .. " asked"
 			return table.concat(parts, " · ")
 		end)
 		b.hit = hit
@@ -674,7 +674,7 @@ D.screens.earnings = function(parent)
 		local tips = N(tot.tips) or 0
 		local parts = {}
 		if tips > 0 then parts[#parts + 1] = earned(tips) .. " tips" end
-		parts[#parts + 1] = plural(N(tot.asks) or 0, "buyer", "buyers") .. " asked"
+		parts[#parts + 1] = plural(N(tot.asks) or 0, "rider", "riders") .. " asked"
 		return table.concat(parts, " · ")
 	end)
 	dash:EnableMouse(true)

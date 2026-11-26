@@ -934,7 +934,7 @@ function DR.LogReport()
 		-- no takings read 0c, never W.Money's "free"
 		local function pay(c) return math.floor((tonumber(c) or 0) + 0.5) > 0 and W.Money(c) or "0c" end
 		local rate = hours >= 0.1 and (" = " .. pay(s.copper / hours) .. " per open hour") or ""
-		W.Print(("%s, this window: %d rides, %s in %.1f open hours%s; %d buyers seen (%d for %s)."):format(row[1], s.rides,
+		W.Print(("%s, this window: %d rides, %s in %.1f open hours%s; %d riders seen (%d for %s)."):format(row[1], s.rides,
 			pay(s.copper), hours, rate, s.asks, s.match, destNow() ~= "" and destNow() or "your place"))
 	end
 	W.Print("The heatmap (gold per open hour, by weekday and hour) is in the Drive tab: Earnings.")

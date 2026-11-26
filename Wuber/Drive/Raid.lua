@@ -455,7 +455,7 @@ function DR.RaidTick(now)
 				DR.raidKeeperGoneAt = nil
 				DR.crewRaidRun = false
 				for k in pairs(DR.raidRows) do DR.raidRows[k] = nil end
-				DR.Alert("Raid summons stopped: the runner left the group.", "raid")
+				DR.Alert("Raid summons stopped: the raid leader left the group.", "raid")
 				if W.InGroup() then DR.Hello() end
 				W.Fire("DRIVE_RAID")
 				W.Fire("SETTINGS", "drive")

@@ -1,4 +1,4 @@
--- BRIEF24 group A, P1: "Invite public chat buyers" must show its real value after the warning is answered
+-- BRIEF24 group A, P1: "Invite public chat riders" must show its real value after the warning is answered
 -- (Yes, Cancel) or goes away another way (hidden, replaced), and after /wuber drive market asks while Settings
 -- is open. The knob position (t.pos) and t.on both count: the click's own slide used to leave the knob ticked.
 local T = ...
@@ -24,7 +24,7 @@ local function shows(t, on, what)
 	ok(not t.inactive, what .. ": clickable")
 end
 
-test("r24 a: Invite public chat buyers after Cancel shows off, knob at the left", function()
+test("r24 a: Invite public chat riders after Cancel shows off, knob at the left", function()
 	local w, d, t = world()
 	ok(t, "the switch")
 	d:click(t)
@@ -42,7 +42,7 @@ test("r24 a: Invite public chat buyers after Cancel shows off, knob at the left"
 	T.clean(w)
 end)
 
-test("r24 a: Invite public chat buyers after Yes shows on", function()
+test("r24 a: Invite public chat riders after Yes shows on", function()
 	local w, d, t = world()
 	d:click(t)
 	w:advance(0.5)
@@ -55,7 +55,7 @@ test("r24 a: Invite public chat buyers after Yes shows on", function()
 	T.clean(w)
 end)
 
-test("r24 a: Invite public chat buyers when the popup closes without an answer shows the real value", function()
+test("r24 a: Invite public chat riders when the popup closes without an answer shows the real value", function()
 	local w, d, t = world()
 	d:click(t)
 	w:advance(0.5)
