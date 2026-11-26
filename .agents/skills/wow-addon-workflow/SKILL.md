@@ -21,6 +21,7 @@ Roles are named, not tools: lead, builder, test runner, reviewer. See ROLES.md. 
 - UI changes: `lua5.1 tools/layout-check.lua --screen <id>` (0 problems), and the full `lua5.1 tools/layout-check.lua` before a pull request.
 - Once at the end: the whole suite, `WUBER_LUA=lua5.1 bash tools/suite-par.sh . 16`. A final count only counts on a fresh clone of the final commit (a leftover `tests/out` from an earlier run can hide order-dependent failures).
 - Scrub check: `python scrub-check.py . --patterns scrub-patterns.public.txt` must print 0 hits.
+- **CI:** Before opening a pull request, run the WHOLE suite locally (and the full layout check for UI changes). The hosted checks on a pull request are the quick set only; the full hosted suite runs on main after merging. If main goes red, fix it first, before anything else is merged.
 
 ## 2. Addon hard rules
 - Lua 5.1 only; at most 200 locals per function/chunk (aim for 170 or fewer), at most 60 upvalues.
@@ -41,9 +42,9 @@ Roles are named, not tools: lead, builder, test runner, reviewer. See ROLES.md. 
 ## 4. A fix round, by role
 1. **Lead** reads the issue(s), splits the work into groups of about 10 minutes each (one bug, or several small bugs in the same file; no two groups on the same addon file), writes down for each group its files and its tests, and states the hard rules once. A change to a shared helper or the fake game is an early group, merged first.
 2. **Builder** takes one group in its own worktree: proof test first (fails), then the fix (passes), `tools/check.lua` and the group's tests green before hand-back. Never use `git stash` in a worktree: the stash is shared by all worktrees. The lead takes a group itself only after the builder failed once, or when the triage wrote down why it is hard.
-3. **Test runner** runs the checks the moment a group reports (check.lua, the group's tests), and at the end the whole suite and the layout check. It reports only the short result (pass/fail counts, the failing test and its key assertion) and never designs a fix.
+3. **Test runner** runs the checks the moment a group reports (check.lua, the group's tests), and at the end the whole suite and the layout check, locally, before the pull request is opened (the hosted checks on a pull request are the quick set only). It reports only the short result (pass/fail counts, the failing test and its key assertion) and never designs a fix.
 4. **Reviewer**, someone who did not build the change, reads the diff (code, screens, a new-player read, security) and lists findings, each marked "proven" (with the failing test) or "not proven / to prove it:". Nobody marks their own homework.
-5. **Lead** judges real failures, merges group by group with a quick check after each merge, then the finish: one full suite run, one layout run, the regenerated map if headers changed, and a short summary (what changed, what is proven, what is not).
+5. **Lead** judges real failures, merges group by group with a quick check after each merge, then the finish: one full local suite run before the pull request (the full hosted suite runs on main after merging; if main goes red, fixing it comes first, before anything else is merged), one layout run, the regenerated map if headers changed, and a short summary (what changed, what is proven, what is not).
 Keep the whole round short: about 20 to 45 minutes, not hours.
 
 ## 5. In-game proof (lab/ and the maintainer)

@@ -18,7 +18,7 @@ You need Lua 5.1 (not LuaJIT), Python 3, and Git Bash on Windows. Run from the r
 
 On Windows, see "Set up on Windows" in `AGENTS.md` (Lua 5.1 binaries, `WUBER_LUA`, and running `tools/suite-par.sh` in Git Bash, not WSL's bash).
 
-Run `tools/check.lua` after every change, a filtered `tests/run.lua` (or `bash tools/quick-check.sh`, which runs only the tests a change touches) while you work, and the whole suite, the layout check and the scrub check before you open a pull request.
+Run `tools/check.lua` after every change, a filtered `tests/run.lua` (or `bash tools/quick-check.sh`, which runs only the tests a change touches) while you work, and the whole suite, the layout check and the scrub check before you open a pull request. The hosted checks on a pull request are the quick set only; the full hosted suite runs on main after merging, and if main goes red, fixing it comes before anything else is merged.
 
 ## How to work
 - Issues are the work list. One issue per pull request.
