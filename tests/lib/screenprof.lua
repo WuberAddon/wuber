@@ -51,7 +51,10 @@ local function findClasses()
 	end
 	return visit(H.newWidget, 0) or visit(H.createFrame, 0)
 end
-local classes = upvalue(upvalue(H.newWidget, "meta"), "classes") or findClasses()
+-- H.classes is the harness's own handle on the table, so no stack of wrappers (taggers installed at load by other test files,
+-- the no-value getters, the hunt) can hide it; the upvalue walks stay as the fallback for an older harness
+local classes = (type(H.classes) == "table" and type(H.classes.Frame) == "table" and H.classes)
+	or upvalue(upvalue(H.newWidget, "meta"), "classes") or findClasses()
 P.ok = type(classes) == "table"
 
 local COUNTED = {

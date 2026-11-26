@@ -35,6 +35,22 @@ test("speed: the profiler counts one client's widgets and calls, then puts the h
 	T.clean(w)
 end)
 
+-- guard: infra (the order leak: other test files leave wrappers on H.newWidget when this file loads; in a full shard the
+-- class table sat deeper than the old five-level upvalue search and "the harness class table not found" failed this file)
+test("speed: the profiler finds the harness class table under a deep stack of newWidget wrappers", function()
+	local real = H.newWidget
+	local f = real
+	for _ = 1, 9 do
+		local inner = f
+		f = function(...) return inner(...) end
+	end
+	H.newWidget = f
+	local ok2, P2 = pcall(function() return dofile(T.dir .. "/lib/screenprof.lua")(H) end)
+	H.newWidget = real
+	ok(ok2, "the profiler loads under nine wrappers")
+	ok(ok2 and P2.ok, "the harness's widget classes are found under nine wrappers")
+end)
+
 -- guard: infra
 test("speed: the profiler's scene plays every screen change with no Lua error", function()
 	local Scenes = dofile(T.dir .. "/speed/scenes.lua")
