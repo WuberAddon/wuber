@@ -143,7 +143,7 @@ test("ui.settings.panel: G1 - the most used rows first: Riding starts with Tips,
 		if y >= rid.top and y < rid.bottom and (not firstRiding or y < rowTop(st, firstRiding)) then firstRiding = row end
 		if y >= snd.top and y < snd.bottom and (not firstSound or y < rowTop(st, firstSound)) then firstSound = row end
 	end
-	eq(firstRiding.label:GetText(), "Tips", "Riding's first row (the always-shown rows come before the Advanced ones)")
+	eq(firstRiding.label:GetText(), "Login tips", "Riding's first row (the always-shown rows come before the Advanced ones)")
 	eq(firstSound.label:GetText(), "Sounds", "Sound and effects' first row")
 	T.clean(w)
 end)

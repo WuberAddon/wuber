@@ -90,7 +90,7 @@ test("v24 diet: non-Warlock rider in Simple sees Riding always rows, not My time
 	local r = T.rider(w, T.TESTCHAR, { simple = true })
 	T.settle(w)
 	openSettings(r, w, "riding")
-	ok(hasText(r, "Tips"), "Tips visible")
+	ok(hasText(r, "Login tips"), "Login tips visible")
 	ok(hasText(r, "Flight offers"), "Flight offers visible")
 	eq(#r:findText("My time is worth", false, true), 0, "My time is worth hidden in Simple")
 	for _, lbl in ipairs({ "Invite riders who whisper me", "Post an advert when I go online", "Your badge", "Key for the big button", "Request words" }) do
