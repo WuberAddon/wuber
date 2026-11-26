@@ -255,6 +255,18 @@ test("l26: a dead pid's slot is taken over, a live one is not", function()
 	local out = run(d, 'WUBER_SUITE_LOCK="' .. lk .. '" WUBER_SUITE_WAIT_MAX=20', "1")
 	ok(out:find("taking over a stale suite lock (pid 999999", 1, true) and out:find("shard 1/1", 1, true) and not out:find("waiting for suite lock", 1, true), out)
 	eq(sh('ls "' .. lk .. '" | grep -c "^held\\.[0-9]"'):match("%d+"), "2", "the two live holders keep their files")
+	eq(sh('ls "' .. lk .. '" | grep -c "^held\\.stale"'):match("%d+"), "0", "the moved-aside file is not named held.*")
+	eq(sh('ls "' .. lk .. '" | grep -c "^stale\\.[0-9]"'):match("%d+"), "1", "the moved-aside file is kept as stale.*")
+end)
+
+-- job 2925: no flock in Git Bash; a lock that cannot be taken must fail loudly, never wait or run silently
+test("l26: an unusable lock folder FAILS LOUDLY (exit 2) and suite.sh needs no flock", function()
+	local d = tree("badlock")
+	put(d .. "/notafolder", "x\n")
+	local out = run(d, 'WUBER_SUITE_LOCK="' .. d .. '/notafolder"', "1")
+	ok(out:find("ERROR: cannot use WUBER_SUITE_LOCK", 1, true) and out:find("exit=2", 1, true) and not out:find("shard 1/1", 1, true), out)
+	local s = sh('cd "' .. d .. '" && mkdir -p tests && printf "x" > tests/run.lua && WUBER_SUITE_LOCK="' .. d .. '/slk" WUBER_LUA="' .. d .. '/fakelua.sh" bash "' .. ROOT .. '/tools/suite.sh" "' .. d .. '"; echo "exit=$?"')
+	ok(s:find("5 passed", 1, true) and s:find("exit=0", 1, true) and not s:find("flock", 1, true), s)
 end)
 
 test("l26: a suite started inside a running suite does not wait even with every slot taken", function()
