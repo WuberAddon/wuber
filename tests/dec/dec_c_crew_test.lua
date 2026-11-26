@@ -1,6 +1,6 @@
 -- Decisions round, group C: the crew. FAB-03 (a member's own price, typed place, largest group, kick and whisper mode
 -- come back on every way out of a crew), FAB-09 (the crew outbox holds and retries while the game's chat is locked),
--- AUD-226 (a full crew and one more Warlock ticked: "Crew is full (8)"). Loaded by tests/run.lua with its helper table T.
+-- AUD-226 (a full crew and one more Warlock ticked: "Crew is full (8 players)"). Loaded by tests/run.lua with its helper table T.
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok
 local function key(name) return (name:lower():gsub("[%s%-]+", " ")) end
@@ -185,15 +185,15 @@ local function raidPick(crewN)
 	return w, dru, row
 end
 
-test("dec c: AUD-226 a full crew of 8 and one more Warlock ticked: the toast says 'Crew is full (8)' and he is not added", function()
+test("dec c: AUD-226 a full crew of 8 and one more Warlock ticked: the toast says 'Crew is full (8 players)' and he is not added", function()
 	local w, dru, row = raidPick(8)
 	eq(dru.W.Drive.CREW_MAX, 8, "the limit is the code's constant")
 	eq(#dru.W.Char().crew, 8, "control: the crew is full")
 	dru:clickOn(row.toggle) w:advance(1)
 	ok(dru.W.Drive.CrewEntry(key(WAR)) == nil, "he is not added")
 	eq(#dru:findText("Wick summons", false, true), 0, "no 'summons' toast")
-	ok(#dru:findText("Crew is full (8)", true, true) > 0 or #dru:findText("Crew is full (8)", false, true) > 0,
-		"the toast 'Crew is full (8)' shows: " .. T.list(dru:visibleTexts()):sub(1, 300))
+	ok(#dru:findText("Crew is full (8 players)", true, true) > 0 or #dru:findText("Crew is full (8 players)", false, true) > 0,
+		"the toast 'Crew is full (8 players)' shows: " .. T.list(dru:visibleTexts()):sub(1, 300))
 	T.clean(w)
 end)
 

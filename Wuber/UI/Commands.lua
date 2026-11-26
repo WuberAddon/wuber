@@ -190,7 +190,7 @@ local function tips(rest)
 		(W.db or W.InitDB()).tipsOn = not off
 	end
 	if off then
-		say("Tips are off. Turn them back on in Settings > Riding > Tips, or type /wuber tips.")
+		say("Tips are off. Turn Login tips back on in Settings > Riding, or type /wuber tips.")
 		return
 	end
 	-- ShowNow says false (combat, a ride, the coach marks, nothing left) when it cannot show one now

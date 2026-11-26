@@ -112,7 +112,7 @@ local KEYWORDS = {
 	["Window size"] = "scale size bigger smaller zoom position move reset middle centre center",
 	["Wide pages"] = "fold unfold wide narrow two pane reset per page",
 	["What Wuber sends"] = "privacy limits limit hidden messages message whispers sending sent spam rate how many often chat addon", -- decisions N
-	["Tips"] = "login tips hints help tip advice learn how tutorial coach replay",
+	["Login tips"] = "login tips hints help tip advice learn how tutorial coach replay",
 	["Check my game"] = "test diagnose problems broken",
 }
 
@@ -1081,7 +1081,7 @@ end
 
 local function buildRiding8(c, y)
 	local tipsRow
-	y, tipsRow = toggleRow(c, y, "tips", "Tips", "A short tip inside Wuber the next time you open it.",
+	y, tipsRow = toggleRow(c, y, "tips", "Login tips", "A short tip inside Wuber the next time you open it.",
 		"On: a small tip card shows when you open Wuber after login, each tip once. Off: none. Type /wuber tips for one now.",
 		tipsOn, setTips)
 	attachSwitchButton(tipsRow, "coach", "Replay", 64, "Replay",
