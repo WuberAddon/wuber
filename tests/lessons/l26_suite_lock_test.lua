@@ -43,6 +43,8 @@ local function put(path, text)
 	local f = assert(io.open(path, "wb"))
 	f:write(text)
 	f:close()
+	-- fake Lua and other helper scripts are run directly: they need the exec bit on Linux (exit 126 without it)
+	if path:match("%.sh$") then sh('chmod +x "' .. path .. '"') end
 end
 
 -- a throwaway git tree with a Wuber/ file and a fake Lua that "passes"
