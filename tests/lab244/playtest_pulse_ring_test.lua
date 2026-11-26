@@ -17,6 +17,13 @@ local function newLab()
 	return w, c, c.ns.WuberLab
 end
 
+test("playtest pulse ring: the Auto check has the map ring row too", function()
+	local w, c, L = newLab()
+	local have
+	for _, s in ipairs(L.AutoScreens()) do if s.id == "a_pulse_map" then have = s end end
+	ok(have and type(have.ready) == "function" and type(have.verify) == "function", "a_pulse_map is an Auto check screen that waits and judges")
+end)
+
 test("playtest pulse ring: the Auto check has the ring row and it is a screen", function()
 	local w, c, L = newLab()
 	local have
@@ -27,7 +34,7 @@ end)
 
 test("playtest pulse ring: run in the fake game the row passes or is skipped, never a look", function()
 	local w, c, L = newLab()
-	ok(L.AutoStart({ words = { "a_pulse_ring" } }), "started")
+	ok(L.AutoStart({ words = { "a_pulse_ring", "a_pulse_map" } }), "started")
 	for _ = 1, 1800 do
 		if not L.AutoRunning() then break end
 		w:advance(1)
@@ -36,7 +43,7 @@ test("playtest pulse ring: run in the fake game the row passes or is skipped, ne
 	local auto = L.lastAuto
 	local rows = {}
 	for _, r in ipairs(auto and auto.results or {}) do
-		if r.id == "a_pulse_ring" then rows[#rows + 1] = r.status .. ": " .. tostring(r.detail) end
+		if r.id == "a_pulse_ring" or r.id == "a_pulse_map" then rows[#rows + 1] = r.status .. ": " .. tostring(r.detail) end
 	end
 	ok(#rows > 0, "the row reported something")
 	for _, r in ipairs(rows) do ok(not r:find("^look"), r) end

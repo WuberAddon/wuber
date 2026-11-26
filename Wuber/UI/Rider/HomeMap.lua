@@ -112,7 +112,7 @@ local function buildMapPanel(home, height, visible)
 	-- (design 1) the "you are here" dot is flat: no blur round it
 	m.me.dot = T.Circle(m.me, 14, "white", "OVERLAY")
 	m.me.dot:SetPoint("CENTER", m.me, "CENTER")
-	m.me.pulse = A.Pulse(m.me, { size = 64, colour = "glow", alpha = 0.4, period = 2.2, rings = 2, texture = "ring" }) -- flat rings
+	m.me.pulse = A.Pulse(m.me, { size = 64, colour = "glow", alpha = 0.3, period = 3, rings = 1, texture = "ring" }) -- flat rings
 	m.me:Hide()
 	m.pins = {}
 	-- during a ride, a look at Home shows the way back to it
@@ -181,7 +181,7 @@ local function mapPin(m, i)
 	p.dot:SetPoint("CENTER", p, "CENTER")
 	p.glyph = T.Icon(p, "summon", 10, "white", "OVERLAY")
 	p.glyph:SetPoint("CENTER", p, "CENTER")
-	p.pulse = A.Pulse(p, { size = 60, colour = "magenta", alpha = 0.6, period = 2, rings = 2, start = false })
+	p.pulse = A.Pulse(p, { size = 60, colour = "magenta", alpha = 0.4, period = 3, rings = 1, start = false })
 	p:RegisterForClicks("LeftButtonUp")
 	safeScript(p, "OnClick", function(self)
 		if self.key then UI.Show("confirm", self.key) end

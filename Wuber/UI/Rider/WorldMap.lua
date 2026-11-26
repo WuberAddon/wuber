@@ -1398,7 +1398,7 @@ local function buildView(wm)
 	wm.me:SetSize(WM.ME, WM.ME)
 	wm.me.dot = T.Circle(wm.me, WM.ME, "white", "OVERLAY")
 	wm.me.dot:SetPoint("CENTER", wm.me, "CENTER")
-	wm.me.pulse = A.Pulse(wm.me, { size = 40, colour = "glow", alpha = 0.4, period = 2.2, rings = 2, texture = "ring" }) -- flat rings, not the blurred pulse
+	wm.me.pulse = A.Pulse(wm.me, { size = 40, colour = "glow", alpha = 0.3, period = 3, rings = 1, texture = "ring" }) -- flat rings, not the blurred pulse
 	wm.me:Hide()
 	-- legend: -- flight  .. boat (or zeppelin)  * driver  $ bounty
 	-- (round 13, I21) the Horde's dashed crossings are mostly zeppelins: the legend says so
