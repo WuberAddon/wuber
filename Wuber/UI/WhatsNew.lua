@@ -259,6 +259,14 @@ local function hookFollow()
 			end)
 		end
 	end
+	-- (gauntlet #42) the window opening wide, folding or showing moves its box: the card steps aside at once, not at the next second
+	local win = ui.win
+	if type(win) == "table" and not followHooked[win] and type(win.HookScript) == "function" then
+		followHooked[win] = true
+		local function again() if card and card:IsShown() then W.Safe("whatsnew", place, card) end end
+		call(win.HookScript, win, "OnSizeChanged", again)
+		call(win.HookScript, win, "OnShow", again)
+	end
 end
 
 local function close()
