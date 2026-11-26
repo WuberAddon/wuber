@@ -86,3 +86,37 @@ test("#232 screen after a fight: the window closed in the fight, then reopened a
 	leftOver(d, only, "Ride after the fight")
 	T.clean(w)
 end)
+
+-- (job 2908, Fable item 8) The same scene again, with the protection rule a probe run teaches: a plain frame parented to or anchored to a secure frame is
+-- protected in a fight (tests/lib/probe_learn.lua L.protectRule, H.protectRule). THE FIXTURE IS A STAND-IN (SYNTHETIC-protect.lua, invented answers):
+-- until a real WuberProbe run is imported this proves the harness and the code against that rule, not the game. 76b3b5a painted the button's plain child
+-- frames and moved its slot in a fight; the old guess did not call those protected, the learned rule does.
+test("#232 K4: the whole fight scene touches no protected frame under the learned protection rule", function()
+	local L = dofile(T.dir .. "/lib/probe_learn.lua")
+	local saved = L.save(H)
+	L.apply(H, assert(L.load(T.dir .. "/fixtures/probe/SYNTHETIC-protect.lua")))
+	local ok2, err = pcall(function()
+		local w, d, W = setup()
+		eq(H.protectRule and H.protectRule.child, true, "control: the rule is on")
+		local baseDrive = H.drawnTextSet(d)
+		w:enterCombat(d) w:advance(0.5)
+		local only = combatOnly(baseDrive, H.drawnTextSet(d))
+		ok(#only > 0, "control: the fight puts its own text on the Drive tab")
+		-- the paused look sits on plain frames under the secure button: under the learned rule they cannot be hidden in the fight, so only alpha
+		-- and text (allowed) can take it off the other pages. 76b3b5a took nothing off: its label stayed drawn over Ride and Settings.
+		W.UI.SelectTab("Ride") w:advance(1.5)
+		leftOver(d, only, "Ride in the fight (learned rule)")
+		W.UI.OpenSettings() w:advance(1.5)
+		leftOver(d, only, "Settings in the fight (learned rule)")
+		W.UI.CloseSettings() w:advance(0.5)
+		W.UI.Toggle(false) w:advance(1)
+		eq(#H.drawnTexts(d, { match = "Paused during combat" }), 0, "window closed in the fight (learned rule): no paused label")
+		W.UI.Toggle(true) w:advance(1)
+		eq(#w.violations, 0, "no protected call in the fight under the learned rule: " .. table.concat(w.violations, "; "))
+		w:leaveCombat(d) w:advance(1.5)
+		eq(#w.violations, 0, "after the fight: " .. table.concat(w.violations, "; "))
+		T.clean(w)
+	end)
+	L.restore(H, saved)
+	if not ok2 then error(err, 0) end
+end)

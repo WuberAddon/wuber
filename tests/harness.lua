@@ -633,13 +633,42 @@ local function subtree(obj, out)
 	return out
 end
 
-local function isProtected(obj)
+-- (job 2908) H.protectRule = { child, anchored, parent } from a probe fixture (tests/lib/probe_learn.lua L.protectRule): what the real client
+-- answered for IsProtected on a plain frame parented to a secure frame, one anchored to it, and the plain parent holding it. nil = the old guess
+-- (a frame holding a secure descendant is protected; a child or an anchored frame is not).
+local isProtected
+do
+local function secureAbove(obj)
+	local p = S[obj].parent
+	local n = 0
+	while p and S[p] and n < 50 do
+		if S[p].secure then return true end
+		p = S[p].parent
+		n = n + 1
+	end
+	return false
+end
+local function anchoredToSecure(obj)
+	for _, pt in ipairs(S[obj].points or {}) do
+		local rel = pt.rel
+		if rel and S[rel] and S[rel].kind == "frame" and S[rel].secure then return true end
+	end
+	return false
+end
+function isProtected(obj)
 	local s = S[obj]
 	if s.secure then return true end
+	local R = H.protectRule
+	if R and s.kind == "frame" then
+		if R.child and secureAbove(obj) then H.rule("combat.protected-child") return true end
+		if R.anchored and anchoredToSecure(obj) then H.rule("combat.protected-child") return true end
+	end
+	if R and not R.parent then return false end
 	for _, c in ipairs(s.children) do
 		if S[c].kind == "frame" and isProtected(c) then H.rule("combat.protected-propagation") return true end
 	end
 	return false
+end
 end
 
 local runScript -- forward
@@ -2771,6 +2800,13 @@ function H.createFrame(client, ftype, name, parent, template, id)
 			if not TEMPLATES[t] then error(("CreateFrame: Couldn't find inherited node \"%s\""):format(t), 2) end
 			list[#list + 1] = t
 		end
+	end
+	-- (job 2908, N25-F) a probe-learned rule: a new frame under a protected parent is refused in a fight
+	if parent and H.protectRule and H.protectRule.createUnder and client.player.combat and S[parent] and S[parent].kind == "frame" and isProtected(parent) then
+		H.rule("combat.protected-child")
+		client.world.violations[#client.world.violations + 1] = client.player.name .. ": CreateFrame under protected frame " .. tostring(S[parent].name or S[parent].otype) .. " in combat"
+		client:fire("ADDON_ACTION_BLOCKED", client:callerAddon(), "CreateFrame()")
+		error("ADDON_ACTION_BLOCKED: " .. client:callerAddon() .. " tried to call the protected function 'CreateFrame()'", 2)
 	end
 	local f = H.newWidget(client, ftype, name, parent, "frame")
 	local s = S[f]
