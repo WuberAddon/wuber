@@ -348,11 +348,15 @@ end)
 -- when one does, tools/rec/probe-import.lua --source game writes the same kind of file, named game-probe-<id>.lua.)
 local function standInFixture()
 	local w = T.newWorld()
-	local oldTM, oldStretch = H.textMetrics, TL.STRETCH
+	local oldTM, oldStretch, oldRatio = H.textMetrics, TL.STRETCH, TL.ratio
 	local saved = L.save(H)
 	L.reset(H) -- the stand-in is made from the fake's own answers, not from a real fixture that may be loaded
 	H.fileIdFn, H.textMetrics, TL.STRETCH = standInId, TL, STRETCH
+	-- (job 2907) the stand-in's truth is the Inter advances stretched by STRETCH and nothing else (the same rule as disagreements() above): the
+	-- measured size ratios of #238 are off, or the fixture drifts 6% from the truth the learning tests check it against
+	TL.ratio = function() return 1 end
 	local c, run = playAuto(w)
+	TL.ratio = oldRatio
 	H.fileIdFn, H.textMetrics, TL.STRETCH = nil, oldTM, oldStretch
 	L.restore(H, saved)
 	local fx = assert(PI.convert(run, "sim"))
@@ -404,7 +408,11 @@ test("wprobe: hit: sweeping the mouse over every cell records the winners; the B
 	-- B7 (tests/fixtures/rec/focus-run3-back.lua): the strip took a click inside the arrow where both lie. Cell (col 1, row 2): strip rect y .55-1, arrow y .45-.75, x .1-.4
 	eq(fx.hit.b7[2 * 6 + 1 + 1], "strip", "the strip wins over the clipped arrow")
 	eq(fx.hit.levels[0 * 6 + 5 + 1], "B", "level 5 beats level 1")
-	eq(#L.hitRules(fx), 12 * 24, "one rule per cell")
+	eq(#L.hitRules(fx), 17 * 24, "one rule per cell")
+	-- (job 2907) the probe ended because every cell was seen, not on a clock or a skip
+	eq(run.p.hit.coverage.ended, "complete", "ended on completion")
+	ok(run.ran.hit.done, "write-ahead: done after the probe")
+	eq(fx.hitRules.scrollclip, "hit.scrollframe-rect-clip", "a ledger rule id travels with the scenario")
 	w.missingFiles = {}
 	T.clean(w)
 end)
@@ -431,7 +439,9 @@ test("wprobe: keys probe runs, logs rows, and closes its panel", function()
 	c:slash("/probe run keys")
 	w:advance(1)
 	c:fire("GLOBAL_MOUSE_DOWN", "LeftButton")
-	w:advance(45)
+	w:advance(1)
+	c.env.WuberProbeAPI.skipRequested = true -- (job 2907) a guided step ends on completion or on Skip, not on a clock
+	w:advance(1)
 	local run = dbOf(c).runs[#dbOf(c).runs]
 	ok(run.ran.keys and run.ran.keys.ms, "finished")
 	ok(#run.p.keys.rows >= 1, "a click row")
@@ -447,7 +457,8 @@ test("wprobe: watch counts events without arguments", function()
 	w:advance(1)
 	c:fire("GROUP_ROSTER_UPDATE")
 	c:fire("GROUP_ROSTER_UPDATE")
-	w:advance(125)
+	c.env.WuberProbeAPI.skipRequested = true -- (job 2907) ends on the four ticks or on Skip, not on 120 s
+	w:advance(2)
 	local run = dbOf(c).runs[#dbOf(c).runs]
 	eq(run.p.watch.fired.GROUP_ROSTER_UPDATE, 2)
 	local fx = assert(PI.convert(run, "sim"))
@@ -487,7 +498,10 @@ test("wprobe: safety: the addon's source never hooks, sends, sets a cvar or call
 	end
 	local n = 0
 	for _ in code:gmatch("ReloadUI") do n = n + 1 end
-	eq(n, 1, "ReloadUI appears once: the typed '/probe taint reload' test")
+	eq(n, 1, "ReloadUI appears once: in P.saveAndReload (the wizard's click and the typed fallback)")
+	ok(src:find("function P.saveAndReload", 1, true))
+	local wz = assert(T.readFile(PROBE_DIR .. "/Wizard.lua"))
+	ok(not wz:gsub("%-%-[^\n]*", ""):find("ReloadUI", 1, true), "the wizard file never calls ReloadUI itself")
 	local toc = assert(T.readFile(PROBE_DIR .. "/WuberProbe.toc"))
 	ok(toc:find("SavedVariables: WuberProbeDB", 1, true))
 end)

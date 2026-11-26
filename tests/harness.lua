@@ -5689,7 +5689,11 @@ function World:addClient(name, opts)
 	env.UpdateAddOnMemoryUsage = function() end
 	env.GetAddOnMemoryUsage = function() return collectgarbage("count") end
 	-- (REC build.number) the build of 20 Nov 2026 on (70938 of 12 Nov and 70959 of 13 Nov came before it)
-	env.GetBuildInfo = function() return "1.60.1", "71037", "Nov 18 2026", 16001, "1.60.1", "release" end
+	-- (job 2907) opts.buildInfo = { version, build, date, interface, ... }: a client on another build (the probe's fingerprint test)
+	env.GetBuildInfo = function()
+		if opts and type(opts.buildInfo) == "table" then return unpack(opts.buildInfo) end
+		return "1.60.1", "71037", "Nov 18 2026", 16001, "1.60.1", "release"
+	end
 	env.GetLocale = function() return "enGB" end
 	-- (Forever's realm names carry the region and ruleset: "CAMWOW EU5 Realm 5 PvE")
 	-- (REC realm.name.empty71037, D16) build 71037 names no realm: "" by default (H.DEFAULT_REALM). A world or client
