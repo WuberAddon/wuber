@@ -138,13 +138,11 @@ local function dragFrom(f)
 	safeScript(f, "OnDragStart", function()
 		ui.moving = true
 		hideOverlays()
-		ui.win:StartMoving()
-		W.Fire("WINDOW_DRAG", true)
+		ui.win:StartMoving() W.Fire("WINDOW_DRAG", true)
 	end)
 	safeScript(f, "OnDragStop", function()
 		ui.win:StopMovingOrSizing()
-		ui.moving = false
-		W.Fire("WINDOW_DRAG", false)
+		ui.moving = false W.Fire("WINDOW_DRAG", false)
 		savePosition()
 		if UI.Fold then W.Safe("fold", UI.Fold.Apply) end
 		UI.SyncSecure()
