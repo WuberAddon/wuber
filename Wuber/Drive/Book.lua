@@ -647,7 +647,7 @@ local function logIndex()
 	local idx = {}
 	for _, list in ipairs({ rides, team }) do
 		for _, line in ipairs(list) do
-			local at, _, name, dest = tostring(line):match("^([^,]*),([^,]*),([^,]*),([^,]*)")
+			local at, copper, name, dest, _, price = tostring(line):match("^([^,]*),([^,]*),([^,]*),([^,]*),?([^,]*),?([^,]*)")
 			local k = name and name ~= "" and W.Key(name)
 			at = tonumber(at)
 			if k and at then
@@ -657,7 +657,13 @@ local function logIndex()
 					idx[k] = e
 				end
 				e.times[#e.times + 1] = at
+				-- (playtest) tips come from the logged payments: gold paid minus the price (own payments only: a
+				-- crew line has no price), nothing new is saved
+				price, copper = tonumber(price), tonumber(copper)
+				local tip = (list == rides and price and price > 0 and copper) and math.max(0, copper - price) or nil
+				if tip then e.tipTotal = (e.tipTotal or 0) + tip end
 				if not e.last or at >= e.last then
+					e.lastTip, e.lastPrice = tip, tip and price or nil
 					e.last = at
 					e.place = (dest and dest ~= "") and dest or e.place
 					e.name = name
@@ -679,12 +685,13 @@ local function rideCount(times)
 	return n
 end
 
--- { rides, last (epoch or nil), place (or nil) } for a customer.
+-- { rides, last (epoch or nil), place (or nil), lastTip / lastPrice (copper, nil when the last ride's price was not logged),
+-- tipTotal (copper, nil when no ride had a price) } for a customer.
 function DR.CustomerFacts(name)
 	local k = keyOf(name)
 	local e = k and logIndex()[k]
 	if not e then return { rides = 0 } end
-	return { rides = rideCount(e.times), last = e.last, place = e.place }
+	return { rides = rideCount(e.times), last = e.last, place = e.place, lastTip = e.lastTip, lastPrice = e.lastPrice, tipTotal = e.tipTotal }
 end
 
 -- Everyone in the book or the log: { { key, name, rides, last, place, note, gift } }, the latest ride
