@@ -1,8 +1,8 @@
--- The "List me in the Group Finder" sheet's steps name the buttons the real Group Finder has, and start with the copy step.
+-- The "List me in the Group Finder" sheet's steps name the buttons the real Group Finder has, and say to type the note by hand (the game's Note box refuses paste).
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
-local WANT = "Click the note and press Ctrl+C. Open the Group Finder, go to List yourself, pick a Playstyle, click the Note box, press Ctrl+V, then List me."
+local WANT = "Open the Group Finder, go to List yourself, pick a Playstyle, click the Note box and type the note below by hand, then List me."
 
 test("playtest Q3: the sheet shows the new Group Finder steps", function()
 	local w = T.newWorld()

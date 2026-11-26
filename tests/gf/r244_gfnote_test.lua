@@ -1,9 +1,9 @@
--- r244 gfnote: the note box on the "List me in the Group Finder" sheet must be copyable: the whole text is selected when the box
--- is clicked or gets focus, typing cannot change it, and Escape lets go of the keyboard. No words are tested or changed here.
+-- The "List me in the Group Finder" sheet: the game's Note box refuses paste and addon SetText, so the sheet shows a short note in
+-- big letters for the driver to TYPE by hand (no copy box, no Ctrl+C step). The note must still match Wuber's own detection.
 local T = ...
-local test, eq, ok, H = T.test, T.eq, T.ok, T.H
+local test, eq, ok = T.test, T.eq, T.ok
 
-local function sheet()
+local function sheet(dest)
 	local w = T.newWorld()
 	local d = T.driver(w, T.ANITA)
 	T.settle(w)
@@ -14,57 +14,46 @@ local function sheet()
 	w:advance(2.5)
 	d:clickText("Drive")
 	w:advance(1.5)
-	d.W.Drive.SetDest("Ashenvale")
+	d.W.Drive.SetDest(dest)
 	w:advance(1.5)
 	d:clickText(d.W.GroupFinder.DRAFT_WORDS.listButton)
 	w:advance(1.5)
 	local sh = d.W.Driver.ui.sheets.gflist
-	ok(sh and sh.note and sh.note.edit, "the sheet has its note box")
-	return w, d, sh, sh.note.edit
+	ok(sh and sh.note, "the sheet has its note")
+	return w, d, sh
 end
 
-local function whole(e)
-	local h = H.state[e].highlight
-	return h ~= nil and h[1] == 0 and (h[2] == -1 or h[2] >= #e:GetText())
-end
-
-test("r244 gfnote 1: clicking the note box selects its whole text", function()
-	local w, d, sh, e = sheet()
-	H.state[e].highlight = nil
-	d:clickOn(e)
-	w:advance(0.2) -- the client places the cursor on the click; the box selects again a frame later
-	ok(whole(e), "the whole note is selected after a click")
+test("gf typed note 1: the note is big letters of 'Wuber summons to <destination>', not a box", function()
+	local w, d, sh = sheet("Orgrimmar")
+	eq(sh.note:GetText(), "Wuber summons to Orgrimmar", "the note names the destination")
+	ok(sh.note.GetText and not sh.note.edit, "a label, not an edit box (nothing to select or copy)")
+	ok(#d:findText("Wuber summons to Orgrimmar", true, true) > 0, "it is on screen")
 	T.clean(w)
 end)
 
--- guard: the focus-gained hook already selects the whole note; this keeps it
-test("r244 gfnote 2: the note box getting keyboard focus selects its whole text", function()
-	local w, d, sh, e = sheet()
-	H.state[e].highlight = nil
-	e:ClearFocus()
-	e:SetFocus()
-	ok(whole(e), "the whole note is selected on focus")
+test("gf typed note 2: the steps say type, never paste or Ctrl", function()
+	local w, d, sh = sheet("Orgrimmar")
+	local WD = d.W.GroupFinder.DRAFT_WORDS
+	local low = WD.steps:lower()
+	ok(low:find("type", 1, true), "the steps say type")
+	ok(not low:find("paste", 1, true) and not low:find("ctrl", 1, true) and not low:find("copy", 1, true), "no paste, Ctrl or copy: " .. WD.steps)
+	ok(#d:findText(WD.steps, true, true) > 0, "the steps show")
 	T.clean(w)
 end)
 
--- guard: the onChange restore already undoes an edit; this keeps it
-test("r244 gfnote 3: typing into the note box is undone and the whole text stays selected", function()
-	local w, d, sh, e = sheet()
-	local note = e:GetText()
-	d:type(e, note .. " extra", false)
-	eq(e:GetText(), note, "the typed edit is undone")
-	ok(whole(e), "the whole note is selected again")
-	d:type(e, "", false)
-	eq(e:GetText(), note, "clearing it is undone too")
+test("gf typed note 3: the note still matches Wuber's own detection (a rider's search marks the driver)", function()
+	local w, d, sh = sheet("Ashenvale")
+	local WD = d.W.GroupFinder.DRAFT_WORDS
+	ok(sh.note:GetText():lower():find("wuber", 1, true), "the note holds Wuber")
+	for _, dest in ipairs({ "Orgrimmar", "Booty Bay", WD.here }) do
+		ok(string.format(WD.note, dest):lower():find("wuber", 1, true), "Wuber is in the note for " .. dest)
+	end
 	T.clean(w)
 end)
 
--- guard: Escape already lets go of the keyboard (Field's OnEscapePressed); this keeps it so the player can move again
-test("r244 gfnote 4: Escape in the note box lets go of the keyboard", function()
-	local w, d, sh, e = sheet()
-	e:SetFocus()
-	ok(e:HasFocus(), "the box has focus")
-	H.state[e].scripts.OnEscapePressed(e)
-	ok(not e:HasFocus(), "the box let go of the keyboard")
+test("gf typed note 4: a longer destination wraps and is shown whole, never shortened", function()
+	local dest = "Booty Bay harbour"
+	local w, d, sh = sheet(dest)
+	ok(sh.note:GetText():find(dest, 1, true), "the whole destination is in the note: " .. sh.note:GetText())
 	T.clean(w)
 end)

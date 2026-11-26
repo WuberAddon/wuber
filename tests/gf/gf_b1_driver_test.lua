@@ -166,7 +166,7 @@ test("gf b1.7: offline without a click (a timer's SetOnline): the listing stays 
 	T.clean(w)
 end)
 
-test("gf b1.8: the List me button opens a sheet with the steps and the note for the driver's destination, in a box he can copy", function()
+test("gf b1.8: the List me button opens a sheet with the steps and the note for the driver's destination, to type by hand", function()
 	local w, d = world(true)
 	local WD = words(d)
 	d.W.Drive.SetDest("Ashenvale")
@@ -175,8 +175,8 @@ test("gf b1.8: the List me button opens a sheet with the steps and the note for 
 	w:advance(1.5)
 	ok(sees(d, WD.steps), "the steps show: " .. texts(d))
 	local sh = d.W.Driver.ui.sheets.gflist
-	ok(sh and sh.note and sh.note.edit, "the sheet has its own box")
-	eq(sh.note.edit:GetText(), string.format(WD.note, "Ashenvale"), "the note names the destination")
+	ok(sh and sh.note and not sh.note.edit, "the sheet shows the note as text, no box")
+	eq(sh.note:GetText(), string.format(WD.note, "Ashenvale"), "the note names the destination")
 	eq(calls(w, "CreateListing"), 0)
 	eq(calls(w, "UpdateListing"), 0)
 	T.clean(w)
