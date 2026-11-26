@@ -111,7 +111,7 @@ local EXPECT = {
 	done_unpaid = "Not paid", raincheck = "offers a raincheck", trips = "Your trips", wrapped = "Azeroth", wrapped_summary = "That's a wrap",
 	console_open = "Summon Dan", button_summoning = "Summoning Dan", button_portal = "CLICK THE PORTAL",
 	button_waiting = "Waiting for Eve", console_closed = "Closed", menu_chat = "Get Wuber", note = "Never the rider",
-	row_marks = "Dan Rider", customers = "Fay Storm", crew = "my account", demand = "want Gadgetzan", pvp = "PvP nearby",
+	row_marks = "Dan Rider", customers = "Fay Storm", crew = "my window", demand = "want Gadgetzan", pvp = "PvP nearby",
 	raid = "Gus", earnings = "Earnings", earnings_heatmap = "Earnings", earnings_empty = "Earnings", shift = "Fair split",
 	messages = "Messages", messages_edit = "Tap to add", settings = "Settings", settings_driving = "Driving",
 	settings_search = "price", settings_nomatch = "No settings match", settings_opened = "passphrase",
