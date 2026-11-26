@@ -314,7 +314,8 @@ local function buildDone(body)
 			local MailMod = W.Mod("Drive.Mail")
 			local mailLine = type(MailMod.RiderLine) == "function" and S(call(MailMod.RiderLine, rv.raw)) or nil
 			s.mailLine = mailLine
-			s.unpaidText:SetPara("Not paid, so no level progress.\n\n"
+			s.unpaidText:SetPara((rv.raw and rv.raw.removed and "Removed from the group\n\n" or "")
+				.. "Not paid, so no level progress.\n\n"
 				.. T.Code("red") .. "Drivers can block riders who don't pay.|r"
 				.. (mailLine and ("\n\n" .. mailLine) or ""))
 			rate:SetHeight(math.max(96, (s.unpaidText.paraH or 60) + 48))
