@@ -291,7 +291,25 @@ local function placeTag(cx, cy, btnRect, tw, th, obstacles, placedTags, sw, sh)
 			if not bestAny then bestAny = c end
 		end
 	end
-	return bestOnScreen or bestClearTags or bestAny
+	if bestOnScreen then return bestOnScreen end
+	-- (gauntlet #41) nothing fits on the screen: the nearest spot near the pin, on the screen, clear of the buttons, rings, windows and
+	-- other tags (a tag far from its pin would mislead); none: the tag is left off (never drawn off the screen over a window)
+	if sw and sh and sw >= tw and sh >= th then
+		local reach = ((tw + gap) * 4) ^ 2
+		local step, bestG, bestD = math.max(4, math.floor(th / 2)), nil, nil
+		for y = 0, sh - th, step do
+			for x = 0, sw - tw, step do
+				local d = (x + tw / 2 - cx) ^ 2 + (y + th / 2 - cy) ^ 2
+				if d <= reach and (not bestD or d < bestD) then
+					local s = { l = x, r = x + tw, b = y, t = y + th }
+					if not hitsAny(s, obstacles, CFG.hitPad) and not hitsAny(s, placedTags, CFG.hitPad) then bestG, bestD = s, d end
+				end
+			end
+		end
+		if bestG then return bestG end
+		return nil
+	end
+	return bestClearTags or bestAny
 end
 
 function Mod.Hide()
