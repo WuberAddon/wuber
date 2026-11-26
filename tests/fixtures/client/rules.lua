@@ -32,6 +32,10 @@ return {
 		evidence = "one-real-case", source = "Lab run 2 (B3: a plain frame ate every key)", build = "71139", bug = "B3", fed_by = "keys" },
 	{ id = "edit.focus-outside-click", what = "a click outside a focused EditBox does not clear its focus",
 		evidence = "one-real-case", source = "Lab run 2: the Settings search box kept keys after a click elsewhere", build = "71139", bug = "B2", was = "guess" },
+	{ id = "keys.editbox-takes-key", what = "a focused, shown EditBox takes a key press: nothing else (no binding, no keyboard frame) sees it",
+		evidence = "guess", source = "FAKE-GAPS: key routing in the fake game (tests/fakegame/key_routing_test.lua); not yet seen in a recording", bug = "-" },
+	{ id = "keys.propagate-off-swallows", what = "a shown keyboard-enabled frame whose propagate flag is off swallows the key, so a binding does not fire",
+		evidence = "guess", source = "FAKE-GAPS: key routing in the fake game (tests/fakegame/key_routing_test.lua); same claim as keys.propagate-default-off, now for routing", bug = "-" },
 	-- hit order
 	{ id = "hit.clip-ancestor-level", what = "a frame inside a SetClipsChildren ancestor competes with outside frames at the ancestor's strata and level",
 		evidence = "one-real-case", source = "tests/fixtures/rec/focus-run3-back.lua: 122 of 122 Lab rows where level order and the game disagreed",

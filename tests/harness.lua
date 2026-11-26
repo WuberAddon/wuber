@@ -7201,7 +7201,28 @@ end
 -- A key press. The game's order: an addon's override binding (SetOverrideBindingClick) beats the list's own key for
 -- the same key, so one press is one action. A listed CLICK binding clicks the named button (a real key press); any
 -- other listed binding runs its body in the addon's environment.
+-- (key routing, fake-game conformance) Who gets a key before a binding does: a focused, shown EditBox types it (the key goes
+-- nowhere else, a SPACE does not jump); then each shown frame with keyboard input on gets OnKeyDown, and one whose propagate
+-- flag is off swallows the key. Modifier keys alone are not swallowed by a frame (they only change the next key).
+local MODIFIER_KEYS = { LSHIFT = 1, RSHIFT = 1, LCTRL = 1, RCTRL = 1, LALT = 1, RALT = 1 }
+function Client:keyTaken(k)
+	local fe = self.focusedEdit
+	if fe and S[fe] and S[fe].focus and visible(fe) then H.rule("keys.editbox-takes-key") return "editbox" end
+	if MODIFIER_KEYS[k] then return nil end
+	local taken
+	for _, f in ipairs(self.frames or {}) do
+		local s = S[f]
+		if s and s.kind == "frame" and s.otype ~= "EditBox" and s.keyboard and visible(f) then
+			runScript(f, "OnKeyDown", k)
+			runScript(f, "OnKeyUp", k)
+			if not s.propagate then H.rule("keys.propagate-off-swallows") taken = taken or f end
+		end
+	end
+	return taken
+end
+
 function Client:pressKey(k)
+	if self:keyTaken(k) then return false end
 	local b = self.binding
 	if not b or b.key ~= k then
 		local name = self.gameKeys and self.gameKeys[k]
