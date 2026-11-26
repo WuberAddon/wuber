@@ -43,9 +43,9 @@ test("r25 B: Login tips switch is on the Riding page, searchable by tips, hints,
 	ok(t, "switch exists")
 	eq(t.get(), true)
 	local indexed = false
-	for _, e in ipairs(st.index or {}) do if e.label == "Tips" then indexed = true end end
+	for _, e in ipairs(st.index or {}) do if e.label == "Login tips" then indexed = true end end
 	ok(indexed, "indexed")
-	local found = r.W.Mod("UI.Settings.Rows").KEYWORDS["Tips"]
+	local found = r.W.Mod("UI.Settings.Rows").KEYWORDS["Login tips"]
 	ok(found, "keywords")
 	for _, word in ipairs({ "tips", "hints", "help" }) do ok(found:find(word, 1, true), word) end
 end)

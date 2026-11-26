@@ -248,7 +248,7 @@ test("r28 REC-01: Skip the bird off in Settings, in combat, during a ride: no ca
 	W.db.birdTip = false
 	openMap(w, r)
 	ok(not birdUp(Mod), "off: no card")
-	eq(Mod.Why(), "Skip the bird: off in Settings (Riding, Flight offers).", "off")
+	eq(Mod.Why(), "Skip the bird: off. Turn Flight offers on in Settings, Riding.", "off")
 	w:closeTaxiMap(r)
 	W.db.birdTip = nil
 	r.player.combat = true

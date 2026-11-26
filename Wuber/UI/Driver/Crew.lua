@@ -201,7 +201,7 @@ D.screens.crew = function(parent)
 				if dr("AddPlainHelper", r.person.name, (r.person.role or WizardMod.classRole(r.person.class)) == "lock" and "lock" or nil) then
 					toast(short(r.person.name) .. " added as a helper (without Wuber)", "info")
 				else
-					toast("Crew is full (" .. (tonumber(W.Drive.CREW_MAX) or 8) .. ")", "warn")
+					toast("Crew is full (" .. (tonumber(W.Drive.CREW_MAX) or 8) .. " players)", "warn")
 				end
 				D.Refresh(true)
 			else
