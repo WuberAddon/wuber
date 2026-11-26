@@ -95,6 +95,8 @@ return {
 		evidence = "guess", source = "job 2908: WuberProbe protprop (own secure button, a plain child, an anchored frame); no real run yet, the stand-in is synthetic", bug = "B6", fed_by = "protect" },
 	{ id = "combat.protected-propagation", what = "a plain frame becomes protected when it holds a secure child (the fake: any descendant)",
 		evidence = "guess", source = "FAKE-GAPS job 2860 OPEN 'which frames count as protected'; the pay pill under TradeFrame", bug = "B6" },
+	{ id = "combat.can-change-protected", what = "CanChangeProtectedState(frame) is false for a protected frame while the player is in combat",
+		evidence = "guess", source = "FAKE-GAPS: protected state in the fake game (tests/fakegame); same claim as combat.secure-frozen, read through the API", bug = "B6" },
 	-- frames
 	{ id = "drag.anchor-center", what = "a dragged frame is re-anchored by its CENTER",
 		evidence = "guess", source = "FAKE-GAPS HUNT-01: the real game picks the point nearest a screen edge or corner", bug = "-" },
