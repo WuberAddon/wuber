@@ -311,13 +311,18 @@ local function buildDone(body)
 			-- never "saved to your trips" (it isn't), and say plainly what leaving unpaid risks
 			-- (payment by mail) after a summon that was never paid, what the rider can still do, in plain words: the
 			-- real amount and the driver's whole name. Wuber only says it; the rider sends the mail himself.
+			-- removed from the group with the summon box up: no summon was taken, so nothing is owed (no warning, no mail line)
+			local removed = rv.raw and rv.raw.removed
 			local MailMod = W.Mod("Drive.Mail")
-			local mailLine = type(MailMod.RiderLine) == "function" and S(call(MailMod.RiderLine, rv.raw)) or nil
+			local mailLine = (not removed and type(MailMod.RiderLine) == "function") and S(call(MailMod.RiderLine, rv.raw)) or nil
 			s.mailLine = mailLine
-			s.unpaidText:SetPara((rv.raw and rv.raw.removed and "Removed from the group\n\n" or "")
-				.. "Not paid, so no level progress.\n\n"
-				.. T.Code("red") .. "Drivers can block riders who don't pay.|r"
-				.. (mailLine and ("\n\n" .. mailLine) or ""))
+			if removed then
+				s.unpaidText:SetPara("Removed from the group")
+			else
+				s.unpaidText:SetPara("Not paid, so no level progress.\n\n"
+					.. T.Code("red") .. "Drivers can block riders who don't pay.|r"
+					.. (mailLine and ("\n\n" .. mailLine) or ""))
+			end
 			rate:SetHeight(math.max(96, (s.unpaidText.paraH or 60) + 48))
 			rate:ClearAllPoints()
 			rate:SetPoint("TOP", f, "TOP", 0, -88)

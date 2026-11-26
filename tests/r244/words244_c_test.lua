@@ -40,6 +40,9 @@ test("words244 C: removed from the group with the summon box up shows Ride ended
 	eq(T.rideState(r), "done", "the ride has ended")
 	ok(seen(r, "Ride ended"), "title Ride ended: " .. table.concat(r:visibleTexts(), " | "))
 	ok(seen(r, "Removed from the group"), "the line: " .. table.concat(r:visibleTexts(), " | "))
+	-- no summon was taken, so nothing is owed: no "don't pay" warning and no pay-by-mail line
+	ok(not seen(r, "don't pay"), "no unpaid warning: " .. table.concat(r:visibleTexts(), " | "))
+	ok(not seen(r, "level progress"), "no level-progress line")
 	T.clean(w)
 end)
 
@@ -59,5 +62,6 @@ test("words244 C: guard, a normal unpaid end shows Ride ended without the remove
 	w:advance(1)
 	ok(seen(r, "Ride ended"), "title: " .. table.concat(r:visibleTexts(), " | "))
 	ok(not seen(r, "Removed from the group"), "no removed line")
+	ok(seen(r, "don't pay"), "the unpaid warning stays for a real unpaid end")
 	T.clean(w)
 end)
