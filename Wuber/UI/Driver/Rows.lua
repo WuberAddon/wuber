@@ -609,7 +609,7 @@ end
 W.Listen("DRIVE_PAID", function() againCache = {} end)
 W.Listen("DRIVE_LOG", function() againCache = {} end)
 
--- the "3rd ride with you" chip (none for a first ride, or a raid row)
+-- the "3rd ride with you" chip (none for a first ride, or a raid row); a lead's row says "2 rides with you"
 local function paintAgain(r, c)
 	if not adv() then
 		r.again:Hide()
@@ -618,6 +618,12 @@ local function paintAgain(r, c)
 	local before = c and D.RideCount(c.name) or 0
 	if before < 1 then
 		r.again:Hide()
+		return
+	end
+	-- (playtest) a lead is a whisper, not a ride yet: it shows the rides so far ("1 ride with you"), never "2nd"
+	if c.state == "lead" then
+		r.again:SetChip(before .. (before == 1 and " ride" or " rides") .. " with you", "muted")
+		r.again:Show()
 		return
 	end
 	local nth = before + 1
