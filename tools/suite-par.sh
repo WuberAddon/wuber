@@ -74,7 +74,7 @@ if [ -f "$lock" ]; then
 fi
 echo "$$ $(date +%s)" > "$lock"
 trap 'rm -f "$lock"; suite_lock_release' EXIT
-suite_lock_acquire
+suite_lock_acquire || exit 2
 # a suite that passed while this one waited in line may have made the run unnecessary
 if [ "$force" = 0 ] && [ -n "$key" ] && suite_cache_hit "$key"; then exit 0; fi
 [ -n "$n" ] || n=$(suite_default_shards)

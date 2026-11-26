@@ -78,7 +78,7 @@ SUITE_HELD=0
 # wait in line for a free slot; after the wait cap run anyway
 suite_lock_acquire() {
   [ -n "$WUBER_SUITE_LOCK" ] || return 0
-  mkdir -p "$WUBER_SUITE_LOCK" 2>/dev/null || { echo "suite-par: note: cannot use WUBER_SUITE_LOCK, running without it"; return 0; }
+  mkdir -p "$WUBER_SUITE_LOCK" 2>/dev/null && [ -d "$WUBER_SUITE_LOCK" ] && [ -w "$WUBER_SUITE_LOCK" ] || { echo "suite-par: ERROR: cannot use WUBER_SUITE_LOCK=$WUBER_SUITE_LOCK (not a writable folder); refusing to run without the lock" >&2; return 2; }
   local mine="$WUBER_SUITE_LOCK/held.$$" waitf="$WUBER_SUITE_LOCK/wait.$$" slots; slots=$(suite_slots)
   local start=$SECONDS max="${WUBER_SUITE_WAIT_MAX:-2700}" poll="${WUBER_SUITE_POLL:-5}" said=-9999 live lpid lstart first f moved mp
   echo "$$ $(date +%s)" > "$waitf"
@@ -90,7 +90,7 @@ suite_lock_acquire() {
         [ -f "$f" ] || continue
         lpid=""; lstart=""; read -r lpid lstart < "$f" 2>/dev/null
         if suite_holder_stale "$f"; then
-          moved="$WUBER_SUITE_LOCK/held.stale.$$.${f##*/}"
+          moved="$WUBER_SUITE_LOCK/stale.$$.${f##*/}"
           if mv "$f" "$moved" 2>/dev/null; then
             echo "suite-par: note: taking over a stale suite lock (pid ${lpid:-?}, started ${lstart:-?}); old file kept as $moved"
           fi
