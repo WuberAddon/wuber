@@ -76,7 +76,7 @@ if split.files then
 		if byRun and rel and not ONLY[rel] and rel:find("^[%w_/]+$") and not rel:find("^lib/") then return function() end end
 		local chunk, err = realLoad(path, ...)
 		if not chunk or not rel or not ONLY[rel] then return chunk, err end
-		return function(...) inPart = true local ok2, e = pcall(chunk, ...) inPart = false if not ok2 then error(e, 0) end end
+		return function(...) inPart = true local ok2, e = pcall(chunk, ...) inPart = false if not ok2 then error(e, 0) end return e end -- (a part that returns a value, like tools/check.lua's module, hands it on)
 	end
 end
 -- --names=<file> (in-round runs, tools/quick-check.sh): every part loads, only the tests named, one exact name a line, run
