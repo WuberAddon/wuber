@@ -70,16 +70,16 @@ not the folder.
 | Folder | Modules | Lines |
 |---|---|---|
 | `Wuber/Core/` | 10 | 4492 |
-| `Wuber/Net/` | 17 | 7631 |
+| `Wuber/Net/` | 17 | 7641 |
 | `Wuber/Theme/` | 4 | 4353 |
 | `Wuber/FX/` | 4 | 2534 |
-| `Wuber/UI/` | 18 | 9507 |
+| `Wuber/UI/` | 18 | 9510 |
 | `Wuber/UI/Rider/` | 12 | 9896 |
 | `Wuber/UI/Settings/` | 4 | 3692 |
 | `Wuber/UI/Map/` | 4 | 2588 |
-| `Wuber/Drive/` | 26 | 17571 |
-| `Wuber/UI/Driver/` | 15 | 11045 |
-| total | 114 | 73309 |
+| `Wuber/Drive/` | 26 | 17606 |
+| `Wuber/UI/Driver/` | 15 | 11069 |
+| total | 114 | 73381 |
 
 ### Modules in load order
 
@@ -240,7 +240,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/net/discovery_test.lua` (not written yet); standalone: no
 
 #### 20. Net.Outreach
-`Wuber/Net/Outreach.lua`, 460 lines. Adverts in public chat ([Wuber] lines, W.AdvertPlan, W.HeardChatLine); no community invites (forbidden in this client since round 12: CX.tickInvites is a no-op).
+`Wuber/Net/Outreach.lua`, 470 lines. Adverts in public chat ([Wuber] lines, W.AdvertPlan, W.HeardChatLine); no community invites (forbidden in this client since round 12: CX.tickInvites is a no-op).
 
 - API: W.ADVERT_TAG, W.ADVERT_GAP, W.ADVERT_CHANNELS, W.net.advertsHeard, W.net.advertsPosted, W.AdvertText, W.ChannelBase, W.AdvertChannel, W.AdvertWait, W.AdvertWords, W.AdvertOwnText, W.AdvertPlan, W.AdvertPosted, W.HeardChatLine, W.NetStatus, W.NetStatusLines, CX.tickInvites, NETK.{ADVERT_MAX}
 - Uses: Net.Base, Net.Community, Net.Favourites, Net.Discovery; Later: (none)
@@ -376,7 +376,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/secure_test.lua` (not written yet); standalone: no
 
 #### 37. UI.Window
-`Wuber/UI/Window.lua`, 1269 lines. The app window: screens table, scale, raise, position, tabs (UI.AddTab/GetTab/SelectTab), screen routing (wantedScreen, goTo), buildWindow, UI.Refresh/RefreshNow, UI.Toggle/Show/IsShown/SetSearch, start-up listeners and the login build. the default place keeps the handset off the chat frame and the action bars (UI.ClearOfHud, UI.Toasts, at run time); a saved place (W.db.pos) is never moved.
+`Wuber/UI/Window.lua`, 1272 lines. The app window: screens table, scale, raise, position, tabs (UI.AddTab/GetTab/SelectTab), screen routing (wantedScreen, goTo), buildWindow, UI.Refresh/RefreshNow, UI.Toggle/Show/IsShown/SetSearch, start-up listeners and the login build. the default place keeps the handset off the chat frame and the action bars (UI.ClearOfHud, UI.Toasts, at run time); a saved place (W.db.pos) is never moved.
 
 - API: UI.WantedScale, UI.ApplyScale, UI.MigrateScale, UI.Raise, UI.AddTab, UI.GetTab, UI.SelectTab, UI.HideOtherScreens, UI.Dismiss, UI.Refresh, UI.RefreshNow, UI.Toggle, UI.Show, UI.IsShown, UI.SetSearch, UI.PlaceWindow, UI.PaintGear, UI.SyncClose, UI.HEAD_H, UI.TABBAR_H, UI.HEAD_ROW, UI.HeadRoom, UI.HeadPush, UI.HeadControl, UI.HeadHit, UI.HeadLayout, UI.TabsHidden, UI.HeadAbove
 - Uses: UI.Kit, UI.Secure; Later: UI.Rider.Cards, UI.Rider.Home, UI.Rider.Confirm, UI.Rider.Ride, UI.Rider.Done, UI.Moments, UI.Coach, UI.Phone, UI.Minimap, UI.Tips (NoteDriveAsked), UI.Fold (Page, Apply), UI.Share (Sync), UI.Rider.Wrapped (Shown) on the way back (A.PopPage), inside the Ride tab's body; a tab change swaps at once. A move ends at once (A.StopPage) when a fight starts, the window hides or folds, a tab is chosen or UI.HideOtherScreens runs; the secure overlays are laid when the move ends. UI.Show on a shut window opens it on the settled page.
@@ -760,7 +760,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/dec/dec_r_lines_test.lua`; standalone: no
 
 #### 85. Drive.Button
-`Wuber/Drive/Button.lua`, 1201 lines. The secure WuberDriveButton: size, place, key binding, dock/float, paint, clicks, skin, DR.BuildButton, Skip, start-up.
+`Wuber/Drive/Button.lua`, 1229 lines. The secure WuberDriveButton: size, place, key binding, dock/float, paint, clicks, skin, DR.BuildButton, Skip, start-up.
 
 - API: DR.AutoScale, DR.Scale, DR.SetScale, DR.ResetPosition, DR.ApplyBinding, DR.SetKey, B.Place, B.Dock, B.Floating, B.Docked, B.Solo, B.MiniRows, B.SetShown, B.SetLocked, B.KeepClosed, B.Refresh, B.Clicked, DR.BuildButton, DR.SkipTarget, DR.Skip
 - Uses: Drive.Cast, Drive.Plan; Later: (none)
@@ -824,7 +824,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/v24/rem_rank_test.lua`; standalone: no
 
 #### 93. Drive.Book
-`Wuber/Drive/Book.lua`, 823 lines. the driver's customer book (round 9, Y1 and Y3): one note per rider, the Gifted stamp and the "Get Wuber" stamp, the facts the earnings log already has (rides, last ride, last place), and the book's sync between this driver's OWN crew windows (addon whispers to trusted crew members only).
+`Wuber/Drive/Book.lua`, 830 lines. the driver's customer book (round 9, Y1 and Y3): one note per rider, the Gifted stamp and the "Get Wuber" stamp, the facts the earnings log already has (rides, last ride, last place), and the book's sync between this driver's OWN crew windows (addon whispers to trusted crew members only).
 
 - API: DR.BOOK, DR.BookEntry, DR.SetNote, DR.SetGifted, DR.CustomerFacts, DR.Customers, DR.GetAppState, DR.ServeHold, DR.SetServeHold, DR.OwesFare, DR.HasWuber, DR.AskGetApp, DR.GetAppOwed, DR.GetAppSent, DR.BookShareOn, DR.BookOwn, DR.SetBookOwn, DR.BookPeers, DR.BookHeard, DR.BookTick, DR.BookBacklog
 - Uses: (none); Later: Drive.Mail (DR.MailNote, DR.MailList: DR.Customers lists a rider whose mail was seen; DR.MailRecord: OwesFare) (Drive.Core, Drive.Team, Drive.Chat and Drive.Log load earlier: reached through DR at run time: DR.Crew, DR.TrustKey, DR.peers, DR.Whisper, DR.CommBacklog, DR.ChatMode, DR.Log, DR.Opt, DR.IsCrewKey, DR.WuberLine, DR.TPREFIX)
@@ -856,7 +856,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/state_test.lua` (not written yet); standalone: no
 
 #### 97. UI.Driver.Rows
-`Wuber/UI/Driver/Rows.lua`, 817 lines. Queue rows: what a row says (D.Describe, D.RowTip), what its clicks do (D.RowAction, D.RowClick, D.OpenMenu, raid rows), D.Row / D.PaintRow.
+`Wuber/UI/Driver/Rows.lua`, 823 lines. Queue rows: what a row says (D.Describe, D.RowTip), what its clicks do (D.RowAction, D.RowClick, D.OpenMenu, raid rows), D.Row / D.PaintRow.
 
 - API: D.STATE, D.Describe, D.RowTip, D.RowAction, D.RowClick, D.OpenMenu, D.RaidAction, D.RaidRowClick, D.DescribeRaid, D.RaidTip, D.Row, D.LayRow, D.RideCount, D.PaintAgain, D.PaintRaidRow, D.PaintRow, D.Passphrase, D.RaincheckRide, D.GiveRaincheck, D.ToggleGetApp
 - Uses: UI.Driver.State; Later: UI.Driver.Mini (UI.ShowDrive, when D.OpenMenu finds the Drive page hidden)
@@ -864,7 +864,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/rows_test.lua`; standalone: no
 
 #### 98. UI.Driver.Build
-`Wuber/UI/Driver/Build.lua`, 858 lines. Building the console: status strip, the big-button slot, controls, middle list, crew chips, the "Your business" list (v.business, v.links: the five pages as rows at the end of the page), mode bar, welcome and provider views.
+`Wuber/UI/Driver/Build.lua`, 862 lines. Building the console: status strip, the big-button slot, controls, middle list, crew chips, the "Your business" list (v.business, v.links: the five pages as rows at the end of the page), mode bar, welcome and provider views.
 
 - API: D.SetMode, D.CalmSegmented, D.FuelGauge, D.PlaceModeBar
 - Uses: UI.Driver.State, UI.Driver.Rows; Later: UI.Driver.Console (D.Refresh, when the header's buttons change beside the switch)
@@ -872,7 +872,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/build_test.lua`; standalone: no
 
 #### 99. UI.Driver.Draw
-`Wuber/UI/Driver/Draw.lua`, 999 lines. Drawing the console each refresh: status, slot, controls, ready list, filter, queue, crew chips, community strip, the "Your business" list at the page's end, drawConsole/drawProvider.
+`Wuber/UI/Driver/Draw.lua`, 1001 lines. Drawing the console each refresh: status, slot, controls, ready list, filter, queue, crew chips, community strip, the "Your business" list at the page's end, drawConsole/drawProvider.
 
 - API: D.RaidTonight, D.HERO_LOOK, D.SlotWords, D.FuelInfo, D.PaintFuel, D.ChipCount, D.WhisperWord
 - Uses: UI.Driver.State, UI.Driver.Build; Later: UI.Driver.Console (D.Refresh), UI.Driver.Raid (drawRaid, hideRaid), UI.Driver.Demand (drawLine, hideLine, List, D.DemandCard)
@@ -920,7 +920,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/crew_test.lua` (not written yet); standalone: no
 
 #### 105. UI.Driver.Messages
-`Wuber/UI/Driver/Messages.lua`, 631 lines. Messages editor with live preview, and the Blocked list. (2.3) Unfolded: the list left, the editor in the side pane (D.FOLD.messages). (2.4) The editors of Greeting, Welcome, please pay and You're next hold the switch that sends the message by itself (Drive.AutoLines: DR.LineOn, DR.SetLineOn, called at run time).
+`Wuber/UI/Driver/Messages.lua`, 632 lines. Messages editor with live preview, and the Blocked list. (2.3) Unfolded: the list left, the editor in the side pane (D.FOLD.messages). (2.4) The editors of Greeting, Welcome, please pay and You're next hold the switch that sends the message by itself (Drive.AutoLines: DR.LineOn, DR.SetLineOn, called at run time).
 
 - API: UI.ADVERT_TIP, D.screens.messages, D.screens.blocked, D.FOLD.messages
 - Uses: UI.Driver.Screens; Later: UI.Driver.Console (D.SidePane, run time)
@@ -952,7 +952,7 @@ event, `login` = `W.OnLogin`, `fires X` = `W.Fire`, `sets A.b` = fills a hook sl
 - Test: `tests/ui/driver/sheets_test.lua`; standalone: no
 
 #### 109. UI.Driver.Customers
-`Wuber/UI/Driver/Customers.lua`, 917 lines. the customer book on the driver's console (round 9, Y1 and Y3): the row menu's "Get Wuber", "Note..." and "Gifted" items, the note and gift marks on queue rows and their tooltip lines, the Note sheet (the note, the Gifted stamp, the facts from the log) and the Customers screen (search, newest ride first; the footer's Customers link). Where "Get Wuber" isn't offered, the menu, the Note sheet and the Customers pane say why; the list says it scrolls; Save says only what it did, and an empty Save over a note asks once before it removes it.
+`Wuber/UI/Driver/Customers.lua`, 928 lines. the customer book on the driver's console (round 9, Y1 and Y3): the row menu's "Get Wuber", "Note..." and "Gifted" items, the note and gift marks on queue rows and their tooltip lines, the Note sheet (the note, the Gifted stamp, the facts from the log) and the Customers screen (search, newest ride first; the footer's Customers link). Where "Get Wuber" isn't offered, the menu, the Note sheet and the Customers pane say why; the list says it scrolls; Save says only what it did, and an empty Save over a note asks once before it removes it.
 
 - API: D.CustomerMenu, D.CustomerPick, D.CustomerTip, D.PaintMarks, D.CustomerFacts, D.CrewOwnMark, D.screens.note, D.screens.customers, D.FOLD.customers (design 4, H) a rider who left owing gets one more pill on the Note sheet and the side pane (Advanced only): "Don't serve again until <date>" (Drive.Book's DR.ServeHold: the driver's own, never sent), a click sets or lifts it
 - Uses: UI.Driver.Screens; Later: UI.Driver.Console (D.SidePane, D.WideLayout's D.wide, run time); the "Mail seen" line on a row's tooltip and under a customer's name is Drive.Mail's (DR.MailNote, through the customer book)

@@ -7,8 +7,28 @@ local test, eq, ok = T.test, T.eq, T.ok
 -- Which bash: the one running the suite (WUBER_BASH, set by tools/suite-par.sh as a Windows path; or BASH),
 -- never "bash" from PATH, which on Windows can be WSL's bash. Plain "bash" only when neither is set (Linux, macOS).
 local WIN = package.config:sub(1, 1) == "\\"
-local BASH = os.getenv("WUBER_BASH") or os.getenv("BASH") or "bash"
-if BASH == "" then BASH = "bash" end
+local function exists(p)
+	local h = p and io.open(p, "rb")
+	if h then h:close() return true end
+	return false
+end
+-- Order: WUBER_BASH, BASH, then (Windows only) Git Bash under ProgramFiles, else "bash" from PATH (Linux, macOS).
+-- On Windows the "bash" on PATH can be WSL's, which fails with "/bin/bash: No such file or directory".
+local function findBash()
+	for _, name in ipairs({ "WUBER_BASH", "BASH" }) do
+		local v = os.getenv(name)
+		if v and v ~= "" then return v end
+	end
+	if WIN then
+		for _, pf in ipairs({ os.getenv("ProgramFiles"), os.getenv("ProgramW6432"), os.getenv("ProgramFiles(x86)") }) do
+			for _, rel in ipairs({ "\\Git\\bin\\bash.exe", "\\Git\\usr\\bin\\bash.exe" }) do
+				if pf and exists(pf .. rel) then return pf .. rel end
+			end
+		end
+	end
+	return "bash"
+end
+local BASH = findBash()
 local seq = 0
 local function sh(cmd)
 	seq = seq + 1
