@@ -296,8 +296,9 @@ D.screens.sheet = function(parent)
 end
 
 ---------------------------------------------------------------------------
--- (Group Finder, B1) "List me in the Group Finder": the steps and the note to paste, in a Wuber-owned box the driver selects and
--- copies. Wuber never creates the listing: he does it in Blizzard's own window. Words: W.GroupFinder.DRAFT_WORDS (drafts).
+-- (Group Finder, B1) "List me in the Group Finder": the steps and a short note in big letters for the driver to TYPE by hand
+-- (the game's Note box refuses paste and addon SetText, so there is no copy box). Wuber never creates the listing: he does it in
+-- Blizzard's own window. Words: W.GroupFinder.DRAFT_WORDS (drafts).
 ---------------------------------------------------------------------------
 
 D.screens.gflist = function(parent)
@@ -307,39 +308,17 @@ D.screens.gflist = function(parent)
 	local b = sh.body
 	s.steps = T.Para(b, "caption", "muted", 320)
 	s.steps:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -8)
-	local function selectAll()
-		pcall(s.note.edit.SetFocus, s.note.edit)
-		pcall(s.note.edit.HighlightText, s.note.edit)
-	end
-	-- read-only: anything typed or pasted puts the note back, all selected
-	s.note = T.Field(b, 320, 64, { multi = true, max = 300, size = "caption",
-		get = function() return s.text or "" end,
-		onChange = function(t)
-			if t ~= (s.text or "") then s.note:SetText(s.text or "") end
-			selectAll()
-		end,
-		onEscape = function() sh:Close() end })
-	-- the client puts the cursor where the click landed, which drops a selection made on the mouse down: select now and again a
-	-- frame later, so the whole note is selected for Ctrl+C after a click or a focus
-	local function selectWhole(self)
-		pcall(self.HighlightText, self)
-		if C_Timer and C_Timer.After then
-			C_Timer.After(0, function() if self:HasFocus() then pcall(self.HighlightText, self) end end)
-		end
-	end
-	pcall(s.note.edit.HookScript, s.note.edit, "OnEditFocusGained", selectWhole)
-	pcall(s.note.edit.HookScript, s.note.edit, "OnMouseDown", selectWhole)
-	pcall(s.note.edit.HookScript, s.note.edit, "OnMouseUp", selectWhole)
-	T.Tip(s.note.edit, WD.listButton, WD.steps)
-	sh.onClose = function() pcall(s.note.edit.ClearFocus, s.note.edit) end
+	-- the note to type: big letters, never edited here (a label, not a box)
+	s.note = T.Para(b, "title", "white", 320, "bold")
+	T.Tip(s.note, WD.listButton, WD.steps)
 	s.enter = function()
 		local dest = K.Dest and K.Dest() or WD.here
 		s.text = string.format(WD.note, dest)
 		local h = s.steps:SetPara(WD.steps)
 		s.note:ClearAllPoints()
 		s.note:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -(8 + h + 12))
-		s.note:SetText(s.text)
-		sh:SetSheetHeight(56 + 8 + h + 12 + 64 + 24)
+		local nh = s.note:SetPara(s.text)
+		sh:SetSheetHeight(56 + 8 + h + 12 + nh + 24)
 	end
 	return s
 end
