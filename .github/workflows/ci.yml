@@ -55,7 +55,7 @@ jobs:
         run: |
           echo "failing tests in shard ${{ matrix.shard }}/16: $(grep -c . tests/out/failed-${{ matrix.shard }}-of-16.txt || true)"
           cat tests/out/failed-${{ matrix.shard }}-of-16.txt || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: failed-suite-${{ matrix.shard }}
@@ -85,7 +85,7 @@ jobs:
           w=${{ matrix.window }}
           { grep -E ' \| ' tests/out/layout-$w.log || true; grep -E '^GAUNTLET|result [0-9]' tests/out/layout-$w.log | tail -n 2; } > tests/out/failed-layout-$w.txt
           cat tests/out/failed-layout-$w.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: failed-layout-${{ matrix.window }}
@@ -127,7 +127,7 @@ jobs:
           for r in $RESULTS; do
             if [ "$r" != success ]; then echo "a job did not succeed ($r)"; exit 1; fi
           done
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: failed-merged
