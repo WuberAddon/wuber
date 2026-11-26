@@ -16,7 +16,7 @@
 -- Events: listens On PLAYER_ENTERING_WORLD, On PLAYER_REGEN_DISABLED, Listen PAGE, Listen RIDE, login; fires SETTINGS (tipsOn)
 -- Standalone: no
 -- Test: tests/r25_a_tips.lua
--- From: new in Wuber 2.3.3 (BRIEF25 T1)
+-- From: new in Wuber 2.3.3
 --
 -- When: the first open after a real login (PLAYER_ENTERING_WORLD's isReloadingUi; a client that
 -- does not say is treated as a login, so at most once per session), and only when the first-open

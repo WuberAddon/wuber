@@ -7,7 +7,7 @@ Check and helper tools for working on Wuber. Run them from the repository root o
 - `lua5.1 tools/perf-audit.lua [--role driver|rider|control] [--minutes N] [--profile|--funcs] [--out path]`: an hour of simulated play (a busy driver with six riders, or a rider with a booking; the map open; 200 public chat lines a minute) in the fake game. Writes Lua KB after login and every 5 minutes, garbage a minute, what each module's tables hold, load KB per file, every timer and OnUpdate (how often, ms a call), the cost of one chat line, and with `--funcs` the CPU by the addon functions up the stack. The fake game's own work is in the numbers: compare runs (a `control` run is the fake alone), do not quote them as game ms.
 
 ## For a pull request
-- `python tools/pr-ready.py --prefix claude/|google/ --title ... --what ... --why ... --test ... [--issue n] [--quick] [--private-list <file>] [--dry-run]`:
+- `python tools/pr-ready.py --prefix claude/ --title ... --what ... --why ... --test ... [--issue n] [--quick] [--private-list <file>] [--dry-run]`:
   from your branch in your own worktree: check.lua, the whole suite in 16 shards (`--quick`: only the tests for the changed
   files), the layout check when a file under `Wuber/UI/` changed, the scrub check of the commit and the pull request text
   (scrub rules and public list from origin/main, plus the private list when given), then push the checked commit to its
@@ -30,9 +30,11 @@ One-line index of the helper scripts here (the full list with their flags is in 
 - `suite-par.sh <tree> [N] [filter] [flags]`: the full suite over parallel shards, joined into one result. See below.
 - `suite-guard.sh`: helpers sourced by `suite-par.sh` (machine-wide lock, result cache, shard count).
 - `suite-win.sh`, `suite.sh`: the serial runs (`suite.sh` queues through the same portable lock as `suite-par.sh`; no `flock` needed).
-- `layout-check.lua`: the layout sweep of the screens (`--comfort` adds the comfort guards: the colour-blind check of the state colours; `--config WxH@scale,uiN` judges at the game's measured text widths).
+- `layout-check.lua`: the layout sweep of the screens (`--probe <fixture>` lets a probe fixture's measured "was it cut" answers decide for the strings it measured and prints "N of M current strings unmeasured"; `--text-rule flat` is the first draft's flat 6% (a proof only); `--collect-labels <file>` lists every drawn string with its font, size and box; `--comfort` adds the comfort guards: the colour-blind check of the state colours; `--config WxH@scale,uiN` judges at the game's measured text widths).
+- `rec/probe-labels.lua`: turns that list into the probe's `P.LABELS` block (`data`) or a labelled DERIVED fixture (`derive`); see its header.
 - `tests-for.lua`: which tests cover the given files (`--run` runs them).
-- `rec/probe-import.lua`: turns the saved data of the developer-only probe addon (one session in the real game) into `tests/fixtures/probe/game-probe-<id>.lua`; `tests/harness.lua` then loads that file in every run (file ids, text widths, key rules, secrets). Until one exists only the synthetic stand-in `SYNTHETIC-standin.lua` is there, used by `tests/rec/probe_test.lua`. Same read-only safety as `rec/import.lua`.
+- `rec/probe-import.lua`: turns the saved data of the developer-only probe addon (one session in the real game) into `tests/fixtures/probe/game-probe-<id>.lua`; `tests/harness.lua` then loads that file in every run (file ids, text widths, key rules, secrets). Until one exists only the synthetic stand-in `SYNTHETIC-standin.lua` is there, used by `tests/rec/probe_test.lua`. Same read-only safety as `rec/import.lua`. It also names a probe the run started but never finished (the write-ahead markers of WuberProbe 1.1).
+- `rec/probe-diff.lua old new` (`--help`): a short fact diff of two probe fixtures: file ids changed, width change per font and size, events no longer valid, accessors newly secret, hit cells that changed winner. Tests: `tests/rec/probe_wizard_test.lua`.
 - `evidence-report.lua`: the evidence ledger report (`--help`): the fake game's rules (`tests/fixtures/client/rules.lua`) by evidence (measured needs a probe fixture with source "game"; sim and synthetic never count), the tests that lean on each (`--run "<filter>"` or `--hits <file>`, from the harness's `H.rule` counters), "N tests lean on guessed rules", and `--check-build` (newest game fixture build against the newest WuberProbe.lua build: STALE or OK).
 - `map.lua`: writes or checks `ARCHITECTURE.md` (maintainer or lead only, after the last merge).
 

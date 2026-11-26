@@ -70,7 +70,7 @@ test("r9 S6: no list row is cut by a hard edge on any page, folded or unfolded, 
 	w:advance(3)
 	both("ride", function() UI.Show("home") end)
 	both("confirm", function() UI.Show("confirm", "anita lift") end)
-	-- (round 13, I18) the pay screen ('Waiting for Mia to open tra...' in Google's shot 13)
+	-- (round 13, I18) the pay screen ('Waiting for Mia to open tra...' in a reviewer's shot 13)
 	both("pay", function()
 		W.ride = { id = "r13", driver = "Mia Runner", driverKey = "mia runner", dest = "Undercity", price = 5000, state = "arrived",
 			at = c.env.GetTime(), payee = "Mia Runner", payto = "Mia", service = "Mia's Rides" }
@@ -315,7 +315,7 @@ end)
 
 
 -- (round 13, merged) every state round 13 changed, folded and unfolded, checked for cut words by the
--- same check: a crew of Warlocks with shards ('14 sh...' in Google's shot), riders who want things,
+-- same check: a crew of Warlocks with shards ('14 sh...' in a reviewer's shot), riders who want things,
 -- raid summons with waits, the end-of-shift card, the row menu (Gifted), the Note sheet, Home's
 -- chips and bounty, the world map's legend, Confirm by zeppelin, the portal, Trips and Settings'
 -- Driving section ('Driving: riders and notes').

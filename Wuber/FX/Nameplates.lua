@@ -15,7 +15,7 @@
 -- crown above their nameplate; known Wuber drivers with a fresh beacon get their badge. Your
 -- own crown (when you are the founder) sits over your character in the middle of the screen.
 -- Plus a tooltip line on mouse-over: "Wuber founder" or "Wuber driver · 50s to Undercity".
--- (BRIEF15) A Pioneer (the shipped W.PIONEERS lists only, never a network claim) gets the Pioneer
+-- A Pioneer (the shipped W.PIONEERS lists only, never a network claim) gets the Pioneer
 -- variant instead of the plain driver badge, and the Pioneer line; the founder's crown wins.
 --
 -- Moo's proven rules for anything drawn on a nameplate: GetNamePlateForUnit under pcall,
@@ -39,7 +39,7 @@ local CROWN_SIZE = 46        -- px: the crown frame (the crown fills about 80% o
 local BADGE_SIZE = 26
 local CROWN_GAP = 2          -- px between the plate's top and the crown frame's bottom
 local BADGE_GAP = 2
-local PIONEER_SIZE = 22      -- (BRIEF15) the Pioneer variant's disc
+local PIONEER_SIZE = 22      -- the Pioneer variant's disc
 local MOO_LIFT = 40          -- Moo draws a cow over guildies: sit clear above it
 local FRIENDLY_CVARS = { "nameplateShowFriends", "nameplateShowFriendlyPlayers" }
 local SELF_REF_ZOOM = 12     -- camera distance (yards) at which your own crown is its base size
@@ -449,7 +449,7 @@ local function lineFor(key)
 	if W.IsCreator(key) then
 		return CROWN_ICON .. " Wuber founder", 0.976, 0.773, 0.243
 	end
-	-- (BRIEF15) a Pioneer's line (under the driver's, when he drives)
+	-- a Pioneer's line (under the driver's, when he drives)
 	local pioneer = pioneerOf(key)
 	local pio = pioneer and W.Theme.PIONEER[pioneer]
 	local d = driverFor(key)

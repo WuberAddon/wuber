@@ -1,4 +1,4 @@
--- bs8: blind-spot checks for the in-game run 1 polish misses (job 206; from Google's BS8 pilot, judged and adapted).
+-- bs8: blind-spot checks for the in-game run 1 polish misses (job 206; from a reviewer's BS8 pilot, judged and adapted).
 -- Item 10 (portal page you dot), 12.7 (Greeting confirm / preview), 12.8 (Shift complete sheet over the pills), 12.2 (wide Settings).
 -- Loaded by tests/run.lua with its helper table T.
 local T = ...

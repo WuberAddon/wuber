@@ -9,7 +9,7 @@
 -- Events: listens On ZONE_CHANGED and ZONE_CHANGED_INDOORS (a shown route header follows the rider); fires (none)
 -- Standalone: no
 -- Test: tests/ui/rider/booking_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 sections 5.1, 5.2; owner C)
+-- From: new in Wuber 2.3.0
 --
 -- Through the handle:
 --   local Booking = W.Mod("UI.Rider.Booking")
@@ -110,7 +110,7 @@ end
 -- a zeppelin, any other a boat
 local ZEPPELIN = { [11] = true, [20] = true, [23] = true }
 
--- (BRIEF26 item 4) The crossing word the world map's arrow uses, read from the same route (W.FlightRoute):
+-- The crossing word the world map's arrow uses, read from the same route (W.FlightRoute):
 -- the first hop between two continents is "zeppelin" (both ends towers) or "boat"; nil when the route
 -- stays on one continent or isn't known. from nil: where the player stands.
 function Mod.CrossWord(dest, from)
@@ -171,7 +171,7 @@ function Mod.DialInfo(d, total, opts)
 	-- (free), not a flight: a price counts only for a priced route with the crossing on it
 	-- (flights to the port, W.FlightCost's "boat")
 	local crossing = (S(how) == "by zeppelin" and "zeppelin") or (S(how) == "by boat" and "boat") or nil
-	-- (BRIEF26 item 4) the map's own word wins, once there is something to show
+	-- the map's own word wins, once there is something to show
 	-- (AUD-216) also when the game gave no travel answer at all (no map position: an instance, a boat) but a flight
 	-- price is known: the route's own word still says boat or zeppelin
 	if (flySecs or flyCost) and how ~= "same continent" and (S(how) or not flySecs) then crossing = Mod.CrossWord(d.dest) or crossing end

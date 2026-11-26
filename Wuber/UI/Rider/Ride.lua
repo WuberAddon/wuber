@@ -147,7 +147,7 @@ local function foundTexts(rv)
 end
 
 ---------------------------------------------------------------------------
--- Round 8 (SPEC7): the live portal tracker (5.10), the passphrase (5.7), the founder's gold
+-- Round 8: the live portal tracker (5.10), the passphrase (5.7), the founder's gold
 -- ring (5.13) and the arrival share line (5.12)
 ---------------------------------------------------------------------------
 
@@ -264,7 +264,7 @@ local function founderLook(hero, rv)
 	hero.gold = gold
 	if hero.runesSet then hero.runes:SetTexture(T.MEDIA .. (gold and "fx\\runes_gold" or "fx\\runes")) end
 	hero.runes:SetVertexColor(T.RGB(gold and "gold" or "glow"))
-	hero.runes:SetAlpha(gold and 0.55 or 0.4) -- (BRIEF22 G1) strength by region alpha, never the colour's
+	hero.runes:SetAlpha(gold and 0.55 or 0.4) -- strength by region alpha, never the colour's
 	hero.glow:SetVertexColor(T.RGB(gold and "gold" or "accent", 0.9))
 	-- the same still, desaturated and tinted with the gold token (design 4, A)
 	Try(hero.art, "SetDesaturated", gold)

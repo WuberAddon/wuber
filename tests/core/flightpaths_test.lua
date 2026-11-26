@@ -1,4 +1,4 @@
--- Tests of Core.FlightPaths (SPEC7 3.3, 3.4, 4.3; owner B). Loaded by tests/run.lua with its helper table T.
+-- Tests of Core.FlightPaths. Loaded by tests/run.lua with its helper table T.
 -- The generated data (tools/build-flights.js; its own checks are in tests/build-flights.test.js).
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok

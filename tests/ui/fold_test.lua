@@ -1,4 +1,4 @@
--- Tests of UI.Fold (SPEC7 2; owner A). Loaded by tests/run.lua with its helper table T.
+-- Tests of UI.Fold. Loaded by tests/run.lua with its helper table T.
 -- The contract, then SPEC7 2.9's list: auto-unfold on each of the eight pages, the button and its
 -- memory, room, combat, no Scale, near the right edge, fx off and interrupted tweens, layouts
 -- called twice make no new frames, the 3-slice background drawn as the one texture was.

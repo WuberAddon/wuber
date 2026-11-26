@@ -1,4 +1,4 @@
--- The screen renderer's text rules (tools/preview/textlayout.lua, BRIEF14): text measured with the
+-- The screen renderer's text rules (tools/preview/textlayout.lua): text measured with the
 -- shipped fonts, wrapped and cut with "..." as the game's FontString does; and the fake game keeps
 -- its simple text rule in the tests (preview mode is only for tools/preview/tour.lua).
 local T = ...

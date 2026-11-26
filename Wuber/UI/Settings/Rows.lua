@@ -525,7 +525,7 @@ local function runCheck()
 	res:Show()
 	A.FadeIn(res, 0.25)
 	UI.LayoutSettings()
-	-- (BRIEF25 I) the results come into view whole: scrolled down just far enough that the card's
+	-- the results come into view whole: scrolled down just far enough that the card's
 	-- bottom clears the scroll area (folded it is only a phone's height), never past its own top
 	if st.clip and st.clip.GetHeight and st.scrollMax then
 		local base = st.restTop or 0
@@ -742,7 +742,7 @@ end
 
 local function buildDriving(drive, dy)
 	dy = section(drive, dy, "Driving: inviting")
-	-- (2.3.2, BRIEF19 R4) off by default; turning it on asks first (DR.SetAutoPublic's warning),
+	-- (2.3.2) off by default; turning it on asks first (DR.SetAutoPublic's warning),
 	-- so the switch stays off until Yes, and Cancel leaves it off
 	dy = toggleRow(drive, dy, "drive.autoPublic", "Invite public chat buyers", "Public chat channels you read, not whispers.",
 		"On: invites buyers in the public chat channels you read (see Chat channels) who name your place. Wuber can misread chat, so it asks first. Off: click a name to invite.",
@@ -750,7 +750,7 @@ local function buildDriving(drive, dy)
 		function(on, t)
 			local d = DR()
 			if not on or type(d.SetAutoPublic) ~= "function" then return setOpt("autoPublic", on) end
-			-- (BRIEF24 P1) the click's own slide to "on" is still running: SetOn(false) alone left the
+			-- the click's own slide to "on" is still running: SetOn(false) alone left the
 			-- knob ticked and the track grey once the slide ended. Settle on the real value now, when
 			-- the answer comes, and when the popup goes away without one (Escape, another popup).
 			local function settle()
@@ -1058,7 +1058,7 @@ local function buildDriving2(drive, dy)
 end
 
 ---------------------------------------------------------------------------
--- Round 8 (SPEC7): the new rows. Riding: the flight master tip (5.11). This window: wide pages
+-- Round 8: the new rows. Riding: the flight master tip (5.11). This window: wide pages
 -- and their reset (the Fold, section 2; UI.WindowWide / UI.Fold.Reset are UI.Fold's). Driving:
 -- the fair split (5.5) and what riders want (5.3).
 ---------------------------------------------------------------------------

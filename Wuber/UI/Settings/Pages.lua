@@ -253,7 +253,7 @@ UI.HELP = {
 }
 UI.HELP_FOOTER = "Nothing here is shared outside the game, and Wuber never sends anything in chat without your click, except the short auto-reply to riders who ask in public and the Messages lines you switch on (Settings can turn the auto-reply off)."
 
--- (BRIEF15) the credits: "Thanks to our first riders and drivers", the Pioneers' short names
+-- the credits: "Thanks to our first riders and drivers", the Pioneers' short names
 -- (W.PioneerNames: the shipped lists only); nil while both lists are empty
 function Mod.creditsText()
 	local n, lines = type(W.PioneerNames) == "function" and RowsMod.call(W.PioneerNames) or nil, {}

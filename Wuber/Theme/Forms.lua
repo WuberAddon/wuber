@@ -82,7 +82,7 @@ end
 --         onChange = fn(text) (every key), onEnter = fn(text) (Enter pressed), onEscape = fn() (after Escape lets go of the keyboard),
 --         multi = true (several lines, h is the box), colour = the well's colour }
 -- f.edit, f.hint, f:Sync() (shows get() unless typing), f:Text(), f:SetText(t), f.focused.
--- (BRIEF17 B1) A box with no get is the caller's own (notes, the Messages editor, price, searches):
+-- A box with no get is the caller's own (notes, the Messages editor, price, searches):
 -- losing focus, Escape and Sync never touch its text, only the placeholder; the caller reads f:Text().
 function T.Field(parent, w, h, opts)
 	opts = opts or {}
@@ -258,7 +258,7 @@ local function measure(view, content)
 	return ct - vt, vb - cb
 end
 
--- (BRIEF22 S1) the thin scroll bar every clipped list gets with its fades: a faint track on the right
+-- the thin scroll bar every clipped list gets with its fades: a faint track on the right
 -- edge and a thumb as long as the part in view, placed by how far the list is scrolled. Shown only
 -- while the list can scroll; it never takes the mouse (the wheel scrolls) and only moves, never fades.
 local BAR = { w = 3, inset = 4, right = 3, minThumb = 18 }
@@ -333,10 +333,23 @@ function T.EdgeFade(view, opts)
 		local t = edge == "top" and self.top or self.bottom
 		return t:IsShown() and true or false
 	end
+	-- the bar between two 0.2 s updates (it follows a smooth scroll every frame): it asks only the list's own
+	-- offset (the source), and paints only when the offset or the range moved; the view's height is the one the
+	-- last update read. A list with no source (T.Scroll) paints its bar itself each time it moves (place).
+	function fd.Follow(self)
+		if not (self.source and self.viewH) then return end
+		local off, max = self.source()
+		off, max = tonumber(off) or 0, tonumber(max) or 0
+		if off == self.fOff and max == self.fMax then return end
+		self.fOff, self.fMax = off, max
+		paintBar(self, math.max(0, off), math.max(0, max - off), self.viewH)
+	end
 	function fd.Update(self)
 		local lvl = tonumber(Try(view, "GetFrameLevel")) or 1
 		if (tonumber(Try(holder, "GetFrameLevel")) or 0) ~= lvl + self.lift then Try(holder, "SetFrameLevel", lvl + self.lift) end
 		local above, below, h = amounts(self)
+		self.viewH = h
+		if self.source then self.fOff, self.fMax = above, above + below end
 		paintBar(self, above, below, h)
 		local size = math.max(4, math.min(self.size, math.floor(h / 4)))
 		self.top:SetHeight(size)
@@ -349,7 +362,7 @@ function T.EdgeFade(view, opts)
 		fd.wait = fd.wait - (tonumber(elapsed) or 0)
 		if fd.wait > 0 then
 			-- the bar follows the smooth scroll every frame (the fades 5 times a second)
-			if fd.thumb then pcall(fd.Bar, fd) end
+			if fd.thumb then pcall(fd.Follow, fd) end
 			return
 		end
 		fd.wait = 0.2

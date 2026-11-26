@@ -41,7 +41,7 @@ test("Theme.Widgets S8: the slider's gold fill is drawn under its white knob ('M
 	T.clean(w)
 end)
 
--- (round 13, I5) Google's shots 37, 56, 57: a tooltip let the page under it show through, its text
+-- (round 13, I5) a reviewer's shots 37, 56, 57: a tooltip let the page under it show through, its text
 -- mixing with what was behind ('Gifted on 17 Nov.' ran into 'Crew · 12 shards'). (design 4) A Wuber tip is
 -- Wuber's own card (the frame WuberTip): solid and on the tooltip layer every time, and the game's own
 -- tooltip is left exactly as the game (or another addon) had it. More in tests/d4/d4_d_tip_test.lua.
@@ -112,7 +112,7 @@ test("Theme.Widgets r13 I5: hand-built tooltips (minimap button, big button) are
 	T.clean(w)
 end)
 
--- (BRIEF18) the author's crew row tooltip hung off the right edge of the screen. (design 4) A Wuber tip stands
+-- the author's crew row tooltip hung off the right edge of the screen. (design 4) A Wuber tip stands
 -- beside its owner on a side where it lies wholly on the screen; the anchor asked for is a preference.
 test("Theme.Widgets BRIEF18: tooltips stay on the screen (the side flips near an edge)", function()
 	local w = T.newWorld()
@@ -156,7 +156,7 @@ test("Theme.Widgets BRIEF18: tooltips stay on the screen (the side flips near an
 	T.clean(w)
 end)
 
--- (BRIEF22 S1) the mouse wheel over a slider (Largest group, Casters' part) changed it while the author was
+-- the mouse wheel over a slider (Largest group, Casters' part) changed it while the author was
 -- scrolling the Settings page. The rule: a slider takes the wheel only after it was clicked, until the
 -- mouse leaves it; until then the wheel goes to the page under it. wheelAt sends a wheel turn the way
 -- the game does: to the topmost shown frame under the point that takes the wheel.

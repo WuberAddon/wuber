@@ -8,7 +8,7 @@
 -- Events: listens (none: the console redraws once a second); fires (none)
 -- Standalone: no
 -- Test: tests/ui/driver/demand_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.3; owner D)
+-- From: new in Wuber 2.3.0
 --
 -- The data is Net.Bounty's W.Bounty.Demand() -> { { place, riders, low, high, newest }, ... }
 -- (newest: seconds since the latest bounty for that place)

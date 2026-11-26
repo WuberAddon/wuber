@@ -63,7 +63,7 @@ DR.KEYWORDS = { "summon", "summons", "summ", "sum", "inv", "invite", "ride", "ta
 
 DR.OPT_DEFAULTS = {
 	autoInvite = true, oneAtATime = false, maxGroup = 0, autoAccept = true,
-	-- autoPublic: off from 2.3.2 (BRIEF19 R4); turned on only through the warning (DR.SetAutoPublic)
+	-- autoPublic: off from 2.3.2; turned on only through the warning (DR.SetAutoPublic)
 	watchPublic = true, autoPublic = false,
 	-- (2.4, the author's yes of 21 Nov 2026) one whisper back to a clear public request for your place
 	-- (Drive.AutoReply); off: such a line only waits as a lead
@@ -77,7 +77,7 @@ DR.OPT_DEFAULTS = {
 	raidsum = true, raidclick = true, -- 2.1 raid summons: whisper the raider, raid line "click the portal"
 }
 
--- 2.3.0 options (SPEC7 section 7): defaults InitDB never writes, so saved data from before stays
+-- 2.3.0 options: defaults InitDB never writes, so saved data from before stays
 -- as it was until the player changes one. Read them with DR.Opt(key); DR.SetOpt cleans them too.
 -- 2.3.0 round 9: showPass (riders see the ride passphrase; off by default, the author), shareNotes (customer
 -- notes go to this driver's own crew windows, Drive.Book)
@@ -91,7 +91,7 @@ end
 
 DR.CHAR_KEYS = {
 	paused = false, dest = "", destWords = "", caster = "", captain = "", wizard = false,
-	-- 2.1 (SPEC4): "sell" | "raid"; a non-Warlock who runs the service; raid summons running
+	-- 2.1: "sell" | "raid"; a non-Warlock who runs the service; raid summons running
 	mode = "sell", runner = false, raidRun = false, alertWindow = false,
 }
 
@@ -204,7 +204,7 @@ function DR.InitDB()
 		if def ~= nil and type(bt[k]) ~= type(def) then bt[k] = def end
 	end
 	if type(bt.scale) ~= "number" or bt.scale ~= bt.scale then bt.scale = 1 end
-	-- 2.3.2 (BRIEF19 R4): "Invite public chat buyers" is off by default. Up to 2.3.1 this function
+	-- 2.3.2: "Invite public chat buyers" is off by default. Up to 2.3.1 this function
 	-- stored the old default (true) for every player, so a saved true can't be told from a player's
 	-- own choice: there was no "changed by the player" marker. The one-time migration (d.publicV)
 	-- turns every saved true off, unless d.publicChosen says the player set it after the warning
@@ -219,7 +219,7 @@ function DR.InitDB()
 end
 
 ---------------------------------------------------------------------------
--- Inviting public chat buyers: on only after a warning (BRIEF19 R4)
+-- Inviting public chat buyers: on only after a warning
 ---------------------------------------------------------------------------
 
 DR.PUBLIC_POPUP = "WUBER_AUTO_PUBLIC"
@@ -860,7 +860,7 @@ function DR.Dest()
 end
 
 -- The default max group: a party for a small crew, a raid of 10 once me + crew >= 3, 20
--- with two or more stations (SPEC4 2.3).
+-- with two or more stations.
 function DR.MaxGroup()
 	local m = tonumber(DR.opts().maxGroup) or 0
 	if m >= 3 then return math.min(40, m) end
@@ -872,7 +872,7 @@ end
 -- The import of RitualRidesDB (once per account, and per character)
 ---------------------------------------------------------------------------
 
--- (2.3.2, BRIEF19 R4: not autoPublic: Ritual Rides' "on" was its default too; inviting public chat
+-- (2.3.2: not autoPublic: Ritual Rides' "on" was its default too; inviting public chat
 -- buyers is turned on only through Wuber's warning)
 local IMPORT_OPTS = {
 	"keywords", "autoInvite", "oneAtATime", "autoAccept", "maxGroup", "inviteCap", "inviteTimeout", "autoTrade",
@@ -1030,7 +1030,7 @@ local function importChar(rr)
 	if price and price == price then
 		c.price = math.max(W.MIN_PRICE or 5000, math.min(99999999, math.floor(price)))
 	end
-	-- (SPEC5 rrname, review #4: the old addon's default service name is never taken)
+	-- (the old addon's default service name is never taken)
 	if type(rr.service) == "string" and rr.service ~= "" and not rr.service:lower():find("ritual%s*rides") then
 		local name, why = W.CleanService(rr.service, W.myName)
 		if not why then c.service = name end
@@ -1128,7 +1128,7 @@ function DR.MergeRetired()
 end
 
 -- The old addon's per-character settings (account-wide in its saved data), kept in WuberDB
--- whenever its data is loaded (SPEC5 rrsnapshot, review #4): a Warlock alt that logs in after
+-- whenever its data is loaded: a Warlock alt that logs in after
 -- the old addon was switched off still gets them. 90 days.
 local SEED_KEYS = { "price", "service", "dest", "destWords", "caster", "paused" }
 local SEED_KEEP = 90 * 86400
@@ -1241,7 +1241,7 @@ local function snapshot()
 		end
 	end
 	table.sort(with, function(x, y) return (tonumber(x.order) or 0) < (tonumber(y.order) or 0) end)
-	-- 2.3.0 (SPEC7 5.8): the rides paid by trade (a raincheck may still be asked for)
+	-- 2.3.0: the rides paid by trade (a raincheck may still be asked for)
 	local paid = DR.RecentPaidSave and DR.RecentPaidSave() or nil
 	DR.char().queue = (#list > 0 or paid) and { at = (type(time) == "function" and time()) or 0, list = list, paid = paid,
 		with = #with > 0 and with or nil } or nil

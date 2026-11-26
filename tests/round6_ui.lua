@@ -615,7 +615,7 @@ test("r6 ui: heatmap - Earnings draws a 7 x 24 grid from DR.Heatmap; a tap says 
 	eq(hm.bestCell, tue8, "the brightest square")
 	H.runScript(tue8, "OnClick", "LeftButton")
 	-- (round 7: the pill as in the mockup, "Fri 20:00 · 4g/hr · ..."; round 13: "g/h", as the chart)
-	-- (BRIEF19 F6) folded, too long for one line: two even lines in a taller pill (never cut)
+	-- folded, too long for one line: two even lines in a taller pill (never cut)
 	eq((hm.info:GetText() or ""):gsub("\n", " · "), "Tue 20:00 · 3g/h · 2 rides · open 30 min · 1 buyer asked", "the numbers")
 	ok(has(a, "1 buyer asked", false), "on screen: " .. texts(a))
 	-- no data: the empty line

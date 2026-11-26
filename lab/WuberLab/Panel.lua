@@ -972,11 +972,11 @@ function L.Slash(msg)
 			L.Say("the photo tour is running (/lab tour stop)")
 		else
 			-- (job 2880) "shots" = a screenshot of every screen (the old way); without it only new screens and looks get one
-			local words, shots = {}, false
+			local words, shots, full = {}, false, false
 			for w in a:gmatch("[^%s,]+") do
-				if w == "shots" then shots = true else words[#words + 1] = w end
+				if w == "shots" then shots = true elseif w == "all" or w == "full" then full = true else words[#words + 1] = w end
 			end
-			L.AutoStart({ words = words, shots = shots })
+			L.AutoStart({ words = words, shots = shots, full = full })
 		end
 	elseif cmd == "tour" or cmd == "photos" then
 		local a = rest:lower()

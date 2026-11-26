@@ -285,7 +285,7 @@ local function buildCard(parent)
 		if d.summoner then lines = d.name .. " runs it; " .. d.summoner .. " (a Warlock) summons you to " .. d.dest .. " for " .. money(d.price) .. ". You pay " .. d.summoner .. "." end
 		-- (design 2) the crown after the name is gone: its words are here
 		if d.creator then lines = lines .. " A Wuber founder. Wuber was made by this driver's team." end
-		local look = T.PioneerLook(d.key) -- (BRIEF15) the shipped list only; a founder: none
+		local look = T.PioneerLook(d.key) -- the shipped list only; a founder: none
 		if look then lines = lines .. " " .. T.PIONEER[look].tip .. "." end
 		if self.updated then lines = lines .. " " .. self.updated .. "." end
 		if self.disabled then return lines .. " Paused for now." end
@@ -443,7 +443,7 @@ local function cardMarks(c, d)
 	end
 end
 
--- PvP near the summon spot (SPEC7 5.6): the driver's beacon (D field 18, kept by Net on the
+-- PvP near the summon spot: the driver's beacon (D field 18, kept by Net on the
 -- driver as danger = level 0..2 and dangerAt = GetTime() of the fight; also read: dangerSecs, or
 -- the raw "level:seconds") or, during a ride, the live tracker's G. Returns level (0 when unknown), seconds since (or nil).
 function UI.DangerOf(d)
@@ -541,7 +541,7 @@ local function fillCard(c, d, glow, hold)
 	local usual = not state and usualSummon(d)
 	if usual then state = "Usually " .. usual end
 	c.stateText = state
-	-- "To Undercity · No helpers"; who casts, when it isn't the driver (SPEC4 1.3)
+	-- "To Undercity · No helpers"; who casts, when it isn't the driver
 	c.subText = "To " .. d.dest .. " · " .. (d.summoner and ("Summoned by " .. d.summoner) or helpersText(d))
 		.. (state and (" · " .. state) or "")
 	-- (Group Finder) a driver the last search found listed there: the second line says where (it wraps, nothing is cut)

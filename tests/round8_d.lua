@@ -1,4 +1,4 @@
--- Wuber 2.3.0 round eight, agent D (driver UI, SPEC7 sections 2 and 5): the fuel gauge (5.4),
+-- Wuber 2.3.0 round eight, agent D (driver UI): the fuel gauge (5.4),
 -- the cut UI (5.5), the demand line and sheet (5.3), the passphrase on queue rows (5.7), the PvP
 -- chip (5.6), the raincheck menu item, alert and counts (5.8), and the driver pages' unfolded
 -- layouts (2.8). Loaded by run.lua with the round-six helpers. Test names start "r8 driver:".

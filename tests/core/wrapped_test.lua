@@ -1,4 +1,4 @@
--- Tests of Core.Wrapped (SPEC7 5.9; owner C). Loaded by tests/run.lua with its helper table T.
+-- Tests of Core.Wrapped. Loaded by tests/run.lua with its helper table T.
 -- The month maths: local month boundaries, the est flag, the longest hop by world distance, new
 -- places against earlier months, the streak, the driver's month; stores nothing.
 local T = ...

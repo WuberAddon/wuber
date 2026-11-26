@@ -8,7 +8,7 @@
 -- Events: listens Listen DRIVE_RITUAL, Listen DRIVE_PAID; fires DRIVE_CUT
 -- Standalone: no
 -- Test: tests/drive/cut_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.5; owner F)
+-- From: new in Wuber 2.3.0
 --
 -- The tallies are also saved in W.db.drive.log.shift.cut (tagged with the shift's start), so a /reload keeps them.
 -- The ledger follows the shift Drive.Log keeps (W.db.drive.log.shift: open to close). Every crew

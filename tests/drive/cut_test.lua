@@ -1,4 +1,4 @@
--- Tests of Drive.Cut (SPEC7 5.5; owner F). Loaded by tests/run.lua with its helper table T.
+-- Tests of Drive.Cut. Loaded by tests/run.lua with its helper table T.
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok
 

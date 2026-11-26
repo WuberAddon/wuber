@@ -556,7 +556,7 @@ return function(Hunt)
 			openDrive(ctx)
 			local rider = ctx.facts.riderName
 			-- (job 2680) openDrive's fallback click on the Drive tab can land on the floating big button, which sits above the
-			-- phone when it has no clear place at this size (Drive.Button, BRIEF18): that click is the thank click already
+			-- phone when it has no clear place at this size (Drive.Button): that click is the thank click already
 			do
 				local c0 = ctx.W.Drive.Find and ctx.W.Drive.Find(rider)
 				if not c0 or c0.thanked then ctx:na("the click that opened the Drive tab hit the big button and thanked the rider") end

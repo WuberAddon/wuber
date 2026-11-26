@@ -1,4 +1,4 @@
--- The layout checker's engine (tools/layout-check.lua; BRIEF21 S11). Loaded with the harness H:
+-- The layout checker's engine (tools/layout-check.lua). Loaded with the harness H:
 --   local E = dofile("tests/layout/engine.lua")(H)
 -- E.tag(dirs)            tags every widget made from now on with the addon whose code made it (Wuber / WuberLab)
 -- E.scan(c, shot)        the drawn Wuber regions of client c now: texts, solid boxes, controls, clip views
@@ -24,7 +24,7 @@ E.K = {
 	CUE_GAP = 120,      -- a "Scroll for ..." cue with this much blank space above it in its view: the rows are missing
 }
 local K = E.K
--- (BRIEF22 L6) art whose edge is see-through: the share of each side's cells that draws next to nothing, cut off
+-- art whose edge is see-through: the share of each side's cells that draws next to nothing, cut off
 -- its box. Measured from the files: in every cell of Media/fx/portal_loop and portal_loop_gold (ADD blend) the
 -- outer 4 of 128 rows and columns on each side add at most 1% light (alpha x brightness), so a text that close
 -- to the portal sits beside it, not under it.
@@ -570,7 +570,7 @@ function E.check(c, opts)
 			end
 		end
 	end
-	-- (BRIEF24 B2) a text drawn over the edge of a box that is not its own (a pill, a card): half on it, half off,
+	-- a text drawn over the edge of a box that is not its own (a pill, a card): half on it, half off,
 	-- as the bird card's "Don't show again" over the "Open Wuber" pill. Kind "straddle"; only a Button's box
 	-- counts (a pill): a text on a map strip, a heatmap or a card is often meant to lie across it.
 	for _, t in ipairs(shown) do
@@ -588,6 +588,7 @@ function E.check(c, opts)
 	for _, t in ipairs(shown) do
 		local fs = t.obj
 		local name = E.nameOf(fs)
+		if opts.collect then opts.collect(fs, t, name) end -- (job 2893) tools/rec/probe-labels.lua: every shown text with its box
 		-- cut short ("..."), or laid out before its font loaded
 		local okT, isT = pcall(fs.IsTruncated, fs)
 		local tr = H.truncation and H.truncation(fs)
@@ -824,7 +825,7 @@ function E.chromeOf(c)
 end
 
 ---------------------------------------------------------------------------
--- (BRIEF26 item 3) The World view: each continent whole inside the view, both at one scale
+-- The World view: each continent whole inside the view, both at one scale
 ---------------------------------------------------------------------------
 
 E.WORLD = { MARGIN = 4, SCALE_TOL = 0.01, STEP = 1000, GAP_TOL = 1 }

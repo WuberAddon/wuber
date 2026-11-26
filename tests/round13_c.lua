@@ -1,4 +1,4 @@
--- Round 13 (Google's in-game screenshot findings, ITEMS13), agent C (rider and map): I8, I12, I14,
+-- Round 13 (a reviewer's in-game screenshot findings, ITEMS13), agent C (rider and map): I8, I12, I14,
 -- I15, I16, I21, I22, I23, I25. Test names start "r13 c:". Loaded by run.lua with the module tests'
 -- helpers (as round12_c.lua).
 --   I8   no "ritual" in anything a player can see (every string literal in Wuber, the TOC, the
@@ -247,7 +247,7 @@ end
 
 local function cellNamed(tr, name)
 	for _, c in ipairs(tr.cells) do
-		-- (BRIEF19 F6) a medal below the folded view is hidden by Trips; its state is still the cell's
+		-- a medal below the folded view is hidden by Trips; its state is still the cell's
 		if c.m and (c.m.name == name or c.m.id == name) then return c end
 	end
 end

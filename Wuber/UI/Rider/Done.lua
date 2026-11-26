@@ -35,7 +35,7 @@ local Try = T.Try
 local UI = W.UI
 
 ---------------------------------------------------------------------------
--- Round 8: "Ask for a raincheck" (SPEC7 5.8) and the arrival share (5.12)
+-- Round 8: "Ask for a raincheck" and the arrival share (5.12)
 ---------------------------------------------------------------------------
 
 -- A paid ride that failed before you arrived, within 30 minutes of paying: worth asking the

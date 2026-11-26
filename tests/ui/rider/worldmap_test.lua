@@ -1,4 +1,4 @@
--- Tests of UI.Rider.WorldMap (SPEC7 3; owner B) and HomeMap's docking (SPEC7 2.8). Loaded by
+-- Tests of UI.Rider.WorldMap and HomeMap's docking. Loaded by
 -- tests/run.lua with its helper table T. The Fold (UI.Fold, agent A) is stubbed here: tests set
 -- UI.Fold.IsUnfolded and make a 360 x 544 side-pane holder of their own.
 local T = ...
@@ -64,7 +64,7 @@ test("ui.rider.worldmap: Build is cheap (the Here/World control only); never bui
 	eq(wm.mode, "world", "World by default (round 12, item 9)")
 	ok(here:IsShown(), "Here shows while nothing is drawn (folded)")
 	ok(not view:IsShown(), "World hidden")
-	-- (BRIEF20 B1) 26: each part has its own lit pill (3 textures), shown or hidden
+	-- 26: each part has its own lit pill (3 textures), shown or hidden
 	ok(#r.widgets - made < 26, "only the control: " .. (#r.widgets - made))
 	Mod.Show("world")
 	eq(wm.built, nil, "folded: never built")
@@ -136,7 +136,7 @@ test("ui.rider.worldmap: coordinates: the map's corners first, the flight-master
 	local g = H.WORLD[1].map
 	ok(math.abs(u - (g[1] - n[4]) / g[3]) < 1e-9 and math.abs(v - (g[2] - n[3]) / g[4]) < 1e-9, ("corner transform: %.4f, %.4f"):format(u, v))
 	local px, py = Mod.Project(1, n[3], n[4])
-	-- (BRIEF25 M1) the box is the cropped land's, where arrange() put it (tests/r25_d_worldmap.lua)
+	-- the box is the cropped land's, where arrange() put it (tests/r25_d_worldmap.lua)
 	local bx, by, bw, bh = Mod.Box(1)
 	ok(math.abs(px - (bx + (u - V[1].u0) / (V[1].u1 - V[1].u0) * bw)) < 1e-6, "pane x")
 	ok(math.abs(py - (by + (v - V[1].v0) / (V[1].v1 - V[1].v0) * bh)) < 1e-6, "pane y")
@@ -352,7 +352,7 @@ test("ui.rider.homemap: Dock moves a map panel into a side pane (360 x 512 at y 
 	clean(w)
 end)
 
--- Inside A's real Fold: the ride and confirm pages registered the way C's pages do it (SPEC7 2.8):
+-- Inside A's real Fold: the ride and confirm pages registered the way C's pages do it:
 -- build(holder) makes the map, layout(true) docks Home's map panel and shows the world view,
 -- layout(false) undocks it.
 local function registerPages(r)
@@ -511,7 +511,7 @@ test("ui.rider.worldmap: 2.3.2 - a price tag stays inside its continent; the rin
 	local t0 = r.env.GetTime()
 	W.drivers["bob stone"] = { name = T.BOB, key = "bob stone", dest = "Ratchet", price = 6000, state = "open", team = 3, service = "Rides", heard = t0 }
 	W.Bounty.Demand = function() return { { place = "Gadgetzan", riders = 1, low = 5000, high = 5000, newest = 30 } } end
-	-- (BRIEF25 D2) your You tag is kept clear too, so it stands away from Ratchet's price tag
+	-- your You tag is kept clear too, so it stands away from Ratchet's price tag
 	W.DriverBeacon = function() return { dest = "Undercity", destShown = "Undercity", price = 5000, state = "open", service = "A", team = 1, seats = 0, queue = 0 } end
 	Mod.Build(holder)
 	Mod.Show("world", { focus = "Gadgetzan" })
@@ -519,7 +519,7 @@ test("ui.rider.worldmap: 2.3.2 - a price tag stays inside its continent; the rin
 	local pin
 	for i = 1, wm.pinCount do if wm.pins[i].key == "bob stone" then pin = wm.pins[i] end end
 	ok(pin and pin.tag and pin.tag:IsShown(), "Ratchet's price tag")
-	local bx, _, bw = Mod.Box(1) -- (BRIEF25 M1: the cropped box)
+	local bx, _, bw = Mod.Box(1) -- (the cropped box)
 	local right = wm.view:GetLeft() + bx + bw
 	ok(pin.tag:GetRight() <= right + 0.5, "the tag ends inside Kalimdor: " .. tostring(pin.tag:GetRight()) .. " vs " .. right)
 	ok(pin.tag:GetLeft() >= wm.view:GetLeft() + bx - 0.5, "and starts inside it")

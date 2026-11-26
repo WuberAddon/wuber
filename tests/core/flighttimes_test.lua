@@ -1,4 +1,4 @@
--- Tests of Core.FlightTimes (SPEC7 4; owner B). Loaded by tests/run.lua with its helper table T.
+-- Tests of Core.FlightTimes. Loaded by tests/run.lua with its helper table T.
 -- The player's own flights (fake taxi: TakeTaxiNode, UnitOnTaxi, PLAYER_CONTROL_*), the estimate
 -- from the game's splines and its calibration, W.FlightRoute, the flight map's calibration
 -- (TaxiNodePosition), and that Enhanced Flight Map is gone.

@@ -174,7 +174,7 @@ function W.AdvertOwnText(text)
 		low = t:lower()
 	end
 	if t == "" then return nil, "text" end
-	-- (SPEC5 advert, review #13: the spam check reads the driver's own words, not what Wuber
+	-- (the spam check reads the driver's own words, not what Wuber
 	-- filled in: the guild's name, the service name and the fare never trip it)
 	local why = W.SentenceSpam and W.SentenceSpam(W.AdvertWords(t))
 	if why and why ~= "letters" then return nil, "spam", why end

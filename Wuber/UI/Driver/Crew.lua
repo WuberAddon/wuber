@@ -90,7 +90,7 @@ local function whoText(st)
 	return t
 end
 
--- (BRIEF17 S7) the "my account" switch and its label on a member card: the card is a little taller so the
+-- the "my account" switch and its label on a member card: the card is a little taller so the
 -- label clears the bottom edge, and the pair sits 8 px further left so the label clears Remove.
 local CARD_H, CARD_STEP = 60, 66
 local EXTRA_H = 12 -- a news line too long for one row wraps to a second line and the card grows by this

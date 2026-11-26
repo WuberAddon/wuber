@@ -166,7 +166,7 @@ test("UI chat clear R6: the default place moves only as far as it must; a hidden
 	local free = H.rect(W.UI.state.win)
 	W.UI.Toggle(false)
 	w:advance(1)
-	-- a chat frame far away: the window stays where it was. (BRIEF20 B4 review) out of the wide
+	-- a chat frame far away: the window stays where it was. out of the wide
 	-- phone's way too (the far left): it unfolds again as before. The default place is no longer
 	-- saved when the unfold slides it, so a chat the wide phone would cover keeps it narrow and
 	-- centred, which is another place.

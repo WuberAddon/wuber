@@ -1,4 +1,4 @@
--- BRIEF25 L1: the layout sweep covers the login tip card (UI.Tips) and the new World map with a sea route.
+-- the layout sweep covers the login tip card (UI.Tips) and the new World map with a sea route.
 -- tests/layout/extra_screens.lua adds the shots when their modules exist; FILE_SCREENS maps the files to them.
 -- Run by tests/run.lua; lua tests/run.lua "layout extra"
 local T = ...

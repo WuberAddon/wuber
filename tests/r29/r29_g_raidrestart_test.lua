@@ -1,4 +1,4 @@
--- Round 29 group G (AUD-76, Google C44b-1): when the runner stops raid summons, the crew Warlock's
+-- Round 29 group G (AUD-76, a reviewer C44b-1): when the runner stops raid summons, the crew Warlock's
 -- window and a raider's own (mirror) window forget the old queue, so a restart lists only the new run.
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok

@@ -93,7 +93,7 @@ test("Theme.Forms: lift sets how far above the list its fades sit (round 9 previ
 	T.clean(w)
 end)
 
--- (BRIEF17 B1) the user types: focus, keys (OnTextChanged with user = true), as the client does
+-- the user types: focus, keys (OnTextChanged with user = true), as the client does
 local function typeIn(field, text)
 	local eb = field.edit
 	eb:ClearFocus() -- (the fake box starts focused: it is made with autofocus on)
@@ -196,7 +196,7 @@ test("Theme.Forms: the Note sheet keeps a note typed, then blurred by the Save c
 	T.clean(w)
 end)
 
--- (BRIEF22 S1) the author asked for a visible scroll bar on pages that scroll: a thin track and thumb on the
+-- the author asked for a visible scroll bar on pages that scroll: a thin track and thumb on the
 -- right edge, shown only while the list can scroll, following the scroll, never taking the mouse.
 test("Theme.Forms BRIEF22 S1: a clipped list shows a thin scroll bar only while it can scroll, and it follows the scroll", function()
 	local W, w, Th, host, env = setup()

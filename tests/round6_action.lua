@@ -1,6 +1,6 @@
 -- Wuber 2.2 (round six, SPEC5.md) tests: agent B's part (action). Loaded by run.lua with the
 -- same helpers as round five. Test names start "r6 action:". Each one fails on the 2.1 code
--- and passes on 2.2 (SPEC5 "regress").
+-- and passes on 2.2.
 
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok

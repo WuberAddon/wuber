@@ -50,7 +50,7 @@ local function exists(path)
 end
 H.exists = exists
 
--- Paths are relative to the repo (SPEC5 paths, review #30: the suite runs from any checkout).
+-- Paths are relative to the repo (the suite runs from any checkout).
 -- "RitualRides" (loadRR = "1.4.1") is a small stand-in written for these tests, in tests/fixtures/addons/OldDriver:
 -- an old driver addon still installed next to Wuber. The real old addon is not needed and not in the repository.
 H.ADDONS = {
@@ -353,7 +353,7 @@ end
 
 local function lookup(c, k)
 	while c do
-		local v = c[k] -- class tables have no metatable: the same as rawget, without a call (BRIEF21 S3)
+		local v = c[k] -- class tables have no metatable: the same as rawget, without a call
 		if v ~= nil then return v end
 		c = c.__parent
 	end
@@ -467,8 +467,8 @@ local function visible(obj)
 end
 H.visible = visible
 
--- (BRIEF21 S5, BRIEF23 H3) What the game draws of a vertex colour's alpha. Seen in game twice (BRIEF19
--- F5, the Earnings period pills; BRIEF20 B1, the top nav), and settled by the in-game alpha probe of
+-- What the game draws of a vertex colour's alpha. Seen in game twice (BRIEF19
+-- F5, the Earnings period pills, the top nav), and settled by the in-game alpha probe of
 -- 20 Nov: while an Alpha animation plays on a texture or a frame above it (A.SlideIn on every Drive
 -- screen, fades), an alpha change is not taken; the colour (r, g, b) is. That is the default rule
 -- (H.ALPHA_HOLD = "anim"). The probe also showed that an alpha change on a frame that was drawn and
@@ -566,7 +566,7 @@ local function underAlphaAnim(obj)
 end
 H.underAlphaAnim = underAlphaAnim
 
--- (BRIEF24 F1) the hold, shared by Layered:SetVertexColor and Region:SetAlpha on a texture (the probe showed
+-- the hold, shared by Layered:SetVertexColor and Region:SetAlpha on a texture (the probe showed
 -- the game drops both under an Alpha animation): true when the game would not take an alpha change from old
 -- to a. A held call is counted in world.alphaKept by the addon line that made it, and written to
 -- WUBER_ALPHA_REPORT (once per line per run, with two callers and which call it was). The caller is three
@@ -601,7 +601,7 @@ H.alphaHeld = alphaHeld
 H.ALPHA_HOLD = os.getenv("WUBER_ALPHA_HOLD") or "anim"
 H.ALPHA_REPORT = os.getenv("WUBER_ALPHA_REPORT")
 H.alphaReported = {}
--- (BRIEF24 F1) tests/fixtures/alpha-known.txt: held lines reported for the next round, skipped by the held-line checks
+-- tests/fixtures/alpha-known.txt: held lines reported for the next round, skipped by the held-line checks
 H.alphaKnown = {}
 do
 	local f = io.open("tests/fixtures/alpha-known.txt", "r")
@@ -695,10 +695,10 @@ local function setShown(self, on, method)
 	if s.kind == "frame" then
 		for _, f in ipairs(list) do before[f] = visible(f) end
 	end
-	local wasVis = s.kind ~= "frame" and visible(self) -- (BRIEF21 S5) the region's own visibility before
+	local wasVis = s.kind ~= "frame" and visible(self) -- the region's own visibility before
 	s.shown = on
 	if s.kind ~= "frame" then
-		-- (BRIEF21 S5) a region shown or hidden by itself: drawn from the next frame on, or no more
+		-- a region shown or hidden by itself: drawn from the next frame on, or no more
 		local now = visible(self)
 		if now and not wasVis then becameVisible(s) elseif wasVis and not now then becameHidden(s) end
 		return
@@ -777,7 +777,7 @@ end
 function Region:IsShown() return st(self).shown end
 function Region:IsVisible() return visible(self) end
 
--- (BRIEF24 F1) a texture's own alpha is held as its vertex alpha is (alphaHeld: under an Alpha animation on it
+-- a texture's own alpha is held as its vertex alpha is (alphaHeld: under an Alpha animation on it
 -- or a frame above it; "drawn" adds that rule); GetAlpha returns the drawn alpha, H.alphaAsked(tex) the asked
 -- one. A frame's or a font string's SetAlpha is always taken (the probe tested textures only).
 local HELD_ALPHA = { Texture = true, Line = true, MaskTexture = true }
@@ -835,7 +835,7 @@ function Region:SetParent(parent)
 	end
 	s.parent = parent
 	if parent then table.insert(S[parent].children, self) end
-	-- (BRIEF21 S5) a new parent can show or hide the whole subtree
+	-- a new parent can show or hide the whole subtree
 	local now = visible(self)
 	if now ~= was then
 		for _, f in ipairs(subtree(self)) do
@@ -1095,7 +1095,7 @@ function Layered:SetVertexColor(r, g, b, a)
 	local s = st(self)
 	a = a or 1
 	s.vertexAsked = { r, g, b, a }
-	-- (BRIEF21 S5, BRIEF23 H3) the game keeps the alpha under an Alpha animation; with H.ALPHA_HOLD =
+	-- the game keeps the alpha under an Alpha animation; with H.ALPHA_HOLD =
 	-- "drawn" also that of a texture it has drawn while it is not drawing it (opt-in, not the client's rule)
 	local old = s.vertex
 	if old and alphaHeld(self, s, old[4], a, "SetVertexColor") then
@@ -1143,7 +1143,7 @@ local BUILTIN_TEXTURE_PREFIX = { "^Interface\\Buttons\\", "^Interface\\Icons\\",
 }
 
 -- a file path the game would load: an addon's file must exist on disk
--- (BRIEF21 S3) a media file found once is not looked for again (one file open per texture made it slow);
+-- a media file found once is not looked for again (one file open per texture made it slow);
 -- a missing one is looked for every time, as before
 local mediaFound = {}
 local function mediaExists(file)
@@ -1323,7 +1323,7 @@ function FontString:SetFont(path, size, flags)
 	if ok and H.textMetrics and not st(self).fontAt then -- (preview mode) when this string first got a font
 		st(self).fontAt = st(self).client.world.time
 	end
-	-- (BRIEF18) set while the addon font was loading; the same font and size again changes nothing
+	-- set while the addon font was loading; the same font and size again changes nothing
 	if ok and H.markStale and not (was and was.path == path and was.size == size) then H.markStale(self) end
 	return ok
 end
@@ -1347,7 +1347,7 @@ local function setText(self, text, method)
 	if not s.font then error(s.otype .. ":" .. method .. "(): Font not set", 3) end
 	local was = s.text
 	s.text = text ~= nil and tostring(text) or nil
-	-- (BRIEF18) laid out again only when the text really changes (the same text again keeps the
+	-- laid out again only when the text really changes (the same text again keeps the
 	-- layout: the author's button, repainted every few seconds, stayed cut until the window re-set it)
 	if H.markStale and s.text ~= was then H.markStale(self) end
 end
@@ -1416,12 +1416,27 @@ local function metricLayout(self)
 		if twoPoints and side.y0 and side.y1 and ok and r then height = r.h / e elseif s.h then height = s.h end
 	end
 	if width and width <= 0 then width = nil end
-	return M.layout(f and f.path, (f and f.size) or 12, s.text or "", { width = width, height = height,
+	if not s.measuring then s.boxW = width end -- (job 2893) H.textBox
+	local L = M.layout(f and f.path, (f and f.size) or 12, s.text or "", { width = width, height = height,
 		wrap = s.wrap ~= false, maxLines = s.maxLines, spacing = s.spacing, scale = effScale(self) })
+	-- (job 2893) a probe run measured this string in this box: its answer, cut yes or no, replaces the metric's (tests/lib/probe_learn.lua)
+	if H.measuredCut and width and not s.measuring then
+		local verdict = H.measuredCut(f and f.path, (f and f.size) or 12, s.text or "", width, s.maxLines, s.wrap ~= false, effScale(self), L)
+		if verdict ~= nil and verdict ~= L.truncated then
+			local copy = {}
+			for k, v in pairs(L) do copy[k] = v end
+			copy.truncated = verdict
+			return copy
+		end
+	end
+	return L
 end
 -- (probe pack) H.measuredWidths(fontPath, size, text) -> the width a real client measured, or nil (tests/lib/probe_learn.lua sets it
 -- from a probe fixture). nil by default: the harness's own metrics answer.
 H.measuredWidths = nil
+-- (job 2893) H.measuredCut(fontPath, size, text, boxWidth, maxLines, wrap, effScale, layout) -> true (the game cut it), false (it did not), or nil (this
+-- string was never measured: the metric answers). Set by tests/lib/probe_learn.lua L.apply from the fixture's labels part.
+H.measuredCut = nil
 local function textWidth(self)
 	local s = S[self]
 	local f = s.font
@@ -1440,7 +1455,7 @@ local function textWidth(self)
 		return H.textMetrics.width(f and f.path, (f and f.size) or 12, s.text or "", effScale(self))
 	end
 	local text = (s.text or ""):gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|T.-|t", "WW")
-	-- (BRIEF18) laid out while the addon font was loading: Arial Narrow's narrower widths
+	-- laid out while the addon font was loading: Arial Narrow's narrower widths
 	return #text * ((f and f.size) or 12) * 0.5 * (s.stale and H.STALE_WIDTH or 1)
 end
 local function textHeight(self)
@@ -1467,10 +1482,10 @@ function FontString:GetNumLines() if not H.textMetrics then H.rule("font.no-wrap
 -- own Inter measure (fs.wuberPx, W.Theme.MeasureText, as drawn) when it has one, else the
 -- harness's rough one. H.truncation(fs) -> nil, or { need = px, room = px, lines = n, max = n }.
 -- The game draws small addon-font text a little wider than its advance widths (letters land on whole
--- screen pixels): Google's shots cut '17:00–20:00' at '20:' and 'Orgrimmar' at 'Orgrim' in room our
+-- screen pixels): a reviewer's shots cut '17:00–20:00' at '20:' and 'Orgrimmar' at 'Orgrim' in room our
 -- measure called just enough. The check asks for that much spare (round 13, I18).
 H.GAME_TEXT_MARGIN = 1.06
--- (BRIEF18) text as the game draws it at a given screen: each glyph's advance lands on whole screen
+-- text as the game draws it at a given screen: each glyph's advance lands on whole screen
 -- pixels at the string's effective scale (as tools/preview/textlayout.lua, calibrated on the 19 Nov
 -- shots: rounded, no tracking). H.TEXT_PIXELS = { px = screen pixels per UI unit, snap = "round" or
 -- "ceil", track = pixels added per glyph } turns it on; nil keeps the flat GAME_TEXT_MARGIN (the
@@ -1552,7 +1567,7 @@ function H.textTall(self)
 	end
 	return s.h
 end
--- (BRIEF18) asGame: the game's own answer (IsTruncated), which a string laid out before its font
+-- asGame: the game's own answer (IsTruncated), which a string laid out before its font
 -- loaded gets wrong; without it, what the player sees (a stale string counts as cut).
 -- H.textLines(fs): the lines its words take as the game wraps them (1 without wrap), or nil.
 local function wrapLines(self, text, room, asGame)
@@ -1619,6 +1634,13 @@ function FontString:IsTruncated()
 	return H.truncation(self, true) ~= nil
 end
 H.metricLayout = metricLayout
+-- (job 2893) the box a string was laid out in: font path, size, text, box width (nil = unbounded), maxLines, wrap, effective scale (tools/rec/probe-labels.lua)
+function H.textBox(fs)
+	if not H.textMetrics then return nil end
+	metricLayout(fs)
+	local s = S[fs]
+	return s.font and s.font.path, (s.font and s.font.size) or 12, s.text or "", s.boxW, s.maxLines, s.wrap ~= false, effScale(fs)
+end
 function FontString:SetAlphaGradient() return true end
 
 ---------------------------------------------------------------------------
@@ -2679,7 +2701,7 @@ function H.newWidget(client, otype, name, parent, kind)
 	}
 	S[obj] = s
 	if parent then table.insert(S[parent].children, obj) end
-	-- (BRIEF21 S5) made visible: visible from this frame on (made under a hidden parent: from when it shows)
+	-- made visible: visible from this frame on (made under a hidden parent: from when it shows)
 	if visible(obj) then s.bornAt = client and client.world and client.world.drawn or 0 end
 	if type(name) == "string" and name ~= "" then
 		if parent and S[parent].name then name = name:gsub("%$parent", S[parent].name) else name = name:gsub("%$parent", "") end
@@ -3085,7 +3107,7 @@ function World:frame(dt)
 				local s = S[f]
 				if s.scripts.OnUpdate and visible(f) then runScript(f, "OnUpdate", dt) end
 			end
-			if next(c.playing) ~= nil then -- (BRIEF21 S3) most frames play no animation: no list, no sort
+			if next(c.playing) ~= nil then -- most frames play no animation: no list, no sort
 				local playing = {}
 				for g in pairs(c.playing) do playing[#playing + 1] = g end
 				table.sort(playing, function(a, b) return S[a].seq < S[b].seq end)
@@ -3096,14 +3118,14 @@ function World:frame(dt)
 			end
 		end
 	end
-	-- (BRIEF21 S5) the game draws the frame: what shows now has been drawn
+	-- the game draws the frame: what shows now has been drawn
 	self.drawn = (self.drawn or 0) + 1
 end
 
 -- Runs the clock forward, firing every timer that falls due and every frame on the way.
 function World:advance(seconds)
 	local target = self.time + seconds
-	-- (BRIEF21 S3) the timer due first is looked for again only when the list changed: a timer is only
+	-- the timer due first is looked for again only when the list changed: a timer is only
 	-- ever added (World:after, a repeat: both bump self.seq) or removed here (the list gets shorter)
 	local best, index
 	local seenN, seenSeq, timers = -1, -1, nil
@@ -5440,7 +5462,7 @@ local BASE = {
 -- The game API of one client
 ---------------------------------------------------------------------------
 
--- UnitClass: the class's name and id (read only; one table for every call, BRIEF21 S3)
+-- UnitClass: the class's name and id (read only; one table for every call)
 local CLASS_NAMES = { WARLOCK = { "Warlock", 9 }, MAGE = { "Mage", 8 }, PRIEST = { "Priest", 5 }, WARRIOR = { "Warrior", 1 },
 	DRUID = { "Druid", 11 }, ROGUE = { "Rogue", 4 }, HUNTER = { "Hunter", 3 } }
 
@@ -5520,7 +5542,7 @@ function World:addClient(name, opts)
 		-- whisper fallback: a trial account (every addon message refused), its internal realm,
 		-- and which copy of a custom channel it lands in (see World:splitChannel)
 		addonFails = opts.addonFails, realm = opts.realm, channelCopy = opts.channelCopy, layer = opts.layer,
-		-- (BRIEF21 S5) opts.rewrite(addon, file, text) -> text: the source the client loads instead (old code from a fixture)
+		-- opts.rewrite(addon, file, text) -> text: the source the client loads instead (old code from a fixture)
 		rewrite = opts.rewrite,
 	}, Client)
 	client.cvars = setmetatable({}, { __index = self.cvars })
@@ -5695,7 +5717,11 @@ function World:addClient(name, opts)
 	env.UpdateAddOnMemoryUsage = function() end
 	env.GetAddOnMemoryUsage = function() return collectgarbage("count") end
 	-- (REC build.number) the build of 20 Nov 2026 on (70938 of 12 Nov and 70959 of 13 Nov came before it)
-	env.GetBuildInfo = function() return "1.60.1", "71037", "Nov 18 2026", 16001, "1.60.1", "release" end
+	-- (job 2907) opts.buildInfo = { version, build, date, interface, ... }: a client on another build (the probe's fingerprint test)
+	env.GetBuildInfo = function()
+		if opts and type(opts.buildInfo) == "table" then return unpack(opts.buildInfo) end
+		return "1.60.1", "71037", "Nov 18 2026", 16001, "1.60.1", "release"
+	end
 	env.GetLocale = function() return "enGB" end
 	-- (Forever's realm names carry the region and ruleset: "CAMWOW EU5 Realm 5 PvE")
 	-- (REC realm.name.empty71037, D16) build 71037 names no realm: "" by default (H.DEFAULT_REALM). A world or client
@@ -6326,7 +6352,7 @@ function World:addClient(name, opts)
 				end
 				return out
 			end,
-			-- the roster (SPEC5 community: Wuber reads it for whisper seeds): memberIds, and each
+			-- the roster (Wuber reads it for whisper seeds): memberIds, and each
 			-- member's name, role, presence (Enum.ClubMemberPresence) and classID. w.clubRosterRealm
 			-- spells names "Name-Realm" as on another node.
 			GetClubMembers = function(id)
@@ -6820,7 +6846,7 @@ function World:addClient(name, opts)
 	client.before = {}
 	for k in pairs(api) do client.before[k] = true end
 	-- lockEngine: a stand-in for Ritual Rides 1.4.1's global, so Wuber 2.0's engine stays locked
-	-- off (SPEC3 3.3) and Net's own driver mode can be tested on its own
+	-- off and Net's own driver mode can be tested on its own
 	if opts.lockEngine then rawset(env, "RitualRides", { VERSION = "1.4.1" }) client.lockEngine = true end
 	H.fakeOptionsList(env, client, "new") -- this build has the Settings API only; a test's prepare may change it ("old", "none")
 	if opts.prepare then opts.prepare(env, client) end
@@ -6902,10 +6928,10 @@ function World:addClient(name, opts)
 	end
 	client.W = client.ns.Wuber
 	client.RR = client.ns.RitualRides
-	-- (BRIEF15) opts.version: this window runs another Wuber version from login on (W.VERSION is read at
+	-- opts.version: this window runs another Wuber version from login on (W.VERSION is read at
 	-- run time; a test that needs it before PLAYER_LOGIN, e.g. the update notice's saved field, sets it here)
 	if opts.version and client.W then client.W.VERSION = opts.version end
-	-- Round 8: old tests run FOLDED ("idle = folded", SPEC7 8.2), so their transcripts keep 2.2.3's behaviour. The harness
+	-- Round 8: old tests run FOLDED ("idle = folded"), so their transcripts keep 2.2.3's behaviour. The harness
 	-- screen (1920 x 1080) has room to unfold, so UI.Fold.Fits answers "small" unless the test opts in: opts.wide at
 	-- creation, client.wide = true at run time, or the player's own fold choices (W.db.fold, made by the fold controls).
 	-- Nothing is saved and no frame changes; only the room check is wrapped (through the table, as Fold calls it).
@@ -7260,7 +7286,7 @@ function H.applyForbidden(list)
 	end
 end
 
--- Round 8's game fakes (SPEC7 section 8): tests/lib/fakes8.lua, next to this file
+-- Round 8's game fakes: tests/lib/fakes8.lua, next to this file
 do
 	local src = debug.getinfo(1, "S").source:gsub("^@", ""):gsub("\\", "/")
 	local libdir = (src:match("^(.*)/[^/]*$") or ".") .. "/lib/"

@@ -22,7 +22,7 @@ local DR = W.Drive
 -- The guild ({guild} in messages)
 ---------------------------------------------------------------------------
 
--- (DR.Guild lives in Drive_Chat only: SPEC5 guild, review #25 - this copy added brackets)
+-- (DR.Guild lives in Drive_Chat only: review #25 - this copy added brackets)
 
 ---------------------------------------------------------------------------
 -- Blocked players
@@ -173,7 +173,7 @@ function DR.Readiness()
 		return out
 	end
 
-	-- who summons (SPEC4 1.1): a runner who is no Warlock must pick a Warlock
+	-- who summons: a runner who is no Warlock must pick a Warlock
 	local chosen = DR.Summoners()
 	if runner and not DR.IsWarlock() and #chosen == 0 then
 		add(false, "Choose who summons", { "Choose", function()
@@ -250,7 +250,7 @@ function DR.Readiness()
 		end
 	end
 
-	-- several stations (SPEC4 2.1)
+	-- several stations
 	local stations = DR.Stations and DR.Stations() or {}
 	if #stations >= 2 then
 		local parts = {}
@@ -344,11 +344,11 @@ function DR.Tick()
 	local hiEvery = (#DR.char().crew + 1 >= 5) and 20 or 15
 	if W.InGroup() and now - (DR.lastHi or -100) >= hiEvery then DR.Hello() end
 	DR.SyncRoster()
-	-- (SPEC5 promote: no DR.HandLead from this timer; PromoteToLeader only from a click, see
+	-- (no DR.HandLead from this timer; PromoteToLeader only from a click, see
 	-- DR.LeadFix)
 	call("CastWatch", now)
 	call("LogTick")
-	-- 2.3.0 (SPEC7 5.6, 5.5, 5.8): PvP danger, the cut ledger's shift, the raincheck book's clocks
+	-- 2.3.0: PvP danger, the cut ledger's shift, the raincheck book's clocks
 	call("DangerTick", now)
 	call("CutTick", now)
 	call("RaincheckTick", now)
@@ -360,7 +360,7 @@ function DR.Tick()
 		DR.ShardsChanged()
 	end
 	if DR.Mode() == "raid" and DR.RaidOn() then
-		-- raid summons (SPEC4 3): no invites, adverts, trades or riders' clocks
+		-- raid summons: no invites, adverts, trades or riders' clocks
 		call("RaidTick", now)
 		call("PumpChat")
 		DR.Changed()

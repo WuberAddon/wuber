@@ -1,9 +1,9 @@
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
--- Round 33, group E5. AUD-118 (Google C03b-3): a trip on one continent was priced through free boats across
+-- Round 33, group E5. AUD-118 (a reviewer C03b-3): a trip on one continent was priced through free boats across
 -- the sea (Auberdine > Menethil > Theramore: 0c, "no price") instead of the flight master's fare.
--- AUD-119 (Google C03b-1): the nearest flight point to Gnomeregan was Tidegear Coast (node 3205), which has
+-- AUD-119 (a reviewer C03b-1): the nearest flight point to Gnomeregan was Tidegear Coast (node 3205), which has
 -- no flights, so the rider saw no flight price or route.
 
 test("r33 e5: a trip on one continent is priced by flight, not by free boats over the sea (AUD-118)", function()
