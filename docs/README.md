@@ -19,4 +19,3 @@
 | [../tests/README.md](../tests/README.md) | The fake game and what tests cannot prove |
 | [../tools/README.md](../tools/README.md) | The check and build tools |
 | [../lab/README.md](../lab/README.md) | The in-game test addon |
-
