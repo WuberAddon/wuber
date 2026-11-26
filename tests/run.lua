@@ -2247,7 +2247,7 @@ do
 end
 
 -- Round 15 (agent E): the forbidden list, the taint.log reader and the release checklist (tests/tools/)
-for _, part in ipairs({ "tools/forbidden_test", "tools/taint_test", "tools/known_bugs_check_test", "tools/checklist_test", "tools/shard_test", "tools/known_test", "tools/sweep_known_test", "tools/sweep_own_repro_test", "tools/transcript_test", "layout/engine_test", "r24_c_layout", "r25_b_tipsettings", "r25_g_layout", "r26_b_helptip", "r26_e_layout_world", "r13_d4c_scenes" }) do
+for _, part in ipairs({ "tools/forbidden_test", "tools/taint_test", "tools/known_bugs_check_test", "tools/checklist_test", "tools/shard_test", "tools/known_test", "tools/sweep_known_test", "tools/sweep_own_repro_test", "tools/transcript_test", "layout/engine_test", "r24_c_layout", "r25_b_tipsettings", "r25_g_layout", "r26_b_helptip", "r26_e_layout_world", "r13_d4c_scenes", "j2935_a_pay_trade" }) do
 	local chunk = loadfile(dir .. "/" .. part .. ".lua")
 	if chunk then
 		chunk({ H = H, test = test, runOne = runOne, eq = eq, ok = ok, list = list, newWorld = newWorld, rider = rider,
