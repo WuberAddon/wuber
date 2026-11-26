@@ -350,7 +350,7 @@ return function(Hunt)
 
 	Hunt.promise{
 		id = "settings.public_buyers_asks", area = "Settings", gap = "the fake game's popups have no buttons: Cancel is answered through the dialog's OnCancel",
-		text = "Turning on Invite public chat buyers asks you first, and the switch stays off if you say no.",
+		text = "Turning on Invite public chat riders asks you first, and the switch stays off if you say no.",
 		source = "Settings > Driving (BRIEF19 R4; \"it asks first\" in the tooltip)", kind = "scenario",
 		needs = { role = "warlock" },
 		when = function(sit) return is(sit, "combat", "no") and sit.opt_autoPublic ~= "on" end,
@@ -362,15 +362,15 @@ return function(Hunt)
 			if t.get() == true then ctx:na("already on") end
 			press(ctx, t)
 			ctx:advance(0.6)
-			ctx:note("click Invite public chat buyers")
+			ctx:note("click Invite public chat riders")
 			if t.get() == true then
-				ctx:fail("You turn on Invite public chat buyers and it is on at once, without asking.")
+				ctx:fail("You turn on Invite public chat riders and it is on at once, without asking.")
 			end
 			local find = ctx.me.env.StaticPopup_FindVisible
 			local D = ctx.W.Drive
 			local asked = type(find) == "function" and D and D.PUBLIC_POPUP and find(D.PUBLIC_POPUP)
 			if not asked then
-				ctx:fail("You turn on Invite public chat buyers and no question comes up.", onScreen(ctx))
+				ctx:fail("You turn on Invite public chat riders and no question comes up.", onScreen(ctx))
 			end
 			-- the fake game's popups have no buttons: the player's Cancel is the dialog's own OnCancel, then the popup hides
 			local dlg = ctx.me.env.StaticPopupDialogs and ctx.me.env.StaticPopupDialogs[D.PUBLIC_POPUP]
@@ -380,7 +380,7 @@ return function(Hunt)
 			ctx:advance(0.8)
 			ctx:note("answer No")
 			if t.get() == true or face(t) then
-				ctx:fail("You turn on Invite public chat buyers, answer No, and the switch is on.")
+				ctx:fail("You turn on Invite public chat riders, answer No, and the switch is on.")
 			end
 		end,
 	}

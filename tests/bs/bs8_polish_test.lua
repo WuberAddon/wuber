@@ -30,7 +30,7 @@ test("bs8 polish 1 (item 10): portal page: the you dot is hidden and still, the 
 	T.clean(w)
 end)
 
--- Item 12.7: the Greeting "Invite public chat buyers" confirm is Blizzard's popup; Wuber lays an opaque backdrop behind it
+-- Item 12.7: the Greeting "Invite public chat riders" confirm is Blizzard's popup; Wuber lays an opaque backdrop behind it
 -- (Drive.PlacePublicWarning) so the Greeting chips do not show through. Driven through the real switch, not a hand-made frame.
 test("bs8 polish 2 (item 12.7): the public-buyers confirm over Wuber gets Wuber's opaque backdrop", function()
 	local w = T.newWorld()

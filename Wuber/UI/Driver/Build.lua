@@ -459,7 +459,7 @@ local function buildControls(v)
 	T.Tip(v.advert, "Advertise", function()
 		local plan = D.AdvertPlan()
 		local line = type(plan) == "table" and S(plan.text)
-		return "Posts one line in public chat, always starting [Wuber], so buyers find you and get the addon."
+		return "Posts one line in public chat, always starting [Wuber], so riders find you and get the addon."
 			.. (line and ("\n\n" .. line) or "")
 			.. "\n\nTyping your own adverts in Trade? Put Wuber in them: other Wuber players' addons hear it and add you."
 			.. "\n\nAt most once every 15 minutes, never in combat, only when you click. Change the line in Messages."

@@ -443,7 +443,7 @@ G.settings3 = {
 	{ id = "Trips <Button> @Window.lua", elsewhere = "rider1", why = "the same header, tab bar or minimap control on every screen: clicked on rider1's home" },
 	{ id = "Drive <Button> @Window.lua", elsewhere = "rider1", why = "the same header, tab bar or minimap control on every screen: clicked on rider1's home" },
 	{ id = "[circle] <Button> @Panel.lua", action = "click", on = "settings_invite_warning", expect = "changed" },
-	{ id = "[pill] <Button> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "Invite public chat buyers stays off until the confirmation dialog is accepted" },
+	{ id = "[pill] <Button> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "Invite public chat riders stays off until the confirmation dialog is accepted" },
 	{ id = "[circle] <Slider> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "fake game clickOn only fires OnMouseDown/OnMouseUp (enabling wheelOn) and does not move a Slider's value (wheel + db checked in google_b2_probes_test.lua)" },
 	{ id = "(long text) <Frame> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
 	{ id = "(long text) <EditBox> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },

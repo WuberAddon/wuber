@@ -88,7 +88,7 @@ local KEYWORDS = {
 	["Post an advert when I go online"] = "advert advertise chat trade services online",
 	["List me in Wuber's starter list"] = "new riders starter list find",
 	["Invite riders who whisper me"] = "auto invite group party whisper app requests",
-	["Invite public chat buyers"] = "auto invite trade lfg lookingforgroup public chat buyers",
+	["Invite public chat riders"] = "auto invite trade lfg lookingforgroup public chat riders buyers",
 	["Group size"] = "largest group one rider at a time raid group size party",
 	["Chat channels"] = "channels to watch advert channels advertise chat channels trade lfg lookingforgroup services general",
 	["Request words"] = "keywords whisper words",
@@ -744,8 +744,8 @@ local function buildDriving(drive, dy)
 	dy = section(drive, dy, "Driving: inviting")
 	-- (2.3.2) off by default; turning it on asks first (DR.SetAutoPublic's warning),
 	-- so the switch stays off until Yes, and Cancel leaves it off
-	dy = toggleRow(drive, dy, "drive.autoPublic", "Invite public chat buyers", "Public chat channels you read, not whispers.",
-		"On: invites buyers in the public chat channels you read (see Chat channels) who name your place. Wuber can misread chat, so it asks first. Off: click a name to invite.",
+	dy = toggleRow(drive, dy, "drive.autoPublic", "Invite public chat riders", "Public chat channels you read, not whispers.",
+		"On: invites riders in the public chat channels you read (see Chat channels) who name your place. Wuber can misread chat, so it asks you once when you switch this on. Off: click a name to invite.",
 		function() return dopts().autoPublic == true end,
 		function(on, t)
 			local d = DR()
@@ -772,7 +772,7 @@ local function buildDriving(drive, dy)
 			local res = call(d.SetAutoPublic, true, settle)
 			if res == "asked" then watch(0) end
 			-- (review #6) no popup to ask with: say so, as /wuber drive market does
-			if res == nil then UI.Toast("Invite public chat buyers: off (the warning can't be shown right now).", "warn") end
+			if res == nil then UI.Toast("Invite public chat riders: off (the warning can't be shown right now).", "warn") end
 		end)
 	dy = toggleRow(drive, dy, "starter", "List me in Wuber's starter list", "So new riders can find you.",
 		"New Wuber users start with a short list of drivers to ask. On: you can be on it (only your name; riders still see you "
@@ -899,7 +899,7 @@ local function buildDriving(drive, dy)
 	local lseg = T.Segmented(lr, {
 		{ value = "tell", label = "Block and tell them", tip = blkTip .. " " .. tellTip },
 		{ value = "quiet", label = "Block quietly", tip = blkTip },
-		{ value = "off", label = "Do nothing", tip = "Nothing happens: the rider stays unblocked and you only get a note." },
+		{ value = "off", label = "Do nothing", tip = "Nothing happens: the rider stays unblocked and you only get a toast." },
 	}, lv0, function(v)
 		if v == "tell" then
 			setOpt("autoBlock", true)
