@@ -1,5 +1,5 @@
 -- Module: FX.Emblem
--- Purpose: the Pioneers' floating emblem (BRIEF15, PLAN 2.3.2 feature 2): Wuber's own small swirling portal
+-- Purpose: the Pioneers' floating emblem: Wuber's own small swirling portal
 --   over a listed Pioneer's nameplate, seen by other Wuber users in the open world; Pioneer Drivers in
 --   teal; the founders' crown wins; a local-only preview over your own head.
 -- API: W.Emblem, W.EmblemHeard, W.EmblemFlag
@@ -10,7 +10,7 @@
 --   FX.Nameplates.emblem
 -- Standalone: no
 -- Test: tests/fx/emblem_test.lua
--- From: new in 2.3.2 (BRIEF15, FIXROUND-2.3.0 LATER item 3)
+-- From: new in 2.3.2
 --
 -- Who gets one: ONLY a name on the shipped list (W.PioneerKind, Core.Base). No network field, saved
 -- value or other player's claim can ever give an emblem. With the shipped lists empty nothing is
@@ -25,7 +25,7 @@
 -- sees, also shows there and with emblems off (a forbidden plate is still skipped). One holder per visible Pioneer, pooled, at
 -- most 6. No text anywhere in a holder (the portal sprite, a ring texture and a glow); no Scale animation.
 --
--- The art (BRIEF16, "portal art"): Wuber's own summoning portal, rendered in Blender like the founder's
+-- The art: Wuber's own summoning portal, rendered in Blender like the founder's
 -- crown (tools/emblem/: portal_blend.py, make_emblem.py): an open swirling vortex with a bright core,
 -- a gold rune ring turning the other way, gold sparks and a soft glow, 32 frames of 128 px in a
 -- 1024x512 atlas per colour (ATLAS: Media/fx/emblem.tga violet for riders, emblem_teal.tga for
@@ -70,7 +70,7 @@ function E.Colour(kind)
 	return { r, g, b }
 end
 
--- The three looks (size and lift in px, spin in radians a second). the author picked 2, the Orb (BRIEF16):
+-- The three looks (size and lift in px, spin in radians a second). the author picked 2, the Orb:
 -- it is the default; the others stay for "/wuber emblem 1|3".
 E.LOOKS = {
 	{ name = "Ring", desc = "a small portal just above the name, quicker", size = 44, lift = 4, spin = 0.9, alpha = 1, glow = 1.5 },

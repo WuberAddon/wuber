@@ -1,4 +1,4 @@
--- Tests of T.Segmented's lit part (BRIEF20 B1). Loaded by tests/run.lua with its helper table T.
+-- Tests of T.Segmented's lit part. Loaded by tests/run.lua with its helper table T.
 -- In the game a pill's fill kept its alpha when the choice changed while it was not drawn (the top nav,
 -- tour #1-17: a clear part stayed clear, a lit one turned solid white). Every segmented choice (the
 -- plain gold one, the calm one of the Drive tab and Earnings, the violet Here | World) is lit by a pill

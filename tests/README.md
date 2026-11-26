@@ -158,7 +158,7 @@ a throttled addon message, a missing media file or an addon message over 255 byt
   "sender", "channels" }` makes those APIs return a value any use of which is an error.
 - **Globals.** The addons' global table records every new global and the line that wrote
   it; every API read is noted.
-- **Drawn alpha (BRIEF21 S5, BRIEF23 H3, BRIEF24 F1).** As the game did (BRIEF19 F5, BRIEF20 B1) and as the
+- **Drawn alpha.** As the game did and as the
   in-game alpha probe showed (20 Nov), a texture's `SetVertexColor` alpha, and its own `SetAlpha`
   (textures and Lines), are not taken while an
   Alpha animation plays on it or a frame above it (`A.SlideIn`, `A.ZoomIn`, fades): the default,

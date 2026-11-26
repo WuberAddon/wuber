@@ -9,8 +9,8 @@
 --   DR.CanInvite, DR.LeadTarget, DR.HandLead, DR.LeadFix, DR.PumpInvites, DR.owing, DR.OWING_GRACE, DR.recentLeft, DR.LEFT_KEEP (riders who left in the last 120 s: a late PAID still counts),
 --   DR.DecidesNonPayer, DR.OwingTick, DR.SyncRoster, DR.LockPrice, DR.Apply, DR.QueueTick,
 --   DR.PLACE_SETTLE, DR.MOVED_TTL, DR.moved, DR.ServedPlaces, DR.PlaceOK, DR.PlaceStale, DR.PlaceSweep,
---   DR.Travelling (BRIEF18: a request's place; riders for a place the driver left), DR.AskedFor,
---   DR.AskOK (BRIEF18 00:53: a request naming a place we don't serve is a lead, never invited)
+--   DR.Travelling (a request's place; riders for a place the driver left), DR.AskedFor,
+--   DR.AskOK (a request naming a place we don't serve is a lead, never invited)
 -- Internals: (none)
 -- Uses: Drive.Careful, Drive.AutoReply
 -- Later: Drive.Raincheck (DR.RaincheckFact: DR.Apply hands it the IOU facts), Drive.Service
@@ -110,7 +110,7 @@ function DR.CleanName(name)
 	if not name then return nil end
 	local person = name:match("^(%S+ %S+)%-.+$")
 	if person then return person end
-	-- a one-part name (or "First-Surname") with a realm tail (W.IsRealmTail: SPEC5 realms,
+	-- a one-part name (or "First-Surname") with a realm tail (W.IsRealmTail: 
 	-- "Dan-CAMWOWEU4Realm7PvE" too): the realm goes; "Jean-Luc Picard" stays whole
 	local base, tail = name:match("^(.-)%-([^%-]+)$")
 	if base and base ~= "" and W.IsRealmTail(tail) then return base end
@@ -283,7 +283,7 @@ function DR.Wanted(msg)
 	return topic and want
 end
 
--- a ride's own fields (BRIEF17 C6: also 2.1-2.3's); after "|" its Wuber ride, kept on a lead put back (Drive.Net ends it)
+-- a ride's own fields (also 2.1-2.3's); after "|" its Wuber ride, kept on a lead put back (Drive.Net ends it)
 local RIDE_KEYS = "caster cashier castAt endAt arrivedAt paidAt joinedAt invitedAt greeted thanked reminded short shortTold walked priority gone busy "
 	.. "busyTold farSeen hereSince wantsPrice kicks kickedAt boxed tradeTries tradeAt offer offerTold cameWith helperOf awayAt rideId prepaid payeeBlind askWhere whereTold "
 	.. "elsewhere elsewhereTold dest forPlace askFor askedFor placeOffAt station priceTold doneAt helps called calledAt auto autoMsg | wuberRide wuberBuyer wuberPrice wuberLabel wuberVer voucher cover fullFare"
@@ -325,7 +325,7 @@ end
 
 local function multi() return DR.MultiStation and DR.MultiStation() or false end
 
--- (BRIEF18 00:53) What a request's words ask for, against where we take riders now: "match" (a
+-- What a request's words ask for, against where we take riders now: "match" (a
 -- place we serve), "elsewhere" (only places we don't: "do you do UC summ?" while serving
 -- Orgrimmar), "unclear" (ours and another, no "to" to tell which), "noplace" (none named, or we
 -- don't know where we are yet); and the place: the one asked for (elsewhere, unclear: the other one).
@@ -347,7 +347,7 @@ local function askedFor(msg)
 end
 DR.AskedFor = askedFor
 
--- (BRIEF18 00:53) The invite's own guard: a rider who asked for a place is invited only while we
+-- The invite's own guard: a rider who asked for a place is invited only while we
 -- serve it (and not while we can't tell).
 local function askOK(c)
 	if not c.askFor or multi() then return true end
@@ -435,7 +435,7 @@ function DR.Request(name, source, msg)
 		c = create(name, "queued", source)
 	end
 	c.msg = msg or c.msg
-	DR.moved[k] = nil -- (BRIEF18) asked again: for the place we serve now
+	DR.moved[k] = nil -- asked again: for the place we serve now
 	if not multi() and not named then c.askFor = place end
 	if named and source == "manual" then
 		c.askedFor = place
@@ -443,10 +443,10 @@ function DR.Request(name, source, msg)
 		DR.Alert(W.Short(c.name) .. " asked for " .. place .. (now and (", not " .. now[1]) or "")
 			.. ": on your list because you added them.", "info")
 	end
-	-- several stations (SPEC4 2.2): the rider goes where they asked to go
+	-- several stations: the rider goes where they asked to go
 	if DR.Route then
 		local how = DR.Route(c, msg)
-		-- (BRIEF18 a) the request remembers its place: the station (several), else where we summon to now
+		-- the request remembers its place: the station (several), else where we summon to now
 		local served = DR.ServedPlaces()
 		local multi = DR.MultiStation and DR.MultiStation()
 		-- (c.dest, from Route, is the place the words named: often where the rider stands, "I'm in
@@ -530,7 +530,7 @@ local function onWhisper(text, sender)
 	if kind == "request" then
 		-- (20 Nov hotfix, the author) a whisper naming another place ("do you do UC summ?" while you serve
 		-- Orgrimmar) is not a request for you: it waits as a lead for you to decide; nobody is invited
-		-- (BRIEF18 00:53) one naming a place we don't serve becomes a lead in DR.Request
+		-- one naming a place we don't serve becomes a lead in DR.Request
 		if DR.WuberLine(text) then
 			DR.Request(sender, "whisper", text)
 			return
@@ -600,7 +600,7 @@ local function publicLine(text, sender, inMarket)
 	key, sender = heardKey(sender)
 	if not key or DR.NeverRider(key) then return end
 	if W.drivers and W.drivers[key] then return end -- another Wuber driver
-	-- (SPEC5 public, review #18: buyers are read only while selling with "watch public chat" on;
+	-- (buyers are read only while selling with "watch public chat" on;
 	-- a closed driver's chat costs nothing here. Net still reads "[Wuber]" adverts for discovery.)
 	local opts = o()
 	if not (open() and opts.watchPublic) then return end
@@ -715,7 +715,7 @@ function DR.HandLead(force)
 	return name
 end
 
--- The lead handover as a step for a click (SPEC5 promote: PromoteToLeader only from a hardware
+-- The lead handover as a step for a click (PromoteToLeader only from a hardware
 -- click, the Readiness pill or the big button): nil, or { unit, name, short, title, run }.
 function DR.LeadFix()
 	local unit, name = DR.LeadTarget()
@@ -751,7 +751,7 @@ end
 local function inviteRoom(opts, now, sweep)
 	if (DR.IsPaused and DR.IsPaused()) or (opts.oneAtATime and DR.Busy()) then return false end
 	if (DR.inviteHold and now < DR.inviteHold) or now - (DR.lastInviteAt or -100) < 1.5 then return false end
-	-- (BRIEF18) a hearth or teleport on its way: nobody is invited to the place we leave
+	-- a hearth or teleport on its way: nobody is invited to the place we leave
 	if DR.Travelling() then return false end
 	if sweep then DR.PlaceSweep() end
 	while inviteLog[1] and now - inviteLog[1] > 60 do table.remove(inviteLog, 1) end
@@ -792,7 +792,7 @@ function DR.PumpInvites()
 	if not room then return end
 	local pick
 	for _, c in ipairs(DR.Sorted()) do
-		-- (BRIEF18 c) never a rider for a place we left; (00:53) nor one who asked for a place we don't serve
+		-- never a rider for a place we left; (00:53) nor one who asked for a place we don't serve
 		if c.state == "queued" and DR.PlaceOK(c) and askOK(c) and not (c.source ~= "manual" and DR.ServeHold and DR.ServeHold(c.key)) then
 			pick = c
 			break
@@ -979,17 +979,17 @@ function DR.SyncRoster()
 				c.name, c.gone = m.name, nil
 				if RANK[c.state] < RANK.joined and not c.cameWith then
 					if c.state == "invited" then DR.inviteMisses = 0 end
-					-- (SPEC5 farelock, review #6: the fare stays the one locked when they asked)
+					-- (the fare stays the one locked when they asked)
 					c.joinedAt = now
 					if c.wuberPrice then c.price = c.wuberPrice end
-					-- (BRIEF18 00:53) a lead who asked for another place, invited by hand: the driver's choice, said
+					-- a lead who asked for another place, invited by hand: the driver's choice, said
 					if c.state == "lead" and c.askedFor then
 						DR.Alert(W.Short(c.name) .. " joined, but asked for " .. c.askedFor .. ".", "info")
 					end
 					DR.SetState(c, "joined")
 				end
 			elseif DR.moved[m.key] and DR.moved[m.key].invited and now - (DR.moved[m.key].at or now) < DR.MOVED_TTL then
-				-- (BRIEF18 b) the invite for a place we left, accepted late: not a rider (owed the sorry whisper)
+				-- the invite for a place we left, accepted late: not a rider (owed the sorry whisper)
 				DR.ignored[m.key] = true
 			elseif isOpen and not DR.ignored[m.key] and DR.Role() == "driver" then
 				fresh[#fresh + 1] = m
@@ -1206,7 +1206,7 @@ local function applyPaid(c, key, from, mine, a, b, c3, now)
 	if c.paid >= price or byHand or o().acceptUnder then
 		c.short = nil
 		if RANK[c.state] < RANK.paid then
-			-- 2.3.0 (SPEC7 5.8): a 2.3.0 app rider in the group who paid by trade before arriving is
+			-- 2.3.0: a 2.3.0 app rider in the group who paid by trade before arriving is
 			-- still summoned; "paid" once here (QueueTick), so a ride that fails first can earn a raincheck
 			if not byHand and RANK[c.state] >= RANK.joined and RANK[c.state] < RANK.arrived
 				and W.VerAtLeast and W.VerAtLeast(c.wuberVer, "2.3.0") then
@@ -1222,7 +1222,7 @@ local function applyPaid(c, key, from, mine, a, b, c3, now)
 	DR.Changed()
 end
 
--- A crew window's locked fare for a rider (ASK / ST, SPEC5 farelock): every window bills
+-- A crew window's locked fare for a rider (ASK / ST, ): every window bills
 -- the same fare, whatever the price is now.
 local function lockPrice(c, price)
 	price = W.Int(price)
@@ -1245,7 +1245,7 @@ local function applyState(c, key, mine, a, b, c3, d, e, f, price, ride)
 	if not c then c = create(W.UnitName(DR.units[key]) or a, "joined", "group") end
 	if not c then return end
 	lockPrice(c, price)
-	-- 2.3.0 (SPEC7 5.7, 5.8): the ride id (field 9) and a fare a raincheck lowered (flag v: any amount)
+	-- 2.3.0: the ride id (field 9) and a fare a raincheck lowered (flag v: any amount)
 	if ride and not c.wuberRide and ride:match("^%a%a%a%a%a%a$") then c.rideId = ride end
 	if price and (f or ""):find("v", 1, true) then c.price = math.max(0, math.min(99999999, price)) end
 	if RANK[b or ""] and RANK[b] > RANK[c.state] then
@@ -1279,7 +1279,7 @@ local function namedCaster(v)
 	return (m and m.role == "lock") and k or nil
 end
 
--- DRIVE_RITUAL (2.3.0, SPEC7 5.10): a step of a rider's summon, in every crew window, from the
+-- DRIVE_RITUAL (2.3.0): a step of a rider's summon, in every crew window, from the
 -- facts: t greeted, c casting, h a helper clicked (data.helper, data.tapped), s summoned, f failed
 local function ritual(c, phase, data)
 	data.key, data.rider, data.caster, data.ride = c.key, c.name, c.caster, c.wuberRide or c.rideId
@@ -1301,7 +1301,7 @@ function DR.Apply(kind, from, a, b, c3, d, e, f, g, h, i, j, k)
 		if not mine then
 			local was = DR.char().paused == true
 			DR.char().paused = a == "1"
-			-- a crew mate's Resume does what a local one does (SPEC5 resume, review #17): the
+			-- a crew mate's Resume does what a local one does: the
 			-- away guard's marks go, the queue is invited, the screens hear it
 			if was and not DR.char().paused then
 				DR.driverActAt = GetTime() -- a crew Resume restarts the away clock too (as DR.SetPaused does)
@@ -1329,7 +1329,7 @@ function DR.Apply(kind, from, a, b, c3, d, e, f, g, h, i, j, k)
 		return
 	elseif kind == "ASK" then
 		if mine or not a or not open() then return end
-		-- (SPEC5 farelock: ASK's fourth field is the fare the hearing window locked)
+		-- (ASK's fourth field is the fare the hearing window locked)
 		local fare = W.Int(d)
 		-- the station a crew window routed the rider to (ASK's third field)
 		local function station(c)
@@ -1416,7 +1416,7 @@ function DR.Apply(kind, from, a, b, c3, d, e, f, g, h, i, j, k)
 		applyPaid(c, key, from, mine, a, b, c3, now)
 		return
 	elseif kind == "IOU" then
-		-- 2.3.0 (SPEC7 5.8): the raincheck book's facts (Drive.Raincheck)
+		-- 2.3.0: the raincheck book's facts (Drive.Raincheck)
 		if DR.RaincheckFact then DR.RaincheckFact(from, mine, a, b, c3, d, e, f) end
 		return
 	end
@@ -1424,7 +1424,7 @@ function DR.Apply(kind, from, a, b, c3, d, e, f, g, h, i, j, k)
 	if not c then return end
 
 	if kind == "CAST" then
-		-- b: the summoner without Wuber whose cast a crew window saw (SPEC4 1.1)
+		-- b: the summoner without Wuber whose cast a crew window saw
 		c.caster, c.castAt, c.endSeen = namedCaster(b) or from, now, nil
 		c.tries = (c.tries or 0) + 1
 		c.priority, c.helps, c.awayAt, c.called, c.calledAt = nil, nil, nil, nil, nil
@@ -1453,7 +1453,7 @@ function DR.Apply(kind, from, a, b, c3, d, e, f, g, h, i, j, k)
 			ritual(c, b == "1" and "s" or "f", { mine = mine })
 		end
 	elseif kind == "HELP" then
-		-- b (2.3.0, SPEC7 5.5): a helper without Wuber the caster's (or the network driver's)
+		-- b (2.3.0): a helper without Wuber the caster's (or the network driver's)
 		-- window saw hold the portal; believed only during that rider's summon, for a group member
 		local hk = from
 		-- (H24-12) still this summon for a few seconds after its END, so a late HELP counts in every window
@@ -1489,7 +1489,7 @@ function DR.Apply(kind, from, a, b, c3, d, e, f, g, h, i, j, k)
 end
 
 ---------------------------------------------------------------------------
--- The place a rider asked for (BRIEF18, 20 Nov 00:50: the author hearthed from Undercity to Orgrimmar
+-- The place a rider asked for (the author hearthed from Undercity to Orgrimmar
 -- while open; two riders for Undercity stayed queued and were invited, to be summoned to Orgrimmar)
 ---------------------------------------------------------------------------
 
@@ -1556,7 +1556,7 @@ function DR.PlaceStale(c, served)
 	return not DR.PlaceOK(c, served)
 end
 
--- (BRIEF18, lead review #1) A Warlock who typed a place (Settings, /wuber drive dest) and stood there,
+-- A Warlock who typed a place (Settings, /wuber drive dest) and stood there,
 -- then left it (a hearth, a flight): they summon where they stand now, not to the typed place, and
 -- the console says so. Not with several stations or another chosen summoner (the place is theirs).
 local follow = { at = nil }
@@ -1586,7 +1586,7 @@ local function followMe()
 	return true
 end
 
--- (BRIEF18 b) Riders for a place we left go, once the new place has held DR.PLACE_SETTLE seconds
+-- Riders for a place we left go, once the new place has held DR.PLACE_SETTLE seconds
 -- (force: at once - Close/Open, a place set by hand). Only the window that invites decides (the
 -- others hear DROP). A rider we told something (an invite, a whisper) is owed the sorry whisper;
 -- one in the group stays there, ignored. Returns how many went.
@@ -1601,7 +1601,7 @@ function DR.PlaceSweep(force)
 	local several = multi()
 	for _, c in ipairs(DR.Sorted()) do
 		local s = c.state
-		-- (BRIEF18) a request made while the place was not known: for the place we serve now
+		-- a request made while the place was not known: for the place we serve now
 		if not c.forPlace and (s == "queued" or s == "invited" or s == "joined") then
 			c.forPlace = (several and c.station) or served[1]
 		end
@@ -1687,7 +1687,7 @@ function DR.QueueTick(now)
 				c.arrivedAt = now
 				DR.SetState(c, "arrived")
 				if c.prepaid and c.state == "arrived" then
-					-- 2.3.0 (SPEC7 5.8): paid by trade before arriving: paid now
+					-- 2.3.0: paid by trade before arriving: paid now
 					c.prepaid = nil
 					DR.session.rides = DR.session.rides + 1
 					DR.SetState(c, "paid")

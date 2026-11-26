@@ -1,5 +1,5 @@
 local T = ...
--- AUD-194 (Google C59r-2): ticking a Warlock with Wuber who is already in the captain's crew sent a
+-- AUD-194 (a reviewer C59r-2): ticking a Warlock with Wuber who is already in the captain's crew sent a
 -- crew card his window drops (it is already in that crew), so he never became a summoner. Now the
 -- tick (Pick summoners, and DR.RaidPick) makes him a summoner at once.
 local H, test, eq, ok, list = T.H, T.test, T.eq, T.ok, T.list

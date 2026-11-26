@@ -192,7 +192,7 @@ local function mapPin(m, i)
 		-- (design 4) Wuber's own tip card (T.TipShow); the words are as they were
 		local lines = {}
 		if d.creator then lines[#lines + 1] = { "Wuber founder", "gold" } end
-		local look = T.PioneerLook(d.key) -- (BRIEF15) the shipped list only
+		local look = T.PioneerLook(d.key) -- the shipped list only
 		if look then lines[#lines + 1] = { T.PIONEER[look].tip, T.PIONEER[look].colour } end
 		lines[#lines + 1] = d.name .. " · to " .. d.dest
 		lines[#lines + 1] = { money(d.price), "gold" }
@@ -532,7 +532,7 @@ local function updateMap(m, list)
 end
 
 ---------------------------------------------------------------------------
--- Docking into an unfolded side pane (SPEC7 2.8) and back
+-- Docking into an unfolded side pane and back
 ---------------------------------------------------------------------------
 
 -- (p242 r3 F) top 44, not 32: the window's round buttons (fold, cog, x) run from 12 to 44 down the pane, so a map that

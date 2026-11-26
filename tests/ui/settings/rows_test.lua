@@ -1,4 +1,4 @@
--- Tests of UI.Settings.Rows (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of UI.Settings.Rows (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. Driving's rows sit under a heading that fits them.
 -- Round 13, A, I7: a row's name and line never run under its button or switch; in every section,
 -- folded and unfolded, each label ends before the control on its row, and its words fit the room it has.
@@ -191,7 +191,7 @@ test("ui.settings.rows: R4 review #6 the warning can't be shown: the switch stay
 	T.clean(w)
 end)
 
--- (BRIEF22 T1) summons are paid: the footer never calls Wuber free
+-- summons are paid: the footer never calls Wuber free
 test("ui.settings.rows: BRIEF22 T1 the footer does not call Wuber free", function()
 	local w = T.newWorld()
 	local d = T.driver(w, T.BOB)

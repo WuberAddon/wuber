@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Draw (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of UI.Driver.Draw (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. The console drawn each refresh: the unfolded console lists
 -- the riders once (the side pane), what riders want shows folded, the crew's shard total, and the
 -- controls that can't be used while closed look dimmed. The engine's queue is stubbed.

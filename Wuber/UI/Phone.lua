@@ -161,14 +161,14 @@ local function sideKey(ph, side, y, len)
 	return k
 end
 
--- The fold button (SPEC7 2.5): shown on the pages that unfold, painted by UI.Fold (glyph, dimmed
+-- The fold button: shown on the pages that unfold, painted by UI.Fold (glyph, dimmed
 -- when there's no room or in combat, its tip). Built left of the signal bars; (round 9, S16)
 -- UI.Window then docks it in the app header, a round button left of Settings (b:Dock), so it is
 -- plain to see folded and unfolded.
 local FOLD_TIP = {
 	small = "Not enough room to unfold. Make the game window wider or Wuber smaller (Settings > Window size).",
 	combat = "After combat",
-	-- (BRIEF19 R6) at its default place the wide window would cover the chat box (UI.Fold)
+	-- at its default place the wide window would cover the chat box (UI.Fold)
 	chat = "Kept narrow so it doesn't cover your chat box.",
 }
 local function foldButton(bar, right)

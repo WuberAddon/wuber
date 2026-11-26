@@ -466,7 +466,7 @@ end
 local function centre(W)
 	local win = winOf(W)
 	if not win or lockdown() then return false end
-	-- (BRIEF20, B4) Wuber's own default place: no saved position (W.db.pos is put back after the tour), then
+	-- Wuber's own default place: no saved position (W.db.pos is put back after the tour), then
 	-- UI.PlaceWindow, so every shot shows where a new player's phone really stands. The old centring stays
 	-- only for a Wuber without PlaceWindow.
 	if fn(W.UI, "PlaceWindow") and type(W.db) == "table" then

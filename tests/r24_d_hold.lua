@@ -1,4 +1,4 @@
--- (BRIEF24 F1) The harness holds a texture's own alpha (Region:SetAlpha) under an Alpha animation, as it holds
+-- The harness holds a texture's own alpha (Region:SetAlpha) under an Alpha animation, as it holds
 -- its SetVertexColor alpha: the in-game alpha probe of 20 Nov showed the game drops both while an Alpha animation
 -- plays on the texture or a frame above it (A.SlideIn, A.ZoomIn, fades). Round 22's G1 moved several looks to
 -- region alpha (card glow, hero glow and rim, rune ring, search wash fade, map routes), which the fake did not

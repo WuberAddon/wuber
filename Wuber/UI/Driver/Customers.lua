@@ -2,7 +2,7 @@
 -- Purpose: the customer book on the driver's console (round 9, Y1 and Y3): the row menu's "Get Wuber",
 --   "Note..." and "Gifted" items, the note and gift marks on queue rows and their tooltip lines, the
 --   Note sheet (the note, the Gifted stamp, the facts from the log) and the Customers screen (search,
---   newest ride first; the footer's Customers link). (BRIEF17) Where "Get Wuber" isn't offered, the
+--   newest ride first; the footer's Customers link). Where "Get Wuber" isn't offered, the
 --   menu, the Note sheet and the Customers pane say why; the list says it scrolls; Save says only
 --   what it did, and an empty Save over a note asks once before it removes it.
 -- API: D.CustomerMenu, D.CustomerPick, D.CustomerTip, D.PaintMarks, D.CustomerFacts, D.CrewOwnMark,
@@ -10,8 +10,8 @@
 --   (design 4, H) a rider who left owing gets one more pill on the Note sheet and the side pane (Advanced only):
 --   "Don't serve again until <date>" (Drive.Book's DR.ServeHold: the driver's own, never sent), a click sets or lifts it
 -- Internals: SERVE (its words), serveLook, serveClick, dayText, factsText, noteRow, giftOf, giftLook / giftTip (round 13: the tick and "a free ride"),
---   liveCustomer (BRIEF19 F4: the queue's own customer, for the right pane's Invite to Wuber pill),
---   savedFlash / savedReset (Save says "Saved"), askPaint (BRIEF20 B1: "Remove note?" is its own pill,
+--   liveCustomer (the queue's own customer, for the right pane's Invite to Wuber pill),
+--   savedFlash / savedReset (Save says "Saved"), askPaint ("Remove note?" is its own pill,
 --   shown or hidden), appWhy / APP_WHY (why no "Get Wuber"), saveNote (one
 --   Save's outcome), scrollCue (the Customers list's "Scroll for N more"),
 --   r.shownTip (a row's tooltip follows a note saved under it); Mod.WhyInvite (/wuber why: why the Invite
@@ -48,7 +48,7 @@ local S, N = W.Str, W.Num
 local function adv() return type(W.Advanced) ~= "function" or W.Advanced() == true end
 
 local LIST_MAX = 100 -- rows drawn on the Customers screen (search for the rest)
-local REMOVE_SECS = 5 -- (BRIEF17 B1) an empty Save over a note asks this long ("Remove note?")
+local REMOVE_SECS = 5 -- an empty Save over a note asks this long ("Remove note?")
 local SAVED_SECS = 2 -- a Save says "Saved" with a tick this long (round 12)
 local SAVED_CLOSE = 1.2 -- the folded Note sheet closes this long after its Save
 local ROW_H = 54
@@ -96,7 +96,7 @@ local function getappWords(state)
 	return "Send \"Get Wuber\"", "Your next big-button click whispers how to get Wuber"
 end
 
--- (BRIEF17 B3) why "Get Wuber" isn't offered (DR.GetAppState), as the menu line and its sub
+-- why "Get Wuber" isn't offered (DR.GetAppState), as the menu line and its sub
 local APP_WHY = {
 	app = { "Already uses Wuber", "No need to tell them about it" },
 	crew = { "Already uses Wuber", "One of your crew" },
@@ -179,7 +179,7 @@ function D.CustomerMenu(s, list, item, c)
 		s.items.getapp.sub:SetText(sub)
 		add[#add + 1] = "getapp"
 	elseif APP_WHY[state] then
-		-- (BRIEF17 B3) not offered: a quiet line says why, so the item never just vanishes
+		-- not offered: a quiet line says why, so the item never just vanishes
 		local why = APP_WHY[state]
 		if not s.items.getappwhy then
 			item("getappwhy", why[1], why[2], "portal", "muted")
@@ -213,7 +213,7 @@ end
 function D.CustomerPick(s, id)
 	local c = s.c
 	if id == "getapp" then
-		D.ToggleGetApp(c) -- (BRIEF17 B2) the same as the row's pill (UI.Driver.Rows)
+		D.ToggleGetApp(c) -- the same as the row's pill (UI.Driver.Rows)
 		s.frame:Close()
 		D.Refresh(true)
 		return true
@@ -336,7 +336,7 @@ end
 -- Round 12 (TEST-FINDINGS-1119 item 6: "not sure it saved"): a Save that kept the note says so on the
 -- button itself, "Saved" with a tick for SAVED_SECS, then "Save" again (the label and an icon only,
 -- nothing scaled).
--- (BRIEF20 B1) "Remove note?" is its own pink pill, shown or hidden over the hidden fill: never an
+-- "Remove note?" is its own pink pill, shown or hidden over the hidden fill: never an
 -- alpha change. In the game a fill kept its alpha when it changed while not drawn (the sheet shut while
 -- it asked, then another note opened): Save came back pale (the ask's alpha, 0.16).
 local function askPaint(btn)
@@ -384,7 +384,7 @@ local function savedFlash(btn)
 	return token
 end
 
--- (BRIEF17 B1) One Save of the note box for name, on its Save button btn. It says only what it did:
+-- One Save of the note box for name, on its Save button btn. It says only what it did:
 -- "Nothing to save" (empty, no note), "No changes to save" (the kept words), and an empty box over a
 -- kept note (cleared by hand, or by mistake) only asks on the first click ("Remove note?", for
 -- REMOVE_SECS); the second removes it. Returns "saved", "removed", "same", "empty", "ask", or false
@@ -545,7 +545,7 @@ D.screens.note = function(parent)
 	end
 	s.enter = function(c)
 		s.name = S(type(c) == "table" and c.name or c) or "?"
-		local why = appWhy(s.name, true, c) -- (BRIEF17 B3) why no "Get Wuber", in the header
+		local why = appWhy(s.name, true, c) -- why no "Get Wuber", in the header
 		sh:SetTitle(s.name, why and ("Your note · " .. why) or "Your note")
 		s.facts:SetText(factsText(s.name))
 		local rec = entry(s.name)
@@ -590,11 +590,11 @@ local function buildSide(p)
 	p.gift = T.Pill(c, "Gifted", "dark", 156, 36)
 	p.gift:SetPoint("TOPLEFT", c, "TOPLEFT", PAD + SIDE_W - 156, -214)
 	T.Tip(p.gift, "Gifted", function() return giftTip(giftOf(p.name)) end)
-	-- (BRIEF17 B3) their Wuber, under Save | Gifted: why "Get Wuber" isn't offered, or that it waits
+	-- their Wuber, under Save | Gifted: why "Get Wuber" isn't offered, or that it waits
 	p.app = T.Text(c, "caption", "muted", "LEFT", "medium")
 	p.app:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -262)
 	p.app:SetWidth(SIDE_W)
-	-- (BRIEF19 F4) the Invite to Wuber action, as the queue row's pill (D.ToggleGetApp), for a rider in the queue
+	-- the Invite to Wuber action, as the queue row's pill (D.ToggleGetApp), for a rider in the queue
 	p.invite = T.Pill(c, "Invite to Wuber", "dark", SIDE_W, 36)
 	p.invite:SetPoint("TOPLEFT", c, "TOPLEFT", PAD, -262)
 	T.Tip(p.invite, function() return p.inviteQueued and "Next click sends" or "Invite to Wuber" end, function()
@@ -645,7 +645,7 @@ local function paintSide(p, name)
 	setShown(p.none, not has)
 	serveLook(p.serve, has and name or nil)
 	local why = has and appWhy(name) or nil
-	-- (BRIEF19 F4) "Get Wuber" state: ok / queued is the Invite pill (a rider in the queue; a past customer
+	-- "Get Wuber" state: ok / queued is the Invite pill (a rider in the queue; a past customer
 	-- has no one to whisper now), anything else says why not
 	local lc = has and liveCustomer(name) or nil
 	local st2 = lc and dr("GetAppState", lc, true) or nil
@@ -733,7 +733,7 @@ local function custRow(parent)
 		local lines = { factsText(e.name) }
 		if S(e.note) then lines[#lines + 1] = "Note: " .. e.note end
 		if N(e.gift) then lines[#lines + 1] = "Gifted on " .. (dayText(e.gift) or "?") .. ": you gave them a ride as a gift." end
-		local why = appWhy(e.name) -- (BRIEF17 B3)
+		local why = appWhy(e.name)
 		if why then lines[#lines + 1] = why .. "." end
 		lines[#lines + 1] = " "
 		lines[#lines + 1] = isWide() and "Click: their note on the right." or "Click: the note and the Gifted stamp."
@@ -751,10 +751,10 @@ local function subLines(text)
 	return ok and N(n) or 1
 end
 
--- (BRIEF17 S6) "Scroll for 3 more" over the list's bottom edge while rows are hidden below it (the
+-- "Scroll for 3 more" over the list's bottom edge while rows are hidden below it (the
 -- soft fade alone read as a cut-off row). Never takes the mouse; checked 5 times a second.
 local CUE_LIFT = 45 -- frame levels above the list (its fades sit at 40)
-local CUE_CLEAR = 30 -- (BRIEF19 F4) the cue's height plus its gap: a row reaching into it is hidden, not sliced
+local CUE_CLEAR = 30 -- the cue's height plus its gap: a row reaching into it is hidden, not sliced
 
 local function scrollCue(s)
 	local sc = s.scroll
@@ -768,7 +768,7 @@ local function scrollCue(s)
 		local row = s.pool.list[i]
 		local cut = cueOn and (row and row.top or 46 + (i - 1) * ROW_H) + (row and N(row:GetHeight()) or ROW_H - 6) > edge - CUE_CLEAR + 0.5
 		if cut then below = below + 1 end
-		-- (BRIEF19 F4) a row that would peek out under the "Scroll for N more" pill is hidden whole
+		-- a row that would peek out under the "Scroll for N more" pill is hidden whole
 		if row and row.SetAlpha and row.cutAlpha ~= (cut and 0 or 1) then
 			row.cutAlpha = cut and 0 or 1
 			row:SetAlpha(row.cutAlpha)

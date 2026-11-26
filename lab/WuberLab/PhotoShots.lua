@@ -284,7 +284,7 @@ function L.PhotoReset(W)
 	omUnfit()
 	closeWorldMap()
 	local tour = K.tour()
-	if tour then tour.alt = nil end -- (BRIEF20 B9) back to the demo log
+	if tour then tour.alt = nil end -- back to the demo log
 	-- (job 041) the "Skip the bird" card the tour showed goes with its shot
 	if tour and tour.bird then
 		tour.bird = nil
@@ -461,7 +461,7 @@ local function demoLog(W)
 	end
 	local d = type(W.db) == "table" and W.db.drive
 	if type(d) ~= "table" then return nil end
-	-- (BRIEF20 B9) t.alt: a shot with its own log (earnings_empty, earnings_tips). The Customers and Cut
+	-- t.alt: a shot with its own log (earnings_empty, earnings_tips). The Customers and Cut
 	-- stubs ask for the demo log all the time, and each ask used to put the full one back (the real game's
 	-- "empty" Earnings showed 65 rides): while t.alt is set it is the log, until L.PhotoReset clears it.
 	local want = t.alt or t.demoLog
@@ -617,7 +617,7 @@ local function console(W, opts)
 end
 
 -- (round 13, I13) while the big button summons Dan, his row says so too ("summoning (you)")
--- caster: who is casting (default me); "vex ember" for the states that say Vex Ember is casting (BRIEF20 B5)
+-- caster: who is casting (default me); "vex ember" for the states that say Vex Ember is casting
 local function summoningDan(W, caster)
 	local q = demoQueue()
 	q[1].state, q[1].caster = "summoning", caster or W.myKey or "anita lift"
@@ -646,7 +646,7 @@ local function earningsScreen(W)
 end
 
 -- mode: false (the full demo log), "empty" (a new driver: nothing logged) or "sparse" (a little history: the
--- "Open a few hours" and "Try ..." tips). (BRIEF20 B9) The log is the tour's t.alt, so the Customers / Cut
+-- "Open a few hours" and "Try ..." tips). The log is the tour's t.alt, so the Customers / Cut
 -- stubs can't put the full demo back (the real game showed the full week for "empty"), and the heatmap's
 -- tapped square from the shot before is let go.
 local function earningsBase(W, mode)
@@ -748,7 +748,7 @@ end
 -- The shots, in order (the README's list)
 ---------------------------------------------------------------------------
 
--- (BRIEF20 B9) Settings' own search, then its first match with this name opened and scrolled to (as a tap on it)
+-- Settings' own search, then its first match with this name opened and scrolled to (as a tap on it)
 function L.PhotoOpenSetting(UI, P, label)
 	if not (P and fn(P, "search") and fn(P, "openResult")) then return "no settings search" end
 	P.search(label)
@@ -762,7 +762,7 @@ function L.PhotoOpenSetting(UI, P, label)
 	return true
 end
 
--- (BRIEF20 B9) the Customers page's right pane for a rider: its own picked row
+-- the Customers page's right pane for a rider: its own picked row
 function L.PhotoPickCustomer(W, name)
 	local d = type(W.UI.drive) == "table" and W.UI.drive
 	local s = d and type(d.screens) == "table" and d.screens.customers
@@ -1447,7 +1447,7 @@ L.PHOTO_SCREENS = {
 		if r ~= true then return r end
 		return driveScreen(W, "customers")
 	end },
-	-- (BRIEF20 B9) wide Customers with a rider who is in the queue picked: the right pane offers "Invite to Wuber"
+	-- wide Customers with a rider who is in the queue picked: the right pane offers "Invite to Wuber"
 	{ id = "customers_queued", side = "driver", only = "unfolded", title = "Customers, wide: a queued rider picked, the Invite to Wuber pill", run = function(W)
 		local r = openConsole(W)
 		if r ~= true then return r end
@@ -1517,7 +1517,7 @@ L.PHOTO_SCREENS = {
 		post = function(W) return tapHour(W) end },
 	-- (r18, 01:00) rides logged but no three-hour top window yet: the "Open a few hours..." and "Try ..." tips must both stay inside the pane
 	{ id = "earnings_tips", side = "driver", unfold = true, title = "Earnings: the tip strip under the heatmap (no top window yet)", run = function(W)
-		-- (BRIEF20 B9) a sparse log, so Wuber's own TopWindow has none: the tip is true, not a stub
+		-- a sparse log, so Wuber's own TopWindow has none: the tip is true, not a stub
 		local r, e = earningsBase(W, "sparse")
 		if r ~= true then return r end
 		scrollTo(e, true)
@@ -1610,7 +1610,7 @@ L.PHOTO_SCREENS = {
 				return true
 			end)
 		end },
-	-- (BRIEF20 B9) the bug report where a player looks for it, and the one Driving switch that asks first
+	-- the bug report where a player looks for it, and the one Driving switch that asks first
 	{ id = "settings_bug", side = "settings", unfold = true, title = "Settings: Report a bug (in This window)", run = function(W)
 		return settings(W, function(UI, P) return L.PhotoOpenSetting(UI, P, "Report a bug") end)
 	end },
@@ -1635,7 +1635,7 @@ L.PHOTO_SCREENS = {
 		if not W.UI.OpenHelp("settings") then return "the help page didn't open" end
 		return true
 	end },
-	-- (BRIEF20 B9) Help's last part, "Something not working?" with its Report a bug pill (the page scrolled to its end)
+	-- Help's last part, "Something not working?" with its Report a bug pill (the page scrolled to its end)
 	{ id = "help_bug", side = "settings", unfold = true, title = "Help: Something not working? Report a bug (the page's end)", run = function(W)
 		local r = settings(W)
 		if r ~= true then return r end
@@ -1664,7 +1664,7 @@ L.PHOTO_SCREENS = {
 				return true
 			end)
 		end },
-	-- (BRIEF20 B9) the /wuber bug window
+	-- the /wuber bug window
 	{ id = "bug_window", side = "settings", video = true, title = "/wuber bug: the report to copy", run = function(W)
 		local B = W.UI.Bug
 		if type(B) ~= "table" or not fn(B, "Open") then return "W.UI.Bug.Open is missing" end
@@ -1818,7 +1818,7 @@ local function floating(W, o)
 		or (o.queue == "summoning_vex" and summoningDan(W, "vex ember") or demoQueue()))
 	local r = console(W, { open = o.open ~= false, queue = q, plan = o.plan })
 	if r ~= true then return r end
-	-- (BRIEF20 B5) the demo agrees with the title: no shards means the gauge says 0; a crew helper is not a
+	-- the demo agrees with the title: no shards means the gauge says 0; a crew helper is not a
 	-- Warlock (no shards of its own, the Warlocks' gauge, "Warlocks pause"). driverBase resets these next shot.
 	if o.shards ~= nil then
 		stub(DR, "Shards", function() return o.shards end)

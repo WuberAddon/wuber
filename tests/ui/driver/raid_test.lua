@@ -1,5 +1,5 @@
 -- Tests of UI.Driver.Raid (the raid summons console). Loaded by tests/run.lua with its helper table T.
--- Round 17 (BRIEF17 S6): the folded (narrow) raid page says when raiders or "Not here" are below
+-- Round 17: the folded (narrow) raid page says when raiders or "Not here" are below
 -- the list's edge ("+N more below", "Not here (N) below"), and a tap scrolls to them.
 local T = ...
 local H, test, eq, ok = T.H, T.test, T.eq, T.ok

@@ -1,4 +1,4 @@
--- Tests of the layout checker's engine (tests/layout/engine.lua, tools/layout-check.lua; BRIEF21 S11) on small
+-- Tests of the layout checker's engine (tests/layout/engine.lua, tools/layout-check.lua) on small
 -- made-up screens: each rule fires on its own bad layout and stays quiet on a good one. Run by the suite
 -- (tests/run.lua loads it with its helper table T: test, eq, ok, H, newWorld; lua tests/run.lua "layout engine"),
 -- or standalone: lua tools/layout-check.lua --selftest
@@ -95,7 +95,7 @@ test("layout engine: a text cut short ('...'), one cut on purpose (wuberEllipsis
 	ok((k.offscreen or 0) >= 1, "off the screen")
 end)
 
--- (BRIEF22 L1) a "Scroll for more" cue under blank space is an empty view; under a drawn card (the heatmap's
+-- a "Scroll for more" cue under blank space is an empty view; under a drawn card (the heatmap's
 -- squares: no text right above the cue) it is not
 test("layout engine: a scroll cue under blank space is emptycue; under a drawn card it is not", function()
 	for _, card in ipairs({ false, true }) do
@@ -109,7 +109,7 @@ test("layout engine: a scroll cue under blank space is emptycue; under a drawn c
 	end
 end)
 
--- (BRIEF22 L6) the portal art's see-through rim (E.ART_RIM): a title 3 units under its box sits beside it; under a
+-- the portal art's see-through rim (E.ART_RIM): a title 3 units under its box sits beside it; under a
 -- solid card's edge it is under
 test("layout engine: a text just under the portal art's see-through rim is not under it; under a solid card it is", function()
 	for _, art in ipairs({ true, false }) do

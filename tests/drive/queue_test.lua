@@ -530,7 +530,7 @@ end)
 
 
 ---------------------------------------------------------------------------
--- BRIEF19 R4: inviting public chat buyers is off by default, and on only after a warning
+-- inviting public chat buyers is off by default, and on only after a warning
 ---------------------------------------------------------------------------
 
 local WARNING = "Wuber reads public chat channels (Trade, LookingForGroup, Services, World, General) and invites players who seem to want your place. It can misread messages,"
@@ -761,7 +761,7 @@ test("drive.queue: H2 the public-invites warning is body-sized at UI scales 0.71
 end)
 
 ---------------------------------------------------------------------------
--- BRIEF23 H4: P1 proved for whispers (the author's live test: "any summoon to loch moodan?" whispered to a
+-- P1 proved for whispers (the author's live test: "any summoon to loch moodan?" whispered to a
 -- driver at 16:00 and she did not invite; unknown whether "Invite riders who whisper me" was on).
 -- Path: CHAT_MSG_WHISPER -> onWhisper -> DR.Classify -> DR.Request (DR.AskedPlaces) or DR.Lead.
 ---------------------------------------------------------------------------

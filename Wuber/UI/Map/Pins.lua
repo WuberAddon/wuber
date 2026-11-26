@@ -227,7 +227,7 @@ local function Tooltip(pin)
 	local function add(words, colour) lines[#lines + 1] = { words, colour } end
 	if service ~= name then add(name, "muted") end
 	if pin.creator then add("Wuber founder", "gold") end
-	-- (BRIEF15) a Pioneer: the shipped list only (Theme.Widgets' T.PioneerLook; a founder: none)
+	-- a Pioneer: the shipped list only (Theme.Widgets' T.PioneerLook; a founder: none)
 	local look = type(Th.PioneerLook) == "function" and Th.PioneerLook(pin.key) or nil
 	local spec = look and type(Th.PIONEER) == "table" and Th.PIONEER[look] or nil
 	-- the theme's Pioneer colour, as the badge and the app's map panel (UI.Rider.HomeMap)

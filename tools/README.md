@@ -7,7 +7,7 @@ Check and helper tools for working on Wuber. Run them from the repository root o
 - `lua5.1 tools/perf-audit.lua [--role driver|rider|control] [--minutes N] [--profile|--funcs] [--out path]`: an hour of simulated play (a busy driver with six riders, or a rider with a booking; the map open; 200 public chat lines a minute) in the fake game. Writes Lua KB after login and every 5 minutes, garbage a minute, what each module's tables hold, load KB per file, every timer and OnUpdate (how often, ms a call), the cost of one chat line, and with `--funcs` the CPU by the addon functions up the stack. The fake game's own work is in the numbers: compare runs (a `control` run is the fake alone), do not quote them as game ms.
 
 ## For a pull request
-- `python tools/pr-ready.py --prefix claude/|google/ --title ... --what ... --why ... --test ... [--issue n] [--quick] [--private-list <file>] [--dry-run]`:
+- `python tools/pr-ready.py --prefix claude/ --title ... --what ... --why ... --test ... [--issue n] [--quick] [--private-list <file>] [--dry-run]`:
   from your branch in your own worktree: check.lua, the whole suite in 16 shards (`--quick`: only the tests for the changed
   files), the layout check when a file under `Wuber/UI/` changed, the scrub check of the commit and the pull request text
   (scrub rules and public list from origin/main, plus the private list when given), then push the checked commit to its

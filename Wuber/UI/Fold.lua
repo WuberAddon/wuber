@@ -11,9 +11,9 @@
 --   On PLAYER_REGEN_ENABLED; fires FOLD (unfolded, page) after every completed change
 -- Standalone: no
 -- Test: tests/ui/fold_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 2; owner A)
+-- From: new in Wuber 2.3.0
 --
--- The Fold (SPEC7 2). Folded, the window is today's 360-wide phone, pixel for pixel. Unfolded it
+-- The Fold. Folded, the window is today's 360-wide phone, pixel for pixel. Unfolded it
 -- is 720 wide: the folded page stays in the left (primary) pane - every tab body is 360 wide -
 -- and a second 360 x 544 side pane opens on its right. No crease: the panes are apart only by
 -- their own padding.
@@ -26,10 +26,10 @@
 --     without a registration never unfolds. Pages keep a working folded layout: in combat the
 --     width never changes, so a page may have to draw folded or unfolded either way.
 --   UI.Fold.Page() -> "ride" | "confirm" | "trips" | "settings" | "console" | "raid" |
---     "earnings" | "messages" | "customers" | nil (the window's state only: SPEC7 2.1; customers: round 9)
+--     "earnings" | "messages" | "customers" | nil (the window's state only; customers: round 9)
 --   UI.Fold.IsUnfolded() -> bool       UI.Fold.Pane() -> the side pane (nil before the window)
 --   UI.Fold.Fits() -> bool, "small" | "chat" | "combat" | nil: room at the window's current scale
---     ((720 + 2 x bezel) x scale + 16 <= the screen's width) and not in combat; (BRIEF19 R6) at the
+--     ((720 + 2 x bezel) x scale + 16 <= the screen's width) and not in combat; at the
 --     window's default place (no W.db.pos) the wide phone must also stay off the chat frame (UI.ChatBox;
 --     else "chat": kept narrow)
 --   UI.Fold.Toggle(): the fold button; flips the current page's choice (W.db.fold.pages[page] =
@@ -71,11 +71,11 @@ local UI = W.UI
 local Fold = {}
 UI.Fold = Fold
 
--- the eight pages that unfold (SPEC7 2.1)
+-- the eight pages that unfold
 -- (round 9: + customers, the driver's Customers list, FIXROUND-2.3.0 item 3)
 local PAGES = { ride = true, confirm = true, trips = true, settings = true, console = true, raid = true, earnings = true, messages = true,
 	customers = true }
--- timings (SPEC7 2.4)
+-- timings
 local TW = {
 	unfold = 0.30, widen = 0.28, sideAt = 0.08, side = 0.22, fromX = -40, -- unfold
 	fold = 0.26, sideOut = 0.12, toX = -24, narrowAt = 0.04, narrow = 0.22, -- fold
@@ -172,7 +172,7 @@ local function scaleOf(win)
 	return we / ue
 end
 
--- room for the wide phone at the window's current scale (SPEC7 2.3); false and why ("small",
+-- room for the wide phone at the window's current scale; false and why ("small",
 -- "chat") when there is none
 local function room()
 	local win = ui.win
@@ -180,7 +180,7 @@ local function room()
 	local sw = N(UIParent:GetWidth())
 	if not sw then return false, "small" end
 	if (WIDE_W + 2 * BEZEL) * scaleOf(win) + TW.margin > sw then return false, "small" end
-	-- (BRIEF19 R6) at its default place (none saved) the wide phone never covers the chat frame
+	-- at its default place (none saved) the wide phone never covers the chat frame
 	-- where it would stand (it widens to the right, sliding left at the screen's edge): a square
 	-- game window keeps the narrow one, clear of the chat
 	local c = W.db and W.db.pos == nil and type(UI.ChatBox) == "function" and UI.ChatBox()
@@ -446,7 +446,7 @@ local function unfold(page, instant)
 		if dx > 0 then setLeft(win, x0 - dx, y0) end
 		placeHolder(h, 0, 1)
 		-- saved only when the window really moved (re-anchoring alone changes nothing on screen),
-		-- and (BRIEF20 B4 review) only a place the player chose: Wuber's default place (no W.db.pos)
+		-- and only a place the player chose: Wuber's default place (no W.db.pos)
 		-- is worked out afresh each time, and saving it would make it count as the player's own
 		-- (HUNT-144) the place before the slide and the one saved by it are kept, so folding can put the window back
 		st.shift = nil
@@ -552,7 +552,7 @@ function Fold.Apply(instant)
 	local fits, why = Fold.Fits()
 	local want = (shown and wanted(page) and (fits or why == "combat")) and true or false
 	if inCombat() then
-		-- never a width change in combat (SPEC7 2.6): made when combat ends
+		-- never a width change in combat: made when combat ends
 		if want ~= st.unfolded then st.pending = true end
 		if st.unfolded and page ~= st.page then switchPage(page) end
 		paint(page)

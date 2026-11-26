@@ -1,4 +1,4 @@
--- Tests of the founder gold portal art and moments (SPEC7 5.13; owner G). Loaded by tests/run.lua with its helper table T.
+-- Tests of the founder gold portal art and moments. Loaded by tests/run.lua with its helper table T.
 local T = ...
 local test, eq, ok, H, S = T.test, T.eq, T.ok, T.H, T.S
 
@@ -192,7 +192,7 @@ test("gold moments: hooks on FX.Fullscreen see the moment's own name; gold costs
 end)
 
 ---------------------------------------------------------------------------
--- End to end (SPEC7 5.13): a real ride on the harness, Net.Portal's check (W.FounderSummon), the rider's
+-- End to end: a real ride on the harness, Net.Portal's check (W.FounderSummon), the rider's
 -- Found screen ring (UI.Rider.Ride) and the driver's own cast (Drive.Queue's DRIVE_RITUAL "c")
 ---------------------------------------------------------------------------
 

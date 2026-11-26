@@ -14,7 +14,7 @@
 -- chevron (A.PopPage), inside st.pages (a frame the size of the window that cuts them off); a section is pushed
 -- over the Settings home the same way. In combat the swap is at once (opts.secure). Unfolded, or when the call
 -- itself opens the window, they keep the short slide. A move ends first on a fold, a close, a new open.
--- Unfolded (SPEC7 2.8): the search box and a narrow section list on the left (in the panel), the
+-- Unfolded: the search box and a narrow section list on the left (in the panel), the
 -- chosen section's rows on the right (the scroll area shows only that section's range); a search
 -- shows its matches on the right instead. Help unfolded (H24-07): the page takes the whole pane and wraps again; (older: contents list left, the text right);
 -- the part being read is lit in the list as you scroll or click (2.3.2, I31).
@@ -24,7 +24,7 @@
 -- section key ("riding", "driving", "map", "sound", "window"; "drive" and "bell" = Driving)
 -- opens that section, else the home.
 -- Uses: UI.Settings.Rows, UI.Settings.Find, UI.Settings.Pages, UI.Kit
--- Later: UI.Tips (ShowAgain, else ShowNow: Help's "Show a tip" row), UI.Fold (Register, IsUnfolded: the unfolded layout, SPEC7 2.8 "settings"), FX.Emblem (W.Emblem.Active,
+-- Later: UI.Tips (ShowAgain, else ShowNow: Help's "Show a tip" row), UI.Fold (Register, IsUnfolded: the unfolded layout), FX.Emblem (W.Emblem.Active,
 --   W.Emblem.Mine, W.Emblem.Sweep: the Pioneer emblem rows), UI.Bug (UI.Bug.Open: the "Report a bug" rows)
 -- Events: listens Listen SETTINGS (advanced); fires SETTINGS, PAGE (open, close, help)
 -- Standalone: no
@@ -106,7 +106,7 @@ local function build(win)
 	p.bg = T.Tex(p, "winbg", "BACKGROUND")
 	p.bg:SetAllPoints(p)
 	p.bg:SetTexCoord(0, 504 / 512, 0, (1 - TOP_H / 600) * (840 / 1024))
-	-- 3-slice (SPEC7 2.5): unfolded the panel is 720 wide; folded it draws exactly as before
+	-- 3-slice: unfolded the panel is 720 wide; folded it draws exactly as before
 	p.slices = KitMod.threeSlice(p.bg, p, T.MEDIA .. "winbg", "BACKGROUND", 0, 504 / 512, 0, (1 - TOP_H / 600) * (840 / 1024), 0, 0)
 	p:Hide()
 	st.panel = p
@@ -290,7 +290,7 @@ local function build(win)
 		bbtn.ring:SetPoint("CENTER", bbtn, "CENTER")
 		bbtn.ring:SetVertexColor(T.RGB("glow"))
 		bbtn.ring:Hide()
-		-- (BRIEF22 G1) the ring of a badge not chosen: its own texture, shown or hidden
+		-- the ring of a badge not chosen: its own texture, shown or hidden
 		bbtn.ringOff = T.Tex(bbtn, "ring", "BORDER")
 		bbtn.ringOff:SetSize(size + 4, size + 4)
 		bbtn.ringOff:SetPoint("CENTER", bbtn, "CENTER")
@@ -475,7 +475,7 @@ local function build(win)
 			local wwin = UI.state and UI.state.win
 			if wwin then
 				if UI.ApplyScale then UI.ApplyScale() end
-				-- (BRIEF19 R6) the default place keeps clear of the chat box, like a first open
+				-- the default place keeps clear of the chat box, like a first open
 				if not (UI.PlaceWindow and UI.PlaceWindow()) then
 					wwin:ClearAllPoints()
 					wwin:SetPoint("CENTER", UIParent, "CENTER", 0, 20)
@@ -536,7 +536,7 @@ local function build(win)
 	FindMod.build(p)
 	st.helpRow = st.find.help
 	UI.LayoutSettings()
-	-- the unfolded layout (SPEC7 2.8): registered with the window, built on the first unfold
+	-- the unfolded layout: registered with the window, built on the first unfold
 	local F = UI.Fold
 	if type(F) == "table" and type(F.Register) == "function" then
 		F.Register("settings", { build = Mod.foldBuild, layout = Mod.foldLayout })
@@ -549,7 +549,7 @@ function UI.LayoutSettings()
 	local warlock = isWarlock()
 	-- (HUNT-23) opened from the Drive tab's gear: Driving shows to anyone
 	if st.showDriving then warlock = true end
-	-- any class that runs a service (SPEC4 1.1) or helps in a crew
+	-- any class that runs a service or helps in a crew
 	local role = (not warlock and W.Drive and type(W.Drive.Role) == "function") and call(W.Drive.Role) or nil
 	if role == "helper" or role == "driver" then warlock = true end
 	local adv = type(W.Advanced) == "function" and W.Advanced() == true
@@ -573,7 +573,7 @@ function UI.LayoutSettings()
 		local fy = 0
 		st.about:ClearAllPoints()
 		st.about:SetPoint("TOP", st.winFoot, "TOP", 0, -8)
-		-- (BRIEF15) the Pioneers' credits under the footer, made only when the lists have names
+		-- the Pioneers' credits under the footer, made only when the lists have names
 		local credits = creditsText()
 		if credits and not st.credits then
 			st.credits = T.Text(st.winFoot, "caption", "muted", "CENTER", "regular")
@@ -1043,7 +1043,7 @@ function Mod.helpLayout(w)
 		return h
 	end
 	y = y + row(help.tipRow, help.tipHead, help.tipBody) + 8
-	help.tops[#help.cards + 1] = y -- (BRIEF20 B9) the bug row
+	help.tops[#help.cards + 1] = y -- the bug row
 	y = y + row(help.bugRow, help.bugHead, help.bugBody) + 16
 	c:SetHeight(y)
 	help.height = y
@@ -1175,7 +1175,7 @@ function UI.ScrollHelp(delta)
 end
 
 ---------------------------------------------------------------------------
--- Unfolded (SPEC7 2.8 "settings"): the sections left, the chosen section's rows right. The
+-- Unfolded: the sections left, the chosen section's rows right. The
 -- scroll area moves into the Fold's side pane and shows only that section's range; folded it
 -- goes back exactly as it was. Help unfolded: its contents list left, the text right.
 ---------------------------------------------------------------------------
@@ -1361,7 +1361,7 @@ function Mod.openResult(m)
 		st.content:SetPoint("TOPLEFT", st.clip, "TOPLEFT", 0, st.scroll)
 	end
 	snap()
-	if W.After then W.After(0.05, function() if st.view == "section" and st.sec == m.key and (snapped == nil or st.scrollTarget == snapped) then snap() end end) end -- (BRIEF25 I) not over a scroll made since
+	if W.After then W.After(0.05, function() if st.view == "section" and st.sec == m.key and (snapped == nil or st.scrollTarget == snapped) then snap() end end) end -- not over a scroll made since
 	FindMod.flash(m.rec and m.rec.frame)
 end
 
@@ -1422,7 +1422,7 @@ function Mod.foldBuild(holder)
 	nav.help.mark:SetPoint("RIGHT", nav.help, "RIGHT", -14, 0)
 	nav.help.mark:SetText("?")
 	safeScript(nav.help, "OnClick", function() UI.OpenHelp("settings") end)
-	-- (BRIEF20 B9) the bug report, a link under Help
+	-- the bug report, a link under Help
 	nav.bug = navRow(nav, "bug", "Report a bug", "Opens a short report to copy. Nothing is sent.", WIDE.navW - PAD)
 	nav.bug.label:SetTextColor(T.RGB("glow"))
 	nav.bug.bar:Hide()

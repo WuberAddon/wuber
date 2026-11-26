@@ -60,7 +60,7 @@ function DR.Selling()
 	return DR.crewOpen == true
 end
 
--- Sell or raid mode (SPEC4 3): the runner's choice; a crew member follows the runner's CFG.
+-- Sell or raid mode: the runner's choice; a crew member follows the runner's CFG.
 function DR.Mode()
 	local ch = DR.char()
 	if ch.captain ~= "" then return DR.crewMode == "raid" and "raid" or "sell" end
@@ -95,7 +95,7 @@ function DR.SetOpen(on)
 	ch.drive = on
 	if not on then DR.adReminded, DR.adDue = nil, nil end -- a later shift gets its own reminder
 	if DR.SyncRoster then DR.SyncRoster() end
-	-- (BRIEF18 d) Close/Open: riders for a place we no longer serve go now (Drive.Queue)
+	-- Close/Open: riders for a place we no longer serve go now (Drive.Queue)
 	if DR.PlaceSweep then DR.PlaceSweep(true) end
 	DR.SendConfig()
 	if was ~= on then W.Fire("SETTINGS", "drive") end
@@ -112,7 +112,7 @@ function DR.SetOpen(on)
 end
 
 -- Pause: no new invites in any crew window; the rides going on carry on.
--- Returns true, or false and "helper": a crew helper's window never pauses (SPEC5 helperpause,
+-- Returns true, or false and "helper": a crew helper's window never pauses (
 -- review #17: the Warlocks would stay open while the helper's screen said Paused).
 function DR.SetPaused(on)
 	if DR.Role() == "helper" then return false, "helper" end
@@ -153,7 +153,7 @@ function DR.SetDest(text, words)
 	local ch = DR.char()
 	ch.dest = W.Clean(text or "", 32)
 	if words ~= nil then ch.destWords = W.Clean(words, 120) end
-	if DR.PlaceSweep then DR.PlaceSweep(true) end -- (BRIEF18) a new place: riders for the old one go
+	if DR.PlaceSweep then DR.PlaceSweep(true) end -- a new place: riders for the old one go
 	DR.SendConfig()
 	W.Fire("SETTINGS", "dest")
 	DR.Changed()
@@ -186,7 +186,7 @@ function DR.SetCaster(name)
 end
 
 ---------------------------------------------------------------------------
--- The chosen summoners (SPEC4 1.1): W.Char().summoners, full names in cast order
+-- The chosen summoners: W.Char().summoners, full names in cast order
 ---------------------------------------------------------------------------
 
 -- A full name for a key (me, a peer, a crew member, a group member), or nil.
@@ -315,7 +315,7 @@ local function atPlace(key, place)
 	return p == nil or W.SamePlace(p, place)
 end
 
--- The crew Warlocks in casting order: the chosen summoners in their order (SPEC4); else the
+-- The crew Warlocks in casting order: the chosen summoners in their order; else the
 -- main caster first, then the others by name. `place`: only those standing there (stations).
 function DR.CastOrder(place)
 	local keys = {}
@@ -440,7 +440,7 @@ function DR.NextCaster(name)
 	return DR.MainCaster()
 end
 
--- Who the rider pays (SPEC4 1.2): the summoner who cast them, else the one expected to. A
+-- Who the rider pays: the summoner who cast them, else the one expected to. A
 -- key; the runner's when nobody summons.
 function DR.Payee(name)
 	local c = name and DR.Find(name)
@@ -610,7 +610,7 @@ function DR.AdvertDue()
 end
 
 -- The driver's advert line: their own "advert" message when they wrote one, else Wuber's
--- line (W.AdvertText: the place, the fare, and where riders get Wuber; SPEC5 advert, review
+-- line (W.AdvertText: the place, the fare, and where riders get Wuber; review
 -- #13). "" when neither can be made.
 function DR.AdvertText()
 	local own = DR.db and type(DR.db.templates) == "table" and DR.db.templates.advert

@@ -397,7 +397,7 @@ end)
 -- #10: no "estimate" wording anywhere (flight costs are exact only)
 ---------------------------------------------------------------------------
 
--- Round 8 (SPEC7 4.2): flight TIMES may now be estimates, labelled "about" on screen. So the Lua files are checked only
+-- Round 8: flight TIMES may now be estimates, labelled "about" on screen. So the Lua files are checked only
 -- for user-visible text (quoted strings) saying "estimate"; comments and code names may use the word, and "about" is
 -- allowed in Lua. README keeps the full 2.2 check (no "estimate", no explaining "about").
 local function quoted(text)

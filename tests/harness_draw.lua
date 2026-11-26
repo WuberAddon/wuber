@@ -1,10 +1,10 @@
--- Tests of the harness drawing as the real client does (BRIEF21 S5). Loaded by tests/run.lua with its helper table T.
+-- Tests of the harness drawing as the real client does. Loaded by tests/run.lua with its helper table T.
 -- Two bugs passed offline and showed in game: BRIEF19 F5 (the Earnings period pills: Today lit while the totals
 -- said 7 days) and BRIEF20 B1 (the top nav: Drive a solid white pill on every Ride screen). Both were a pill fill
 -- whose SetVertexColor alpha the game did not take, set while an Alpha animation played (the window's A.ZoomIn,
 -- a Drive screen's A.SlideIn). The harness holds such a change as the game does (tests/harness.lua,
--- Layered:SetVertexColor; BRIEF23 H3: only under an Alpha animation, as the in-game alpha probe showed; the
--- drawn-then-hidden hold is an opt-in, H.ALPHA_HOLD = "drawn"; BRIEF24 F1: a texture's own SetAlpha is held by
+-- Layered:SetVertexColor: only under an Alpha animation, as the in-game alpha probe showed; the
+-- drawn-then-hidden hold is an opt-in, H.ALPHA_HOLD = "drawn": a texture's own SetAlpha is held by
 -- the same rule, tests/r24_d_hold.lua): the old code of both fixes, put back from
 -- tests/fixtures/old_pills.lua, must draw the bug here, and today's code must not.
 local T = ...
@@ -125,7 +125,7 @@ test("harness draw: the client's rule (alpha probe, 20 Nov): drawn-then-hidden a
 	t:Hide()
 	step(1, 0.15, "C: a hidden texture under the animation", 0, 1, 0, 1)
 	t:Show()
-	-- (BRIEF24 F1) the probe: the texture's own alpha (Region:SetAlpha) is dropped too under the animation
+	-- the probe: the texture's own alpha (Region:SetAlpha) is dropped too under the animation
 	local n = kept()
 	t:SetAlpha(0.3)
 	eq(t:GetAlpha(), 1, "C: a texture's SetAlpha under an Alpha animation: held")
@@ -298,7 +298,7 @@ test("harness draw: an Alpha animation holds the alpha of a visible texture the 
 end)
 
 ---------------------------------------------------------------------------
--- BRIEF20 B1: the old top nav draws Drive lit on the Ride tab, as the game did (tour #1-17, #89)
+-- the old top nav draws Drive lit on the Ride tab, as the game did (tour #1-17, #89)
 ---------------------------------------------------------------------------
 
 local function topNav(old, how)
@@ -352,7 +352,7 @@ test("harness draw: B1 the old top nav draws Drive lit on the Ride tab, as the g
 end)
 
 ---------------------------------------------------------------------------
--- BRIEF19 F5: the old Earnings pills draw Today lit while the totals say 7 days, as the game did (tour #47-#52)
+-- the old Earnings pills draw Today lit while the totals say 7 days, as the game did (tour #47-#52)
 ---------------------------------------------------------------------------
 
 local function earnings(old, seenBefore)

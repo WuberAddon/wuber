@@ -1,5 +1,5 @@
 local T = ...
--- Round 33 group d6 (AUD-121, Google C52b-1): with the window shut, the '...' on a floating mini
+-- Round 33 group d6 (AUD-121, a reviewer C52b-1): with the window shut, the '...' on a floating mini
 -- console row opened its menu on the hidden Drive page. It now opens the window on the Drive tab
 -- first (UI.ShowDrive, the path the other open paths use), so the menu is seen at once.
 local test, eq, ok, H = T.test, T.eq, T.ok, T.H

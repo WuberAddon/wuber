@@ -1,4 +1,4 @@
--- Tests of the harness's round-8 game fakes (tests/lib/fakes8.lua, SPEC7 section 8): what the
+-- Tests of the harness's round-8 game fakes (tests/lib/fakes8.lua): what the
 -- other agents' tests rely on. Loaded by tests/run.lua with its helper table T.
 local T = ...
 local H, test, eq, ok, list = T.H, T.test, T.eq, T.ok, T.list

@@ -350,7 +350,7 @@ local function enqueue(chan, target, kind, text, coalesce, done, urgent)
 			return false
 		end
 	end
-	-- full (SPEC5 outbox, review #5): the lowest-priority item waiting goes (the newest of the
+	-- full: the lowest-priority item waiting goes (the newest of the
 	-- lowest kind), never the head; a new item worse than everything waiting is dropped
 	-- itself. Ride messages may run 20 over the cap before one of them goes.
 	if #queue >= NETK.MAX_QUEUE then

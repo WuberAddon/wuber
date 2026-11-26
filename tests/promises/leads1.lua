@@ -1,4 +1,4 @@
--- Promises from the Google contradiction leads (LEADS-1 judge). Each id is leads.c### and says what the player sees
+-- Promises from the a reviewer contradiction leads (LEADS-1 judge). Each id is leads.c### and says what the player sees
 -- when it fails. See tests/out/hunt-scratch/leads1/verdicts.tsv for the full verdicts.
 return function(Hunt)
 	local function strip(t) return (tostring(t or ""):gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", ""):gsub("|H.-|h(.-)|h", "%1")) end

@@ -1,6 +1,6 @@
 -- Module: UI.Toasts
--- Purpose: UI.Toast and the toast queue (one at a time, slides from the top). (BRIEF19 R6) UI.ChatBox and
---   UI.ClearOfChat: where the game's chat frame is now, and a spot for a Wuber frame clear of it. (BRIEF20 B4)
+-- Purpose: UI.Toast and the toast queue (one at a time, slides from the top). UI.ChatBox and
+--   UI.ClearOfChat: where the game's chat frame is now, and a spot for a Wuber frame clear of it.
 --   UI.HudBoxes and UI.ClearOfHud: the shown action bars, micro menu, bags, status bars and party frames
 --   (the game's and Daylight UI's), and a spot clear of them and the chat, with room to breathe.
 -- API: UI.ToastPlace, UI.Toast, UI.ToastShowing, UI.UndoToast, UI.UndoPending, UI.ChatBox, UI.ClearOfChat, UI.HudBoxes, UI.ClearOfHud
@@ -28,7 +28,7 @@ local Try = T.Try
 local UI = W.UI
 
 ---------------------------------------------------------------------------
--- (BRIEF19 R6) The chat frame: no Wuber frame is placed over it
+-- The chat frame: no Wuber frame is placed over it
 ---------------------------------------------------------------------------
 -- the author (20 Nov): on a squarer game window the chat ended up under Wuber's frames. A UI pack may
 -- have moved the chat, so its place is read live, never guessed. Boxes are { left, right,
@@ -109,7 +109,7 @@ function UI.ClearOfChat(l, b, w, h, avoid, edit)
 end
 
 ---------------------------------------------------------------------------
--- (BRIEF20 B4) The action bars, micro menu, bags bar, status bars and party frames: no Wuber
+-- The action bars, micro menu, bags bar, status bars and party frames: no Wuber
 -- frame at its default place is put over them either
 ---------------------------------------------------------------------------
 -- the author (20 Nov): on the square window the phone's default place covered the action bars,
@@ -233,7 +233,7 @@ local TOAST_KIND = {
 	paid = { colour = "gold", glyph = "coin" },
 	away = { colour = "muted", glyph = "clock", stay = 8 },
 	offer = { colour = "glow", glyph = "summon", stay = 6 },
-	-- (2.3, SPEC7 5.8) a rider asks the driver for a raincheck (UI.Driver.Mini; a click opens
+	-- (2.3) a rider asks the driver for a raincheck (UI.Driver.Mini; a click opens
 	-- "Give raincheck"): 10 s, so there is time to click; not sticky, no sound of its own
 	raincheck = { colour = "glow", glyph = "clock", stay = 10 },
 	-- (round 11) "Wuber 2.3.1 is out" (Net.Update): once per session, quiet, 8 s to read it
@@ -291,8 +291,8 @@ local function phonePlace()
 	return box
 end
 
--- (BRIEF19 R6) and never over the chat frame (a squarer game window, or a UI pack that moved it);
--- (BRIEF20 B4) nor an action bar or the party frames; (decisions N2) nor the What's new card (WuberNewsCard)
+-- and never over the chat frame (a squarer game window, or a UI pack that moved it);
+-- nor an action bar or the party frames; (decisions N2) nor the What's new card (WuberNewsCard)
 local function toastPlace()
 	local box = phonePlace()
 	local sw, sh = N(Try(UIParent, "GetWidth")), N(Try(UIParent, "GetHeight"))
