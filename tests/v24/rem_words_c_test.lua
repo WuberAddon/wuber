@@ -131,7 +131,7 @@ test("v24 words c: 4 Earnings: 'an hour' line, short stats line with its tooltip
 	W.Drive.LogTotals = function() return { rides = 1, copper = 5000, tips = 0, open = 60, asks = 1 } end
 	e.update()
 	body = plain(part(e.statsHit.wuberTip.text, e.statsHit))
-	eq(body, "1 buyer asked", "no tips: no tips part")
+	eq(body, "1 rider asked", "no tips: no tips part")
 	-- below the target
 	W.Drive.LogTotals = function() return { rides = 1, copper = 100, tips = 0, open = 600, asks = 0 } end
 	e.update()
