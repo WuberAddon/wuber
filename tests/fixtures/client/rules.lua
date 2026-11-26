@@ -89,6 +89,8 @@ return {
 		evidence = "one-real-case", source = "Logs/taint.log of 19 Nov: 7 blocked actions; the 'Paused during combat' label (B6)", build = "71037", bug = "B6", was = "guess" },
 	{ id = "combat.protected-propagation", what = "a plain frame becomes protected when it holds a secure child (the fake: any descendant)",
 		evidence = "guess", source = "FAKE-GAPS job 2860 OPEN 'which frames count as protected'; the pay pill under TradeFrame", bug = "B6" },
+	{ id = "combat.can-change-protected", what = "CanChangeProtectedState(frame) is false for a protected frame while the player is in combat",
+		evidence = "guess", source = "FAKE-GAPS: protected state in the fake game (tests/fakegame); same claim as combat.secure-frozen, read through the API", bug = "B6" },
 	-- frames
 	{ id = "drag.anchor-center", what = "a dragged frame is re-anchored by its CENTER",
 		evidence = "guess", source = "FAKE-GAPS HUNT-01: the real game picks the point nearest a screen edge or corner", bug = "-" },
