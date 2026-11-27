@@ -111,6 +111,9 @@ test("b4 api chat: ledger schema, honest evidence, and fake-game conformance", f
 	eq(type(gInst), "number", "GetChannelName instance is number")
 	eq(type(gDisabled), "boolean", "GetChannelName disabled is boolean")
 
+	eq(type(c.env.IsDisplayChannelOwner), "function", "IsDisplayChannelOwner exists")
+	eq(c.env.IsDisplayChannelOwner(), false, "IsDisplayChannelOwner returns false by default")
+
 	eq(type(c.env.JoinChannelByName), "function", "JoinChannelByName exists")
 	eq(c.env.JoinChannelByName("B4TestChan"), 0, "JoinChannelByName returns 0")
 
