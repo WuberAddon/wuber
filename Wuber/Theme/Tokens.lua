@@ -721,7 +721,7 @@ end
 -- follow the frame when it is sized later (OnSizeChanged, OnShow). out: how far the fill reaches outside
 -- the frame (an outline): its corners are that much larger. A shape that must keep a radius of its own
 -- (the handset, the driver's big button) uses T.NineSlice itself.
-T.CORNER = { radius = 14, small = 28, round = 32 }
+T.CORNER = { radius = 14, small = 28, round = 32, window = 7 } -- window: the corner of the window art (Media/winbg.tga), for what must lie inside it (a sheet's dim)
 local function cornerFor(h, out)
 	local k = T.CORNER
 	h = tonumber(h)
