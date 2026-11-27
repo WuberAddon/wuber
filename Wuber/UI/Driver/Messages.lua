@@ -309,7 +309,12 @@ local function buildEditor(s, c, pad, iw, host)
 			-- (HUNT-30) only the crew's captain shares it; a member's window keeps its own words
 			local member = type(DR.char) == "function" and (S((DR.char() or {}).captain) or "") ~= ""
 			toast(member and "Saved" or "Saved · your crew uses it too", "found")
-			s.list()
+			-- (#80) in Simple mode the advert line is the only message page: Save leaves it, as Back does
+			if type(W.Advanced) == "function" and W.Advanced() ~= true then
+				D.ShowScreen("console")
+			else
+				s.list()
+			end
 		else
 			-- (AUD-167) kept, so the preview reserves its height above Reset and Save
 			e.refused = { draft = e.field:Text(), text = "Not saved: " .. (S(why) or "refused") }
