@@ -608,6 +608,10 @@ function D.RideCount(name)
 end
 W.Listen("DRIVE_PAID", function() againCache = {} end)
 W.Listen("DRIVE_LOG", function() againCache = {} end)
+-- (#61) a rider who leaves the queue or comes back is a new record: the 0 counted while their first ride was
+-- still going on must not outlive it
+W.Listen("DRIVE_REMOVED", function() againCache = {} end)
+W.Listen("DRIVE_STATE", function(_, was) if was == nil then againCache = {} end end)
 
 -- the "3rd ride with you" chip (none for a first ride, or a raid row); a lead's row says "2 rides with you"
 local function paintAgain(r, c)
