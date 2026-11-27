@@ -2,7 +2,7 @@
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
-local WANT = "Open the Group Finder, go to List yourself, pick a Playstyle, click the Note box and type the note below by hand, then List me."
+local WANT = "Open the Group Finder, go to List yourself, choose the Custom category, pick a Playstyle, click the Note box and type the note below by hand, then List me."
 
 test("playtest Q3: the sheet shows the new Group Finder steps", function()
 	local w = T.newWorld()
