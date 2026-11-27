@@ -382,7 +382,14 @@ function DR.SetTemplate(kind, text)
 		local line, bad = W.AdvertOwnText(clean)
 		if not line then return false, bad == "spam" and "the spam filter refused it" or "it is empty" end
 	end
-	if clean == DR.TEMPLATES[kind] then list[kind] = nil else list[kind] = clean end
+	-- (3045 answer 4) the editor opens with Wuber's own advert line (place and fare filled in): saving it
+	-- unchanged keeps the default, so the place and fare still follow the driver
+	local isDefault = clean == DR.TEMPLATES[kind]
+	if kind == "advert" and not isDefault and DR.DefaultAdvertLine and clean == DR.DefaultAdvertLine() then
+		isDefault = true
+		clean = DR.TEMPLATES[kind]
+	end
+	if isDefault then list[kind] = nil else list[kind] = clean end
 	call("Send", "TPL", kind, clean)
 	changed()
 	return true

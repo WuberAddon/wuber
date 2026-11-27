@@ -82,6 +82,17 @@ local function sample(kind)
 		summoner = type(W.Me) == "function" and S(W.Me()) or nil }
 end
 
+-- (3045 answer 4) what the editor opens with: the saved words, else Wuber's own words. For the advert line
+-- Wuber's own words are the line it really posts (place and fare filled in, without the [Wuber] tag).
+local function shownTemplate(kind)
+	local saved = DR.db and type(DR.db.templates) == "table" and DR.db.templates[kind]
+	if kind == "advert" and (type(saved) ~= "string" or saved == "") then
+		local line = S(dr("DefaultAdvertLine"))
+		if line then return line end
+	end
+	return S(dr("Template", kind)) or S(DR.TEMPLATES and DR.TEMPLATES[kind]) or ""
+end
+
 local function textOf(kind, draft)
 	-- (HUNT-75) an emptied box previews the default wording, which is what Save goes back to
 	if type(draft) == "string" and draft:gsub("%s", "") == "" then draft = S(DR.TEMPLATES and DR.TEMPLATES[kind]) end
@@ -294,7 +305,7 @@ local function buildEditor(s, c, pad, iw, host)
 		local ok, why = dr("SetTemplate", s.kind, nil)
 		if ok then
 			toast("Back to Wuber's own words", "info")
-			e.field:SetText(S(dr("Template", s.kind)) or S(DR.TEMPLATES and DR.TEMPLATES[s.kind]) or "")
+			e.field:SetText(shownTemplate(s.kind))
 			s.preview()
 		else
 			toast(S(why) or "Couldn't reset it", "warn")
@@ -453,8 +464,7 @@ D.screens.messages = function(parent)
 		e.body:SetPoint("TOPLEFT", e, "TOPLEFT", 0, -e.shift)
 		e.body:SetPoint("BOTTOMRIGHT", e, "BOTTOMRIGHT", 0, 0)
 		if not keep then
-			local cur = S(dr("Template", kind)) or S(DR.TEMPLATES and DR.TEMPLATES[kind]) or ""
-			e.field:SetText(cur)
+			e.field:SetText(shownTemplate(kind))
 		end
 		e.refused = nil
 		e.why:Hide()
