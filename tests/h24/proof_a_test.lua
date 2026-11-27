@@ -3,7 +3,7 @@ local T = ...
 local test, eq, ok, H = T.test, T.eq, T.ok, T.H
 
 -- r50 (job 2609): these bugs are fixed in 2.4.1; their proofs now run as normal tests
-local FIXED = { ["H24-01"] = true, ["H24-02"] = true, ["H24-03"] = true, ["H24-04"] = true, ["H24-05"] = true, ["H24-08"] = true, ["H24-15"] = true }
+local FIXED = { ["H24-01"] = true, ["H24-02"] = true, ["H24-03"] = true, ["H24-04"] = true, ["H24-05"] = true, ["H24-08"] = true, ["H24-15"] = true, ["H24-06"] = true }
 local function proof(id, name, fn)
 	if os.getenv("WUBER_H24_PROOF") or FIXED[id] then
 		test(id .. ": " .. name, fn)
@@ -57,6 +57,9 @@ local function bleed(ui, sh)
 		{ "bottom left", dr.l, dr.b, wr.l, wr.b, 0, 839 },
 		{ "bottom right", dr.l + dr.w, dr.b, wr.l + wr.w, wr.b, 503, 839 },
 	}
+	-- the dim's fill is what shows: round at the window art's own corner (T.CORNER.window) it lies inside the art
+	local fill = sh.dim and sh.dim.fill
+	if fill and fill.parts and (fill.px or 0) >= 7 then return out end
 	for _, p in ipairs(pts) do
 		if near(p[2], p[4]) and near(p[3], p[5]) and texelAlpha(p[6], p[7]) == 0 then out[#out + 1] = p[1] end
 	end

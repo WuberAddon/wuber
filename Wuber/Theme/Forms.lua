@@ -582,8 +582,16 @@ function T.Sheet(host, height, title, opts)
 	sh.dim = CreateFrame("Frame", nil, sh)
 	sh.dim:SetAllPoints(sh)
 	sh.dim:SetFrameLevel(sh:GetFrameLevel())
-	sh.dim.fill = T.Line(sh.dim, "black", 1, "BACKGROUND") -- shown at 50% (put)
-	sh.dim.fill:SetAllPoints(sh.dim)
+	if head then
+		-- a sheet over the whole window (opts.head) has its dim reach the window's own corners, and the window art is
+		-- rounded there (about 7 units): a square fill would lay small dark corners past the art, so the fill's corners are round
+		sh.dim.fill = T.NineSlice(sh.dim, "rounded", T.CORNER.window, 0.25, "BACKGROUND", 0)
+		sh.dim.fill:SetColor("black", 1) -- shown at 50% (put)
+		sh.dim.fill.px = T.CORNER.window
+	else
+		sh.dim.fill = T.Line(sh.dim, "black", 1, "BACKGROUND") -- shown at 50% (put)
+		sh.dim.fill:SetAllPoints(sh.dim)
+	end
 	sh:SetScript("OnMouseDown", function(self) pcall(self.Close, self) end)
 	sh.wuberNoTip = true -- a click blocker (the dim): no tooltip on empty space
 	if head then
