@@ -69,7 +69,7 @@ The old Ritual Rides addon is not in this repository. Where a test needs an old 
 (`loadRR = "1.4.1"`), it gets the small stand-in in `tests/fixtures/addons/OldDriver` (the global that Wuber's lock reads,
 a driver registered through `WuberAPI.SetDriver`, saved data in `RitualRidesDB`); `tests/oldaddon/` tests what Wuber does
 with such an addon. Tests that only exercised the old addon's own code are in `tests/retired/` (not run). The transcript
-baseline (about 110 MB) is not stored; `WUBER_BASELINE=<file>` makes a run compare with another baseline file. With no baseline file `--compare-transcript` prints `transcript: NO BASELINE ...` (nothing was compared, not a failure); make one with `--update-transcript` on a fresh clone (`bash tools/fresh-suite.sh`).
+baseline (about 110 MB) is not stored; `WUBER_BASELINE=<file>` makes a run compare with another baseline file. With no baseline file `--compare-transcript` prints `transcript: NO BASELINE ...` (nothing was compared, not a failure); make one with `bash tools/make-baseline.sh <repo> <commit>` (two full runs on a fresh clone; the file is kept only when both transcripts are byte-identical; `--update-transcript` is the reviewed way to accept a change).
 
 The behaviour transcript (`tests/lib/transcript.lua`, REFACTOR-MAP 4.5) proves a restructure
 changed nothing: per test, every addon message, whisper and chat line sent, every named frame
