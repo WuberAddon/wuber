@@ -146,7 +146,7 @@ local function raise()
 	if not win then return end
 	local map = type(WorldMapFrame) == "table" and WorldMapFrame or nil
 	local over = map and type(map.IsShown) == "function" and W.Plain(call(map.IsShown, map)) == true
-	local want = (over or ui.overOptions) and "FULLSCREEN_DIALOG" or "HIGH"
+	local want = (over or ui.overOptions or ui.overPaused) and "FULLSCREEN_DIALOG" or "HIGH" -- (T243-2: ui.overPaused, see the end of this file)
 	if ui.strata ~= want then
 		win:SetFrameStrata(want)
 		ui.strata = want
@@ -1270,3 +1270,17 @@ end)
 -- internals other modules use (bound at load by later modules, or called late)
 Mod.savePosition = savePosition
 Mod.screens = screens
+
+-- (T243-2) The Drive button was left where it was in a fight (its slot moved or went; it cannot be moved, hidden or made mouse-free
+-- then, and it takes the clicks over its place), or is back: the window lifts itself above it and goes down again after. A window the
+-- game counts as protected in a fight is left alone, so no call here can be blocked.
+W.Listen("DRIVE_BUTTON_STALE", function(on)
+	local win = ui.win
+	if on and win and W.InCombat() then
+		local okp, prot = pcall(win.IsProtected, win)
+		if not okp or prot then return end
+	end
+	ui.overPaused = on == true or nil
+	raise()
+	if on and win and type(win.Raise) == "function" then win:Raise() end
+end)
