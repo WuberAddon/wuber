@@ -756,11 +756,11 @@ end
 
 -- the line under a name: the facts, then the whole note. (2.4 fix round 3) A long note wraps onto more
 -- lines and its row grows; it is never cut with "...".
-local SUB_LINE = 13 -- one line of the 10 px sub text
+local SUB_LINE, wrapLongWords = 13 -- one line of the 10 px sub text
 local function subLines(text)
-	if type(T.ParaLines) ~= "function" then return 1 end
+	text = wrapLongWords(text, 10, "regular", SUB_W - 4)
 	local ok, n = pcall(T.ParaLines, text, 10, "regular", SUB_W - 4)
-	return ok and N(n) or 1
+	return ok and N(n) or 1, text
 end
 
 -- "Scroll for 3 more" over the list's bottom edge while rows are hidden below it (the
@@ -815,10 +815,10 @@ local function paintCust(r, e)
 	-- (payment by mail, Drive.Mail) "Mail seen: 5g from Dan, 21 Nov." after the facts and the note, whole
 	local mail = S(e.mail)
 	if mail then text = text .. " · " .. mail end
-	local lines = subLines(text)
+	local lines, wrapped = subLines(text)
 	r.sub:SetWordWrap(lines > 1)
 	local subH = math.max(lines * SUB_LINE, wrapH(lines, "caption")) -- the spacing counted
-	r.sub:SetText(text)
+	r.sub:SetText(wrapped)
 	r.sub:SetHeight(subH)
 	r:SetHeight(ROW_H - 6 + subH - SUB_LINE)
 	setShown(r.gift, N(e.gift) ~= nil)
@@ -897,6 +897,34 @@ D.screens.customers = function(parent)
 		scrollCue(s)
 	end
 	return s
+end
+
+wrapLongWords = function(text, px, weight, room)
+	if type(T.MeasureText) ~= "function" or room <= 0 then return text end
+	if T.MeasureText(text, px, weight) * 1.07 <= room then return text end
+	local out = {}
+	for line in (tostring(text) .. "\n"):gmatch("([^\n]*)\n") do
+		local parts = {}
+		for gap, word in line:gmatch("(%s*)(%S+)") do
+			if T.MeasureText(word, px, weight) * 1.07 > room then
+				local chunk, buf = {}, ""
+				for ch in word:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
+					local try = buf .. ch
+					if buf ~= "" and T.MeasureText(try, px, weight) * 1.07 > room then
+						chunk[#chunk + 1] = buf
+						buf = ch
+					else
+						buf = try
+					end
+				end
+				if buf ~= "" then chunk[#chunk + 1] = buf end
+				word = table.concat(chunk, "\n")
+			end
+			parts[#parts + 1] = gap .. word
+		end
+		out[#out + 1] = table.concat(parts) .. (line:match("(%s*)$") or "")
+	end
+	return table.concat(out, "\n")
 end
 
 -- for other modules (REFACTOR-MAP section 2)
