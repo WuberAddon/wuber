@@ -499,21 +499,21 @@ local function capNote(field)
 end
 
 D.screens.note = function(parent)
-	local sh = T.Sheet(parent, 330, "Note")
+	local sh = T.Sheet(parent, 346, "Note")
 	local s = { frame = sh }
 	local b = sh.body
 	s.facts = T.Text(b, "caption", "glow", "LEFT", "medium")
 	s.facts:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -2)
-	s.facts:SetWidth(320)
+	s.facts:SetWidth(320) T.Lines(s.facts, 2) -- (#81) a second line for the tip words (kept on one line: a click test names Customers.lua:508)
 	s.field = T.Field(b, 320, 92, { multi = true, max = 200, size = "sub",
 		placeholder = "Anything you want to remember (200 letters)", onChange = function(t) s.cap(t) end })
 	s.cap = capNote(s.field)
-	s.field:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -24)
+	s.field:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -40)
 	-- the game counts an end byte, so NOTE_MAX + 1 takes the book's 200 bytes (an accented letter is two)
 	pcall(s.field.edit.SetMaxBytes, s.field.edit, DR.BOOK.NOTE_MAX + 1)
 	T.Tip(s.field.edit, "Note", "One note per rider, 200 letters at most (accented letters count double). Only you and the crew windows you marked as your own accounts see it; the rider never does.")
 	s.privacy = para(b, "caption", "muted", 320)
-	s.privacy:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -124)
+	s.privacy:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -140)
 	s.privacy:SetText("Only you and the crew windows you marked as your own accounts see notes. Never the rider.")
 	-- Save and Gifted share the note box's 320 (round 9 previews: two 156s from both card edges met)
 	s.save = T.MainButton(sh.card, "Save") -- (Design 2) the one main button's place
@@ -522,7 +522,7 @@ D.screens.note = function(parent)
 	s.gift:SetPoint("BOTTOMRIGHT", sh.card, "BOTTOMRIGHT", -T.MAIN.side, T.MAIN.foot + T.MAIN.h + 8)
 	T.Tip(s.gift, "Gifted", function() return giftTip(giftOf(s.name)) end)
 	s.serve = T.Pill(b, SERVE.LABEL, "dark", 320, 34)
-	s.serve:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -168)
+	s.serve:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -184)
 	T.Tip(s.serve, SERVE.TIP, function() return serveTip(s.name) end)
 	safeScript(s.serve, "OnClick", function() serveClick(s.name) s.update() end)
 	safeScript(s.save, "OnClick", function()
@@ -551,7 +551,7 @@ D.screens.note = function(parent)
 	function s.update()
 		giftLook(s.gift, giftOf(s.name))
 		-- the sheet grows by the pill's row when it is there (nothing is cut or moved over)
-		sh:SetSheetHeight(serveLook(s.serve, s.name) and 330 + 44 or 330)
+		sh:SetSheetHeight(serveLook(s.serve, s.name) and 346 + 44 or 346)
 	end
 	s.enter = function(c)
 		s.name = S(type(c) == "table" and c.name or c) or "?"
