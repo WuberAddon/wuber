@@ -322,9 +322,13 @@ end
 -- (playtest) one soft ring every 3 s, like the Waiting for riders ring
 local PULSE_PERIOD = 3
 
+local ringing = setmetatable({}, { __mode = "k" }) -- the pins whose ring plays (Reduce motion stops them)
+
 local function StartPulse(pin)
 	if pin.pulsing then return end
+	if W.Theme and W.Theme.ReduceMotion and W.Theme.ReduceMotion() then return end -- Reduce motion: no ring
 	pin.pulsing = true
+	ringing[pin] = true
 	pin.pulse:Show()
 	pin.pulseAnim:Play()
 end
@@ -332,9 +336,16 @@ end
 local function StopPulse(pin)
 	if not pin.pulsing then return end
 	pin.pulsing = false
+	ringing[pin] = nil
 	pin.pulseAnim:Stop()
 	pin.pulse:Hide()
 end
+
+-- Reduce motion switched on while rings play: they stop now
+W.Listen("SETTINGS", function(what)
+	if what ~= "reduceMotion" or not (W.Theme and W.Theme.ReduceMotion and W.Theme.ReduceMotion()) then return end
+	for pin in pairs(ringing) do StopPulse(pin) end
+end)
 
 local function NewPin(parent)
 	local pin = NewFrame("Button", parent)
