@@ -12,7 +12,7 @@ local VALID_EVIDENCE = {
 
 test("b4 api world: ledger schema, honest evidence, and fake-game conformance", function()
 	local rows = assert(dofile(LEDGER_PATH))
-	ok(type(rows) == "table" and #rows == 84, "ledger has 84 rows")
+	ok(type(rows) == "table" and #rows == 87, "ledger has 87 rows")
 
 	local seen = {}
 	for i, row in ipairs(rows) do
@@ -41,7 +41,7 @@ test("b4 api world: ledger schema, honest evidence, and fake-game conformance", 
 	w:advance(5)
 	local e = c.env
 
-	-- 1. Widget / Object :Methods (11)
+	-- 1. Widget / Object :Methods (10)
 	local f = e.CreateFrame("Frame", nil, e.UIParent)
 	local ag = f:CreateAnimationGroup()
 	local fb = ag:CreateAnimation("FlipBook")
@@ -75,12 +75,10 @@ test("b4 api world: ledger schema, honest evidence, and fake-game conformance", 
 	eq(fb:SetFlipBookFrameHeight(64), nil, ":SetFlipBookFrameHeight returns nil")
 	eq(type(fb.SetFlipBookFrameWidth), "function", ":SetFlipBookFrameWidth exists")
 	eq(fb:SetFlipBookFrameWidth(64), nil, ":SetFlipBookFrameWidth returns nil")
-	eq(type(f.SetMouseClickEnabled), "function", ":SetMouseClickEnabled exists")
-	eq(f:SetMouseClickEnabled(false), nil, ":SetMouseClickEnabled returns nil")
 	eq(type(f.SetMouseMotionEnabled), "function", ":SetMouseMotionEnabled exists")
 	eq(f:SetMouseMotionEnabled(false), nil, ":SetMouseMotionEnabled returns nil")
 
-	-- 2. C_* Namespace calls (34)
+	-- 2. C_* Namespace calls (35)
 	eq(type(e.C_AddOns.DisableAddOn), "function", "C_AddOns.DisableAddOn exists")
 	eq(e.C_AddOns.GetAddOnInfo, nil, "C_AddOns.GetAddOnInfo is nil (not modelled)")
 	eq(e.C_AddOns.GetNumAddOns, nil, "C_AddOns.GetNumAddOns is nil (not modelled)")
@@ -91,6 +89,8 @@ test("b4 api world: ledger schema, honest evidence, and fake-game conformance", 
 
 	eq(type(e.C_CVar.GetCVar), "function", "C_CVar.GetCVar exists")
 	eq(e.C_CVar.GetCVar("taintLog"), "1", "C_CVar.GetCVar taintLog returns '1'")
+	eq(type(e.C_CVar.GetCVarBool), "function", "C_CVar.GetCVarBool exists")
+	eq(e.C_CVar.GetCVarBool("Sound_EnableSFX"), true, "C_CVar.GetCVarBool Sound_EnableSFX returns true")
 	eq(type(e.C_CVar.SetCVar), "function", "C_CVar.SetCVar exists")
 	eq(type(e.C_CVar.SetCVar("b4test", "1")), "boolean", "C_CVar.SetCVar returns boolean")
 
@@ -161,7 +161,7 @@ test("b4 api world: ledger schema, honest evidence, and fake-game conformance", 
 	eq(type(ticker), "table", "C_Timer.NewTicker returns handle table")
 	ticker:Cancel()
 
-	-- 3. Globals (39)
+	-- 3. Globals (42)
 	eq(type(e.CreateVector2D), "function", "CreateVector2D exists")
 	eq(type(e.FlashClientIcon), "function", "FlashClientIcon exists")
 	eq(e.FlashClientIcon(), nil, "FlashClientIcon returns nil")
@@ -252,11 +252,16 @@ test("b4 api world: ledger schema, honest evidence, and fake-game conformance", 
 
 	eq(type(e.canaccessvalue), "function", "canaccessvalue exists")
 	eq(e.canaccessvalue("x"), true, "canaccessvalue returns true for plain value")
+	eq(type(e.date), "function", "date exists")
+	eq(type(e.date("%Y-%m-%d")), "string", "date returns formatted string")
 	eq(e.debugstack, nil, "debugstack is nil (not modelled)")
 	eq(type(e.geterrorhandler), "function", "geterrorhandler exists")
 	eq(type(e.geterrorhandler()), "function", "geterrorhandler returns function")
+	eq(type(e.hooksecurefunc), "function", "hooksecurefunc exists")
 	eq(type(e.issecretvalue), "function", "issecretvalue exists")
 	eq(e.issecretvalue("x"), false, "issecretvalue returns false for plain value")
+	eq(type(e.time), "function", "time exists")
+	eq(type(e.time()), "number", "time returns number")
 
 	T.clean(w)
 end)

@@ -1,5 +1,5 @@
 -- tests/fixtures/client/api/world.lua: client API ledger for Lane e4 (world: trade, money, mail, maps, taxi, zones, timers, sound, items, LFG, cvars, misc).
--- Complement of e1 (chat), e2 (units), and e3 (frames): 84 names Wuber calls in Wuber/**/*.lua that tests/surface/apisurface.lua knows.
+-- Complement of e1 (chat), e2 (units), and e3 (frames): 87 names Wuber calls in Wuber/**/*.lua that tests/surface/apisurface.lua knows.
 --
 -- Evidence words (never write "measured"):
 --   one-real-case   recording/fixture in this repo (tests/fixtures/rec/**, tests/fixtures/probe/**, tests/README.md)
@@ -7,7 +7,7 @@
 --   borrowed        another addon's author says so
 --   guess           nobody checked
 return {
-	-- Widget / Object :Methods (11)
+	-- Widget / Object :Methods (10)
 	{
 		name = ":AddLine",
 		calls = 1,
@@ -43,7 +43,7 @@ return {
 		calls = 7,
 		first = "Wuber/Core/Places.lua:274",
 		fake = "Vector2D:GetXY() returns the stored x, y numbers",
-		evidence = "borrowed",
+		evidence = "guess",
 		source = "the maintainer's field notes, section 7.1 (C_Map.GetPlayerMapPosition(...):GetXY())",
 		build = nil,
 		offline = "pure 2D vector field getter on CreateVector2D result",
@@ -99,16 +99,6 @@ return {
 		game = "worldmap_open: open WorldMapFrame to a driver's map",
 	},
 	{
-		name = ":SetMouseClickEnabled",
-		calls = 4,
-		first = "Wuber/Theme/Forms.lua:1285",
-		fake = "Frame:SetMouseClickEnabled(on) stores mouse-click state and returns nil",
-		evidence = "docs",
-		source = "tests/surface/apisurface.lua S.methods.SetMouseClickEnabled (p=true, sa=true)",
-		build = nil,
-		game = "nameplate_clickthrough: verify nameplate overlay does not block clicks",
-	},
-	{
 		name = ":SetMouseMotionEnabled",
 		calls = 2,
 		first = "Wuber/FX/Nameplates.lua:338",
@@ -119,7 +109,7 @@ return {
 		game = "nameplate_clickthrough: verify nameplate overlay passes motion through",
 	},
 
-	-- C_* Namespace calls (34)
+	-- C_* Namespace calls (35)
 	{
 		name = "C_AddOns.DisableAddOn",
 		calls = 2,
@@ -169,6 +159,16 @@ return {
 		source = "tests/surface/apisurface.lua S.ns.C_CVar.GetCVar (sa=true)",
 		build = nil,
 		game = "nameplate_cvar: read nameplateShowFriends in game",
+	},
+	{
+		name = "C_CVar.GetCVarBool",
+		calls = 1,
+		first = "Wuber/UI/Settings/Rows.lua:363",
+		fake = "C_CVar.GetCVarBool(name) returns boolean (true for Sound_EnableSFX by default)",
+		evidence = "docs",
+		source = "tests/surface/apisurface.lua S.ns.C_CVar.GetCVarBool (sa=true)",
+		build = nil,
+		game = "login.f1_sound: check Sound in Background CVar via C_CVar.GetCVarBool",
 	},
 	{
 		name = "C_CVar.SetCVar",
@@ -235,8 +235,8 @@ return {
 		calls = 2,
 		first = "Wuber/Net/GroupFinder.lua:128",
 		fake = "C_LFGList.GetAvailableActivities() returns a table of available activity IDs",
-		evidence = "borrowed",
-		source = "the maintainer's field notes, section 12.2 (LFG Forever Group Finder)",
+		evidence = "guess",
+		source = "tests/harness.lua Group Finder model; in apisurface.lua only via S.called.n",
 		build = nil,
 		game = "lfg_activities: read available Group Finder activities in game",
 	},
@@ -265,8 +265,8 @@ return {
 		calls = 2,
 		first = "Wuber/Net/GroupFinder.lua:191",
 		fake = "C_LFGList.GetSearchResults() returns count and table of result IDs (empty table by default)",
-		evidence = "borrowed",
-		source = "the maintainer's field notes, section 12.2 (LFG Forever Group Finder)",
+		evidence = "guess",
+		source = "tests/harness.lua Group Finder model; in apisurface.lua only via S.called.n",
 		build = nil,
 		game = "lfg_search: run Group Finder search from Rider click",
 	},
@@ -275,8 +275,8 @@ return {
 		calls = 4,
 		first = "Wuber/Net/GroupFinder.lua:116",
 		fake = "C_LFGList.HasActiveEntryInfo() returns boolean (false when not listed)",
-		evidence = "borrowed",
-		source = "the maintainer's field notes, section 12.2 (LFG Forever Group Finder)",
+		evidence = "guess",
+		source = "tests/harness.lua Group Finder model; in apisurface.lua only via S.called.n",
 		build = nil,
 		game = "lfg_listing: check HasActiveEntryInfo while listed vs unlisted",
 	},
@@ -285,8 +285,8 @@ return {
 		calls = 1,
 		first = "Wuber/Net/GroupFinder.lua:276",
 		fake = "C_LFGList.RemoveListing() clears active listing and returns nil",
-		evidence = "borrowed",
-		source = "the maintainer's field notes, section 12.3 (Group Finder click rules)",
+		evidence = "guess",
+		source = "tests/harness.lua Group Finder model; in apisurface.lua only via S.called.n",
 		build = nil,
 		game = "lfg_delist: click delist button in Driver UI",
 	},
@@ -456,13 +456,13 @@ return {
 		game = "B8: verify ticker jitter/lag during Shift-drag in game",
 	},
 
-	-- Globals (39)
+	-- Globals (42)
 	{
 		name = "CreateVector2D",
 		calls = 13,
 		first = "Wuber/Core/Places.lua:486",
 		fake = "CreateVector2D(x, y) returns a vector table { x = x, y = y } with :GetXY()",
-		evidence = "borrowed",
+		evidence = "guess",
 		source = "the maintainer's field notes, section 7.1 (C_Map vector helpers)",
 		build = nil,
 		offline = "pure 2D vector constructor",
@@ -620,7 +620,7 @@ return {
 		calls = 98,
 		first = "Wuber/Core/Runtime.lua:50",
 		fake = "GetTime() returns monotonic session seconds number (1000 + world.now)",
-		evidence = "borrowed",
+		evidence = "guess",
 		source = "the maintainer's field notes, section 8.6 (GetTime counts from start-up)",
 		build = nil,
 		offline = "monotonic elapsed-time arithmetic",
@@ -810,6 +810,16 @@ return {
 		offline = "secret-value guard helper (runtime taint/secret test)",
 	},
 	{
+		name = "date",
+		calls = 7,
+		first = "Wuber/Core/Stats.lua:30",
+		fake = "date(fmt, t) formats epoch timestamp in WoW Lua sandbox",
+		evidence = "guess",
+		source = "tests/harness.lua clock model; in apisurface.lua only via S.called.g",
+		build = nil,
+		offline = "date/time formatting",
+	},
+	{
 		name = "debugstack",
 		calls = 2,
 		first = "Wuber/Core/Runtime.lua:473",
@@ -830,6 +840,15 @@ return {
 		offline = "Lua error-handler lookup",
 	},
 	{
+		name = "hooksecurefunc",
+		calls = 1,
+		first = "Wuber/Core/FlightTimes.lua:358",
+		fake = "hooksecurefunc([tbl, ]name, fn) post-hooks global or table function and returns nil",
+		evidence = "one-real-case",
+		source = "tests/README.md:260 (PF-061, Lab row L18: hooksecurefunc hook on PlaySound)",
+		build = "71139",
+	},
+	{
 		name = "issecretvalue",
 		calls = 10,
 		first = "Wuber/Core/Base.lua:315",
@@ -838,5 +857,15 @@ return {
 		source = "tests/surface/apisurface.lua S.globals.issecretvalue (aut=true)",
 		build = nil,
 		offline = "secret-value predicate helper",
+	},
+	{
+		name = "time",
+		calls = 20,
+		first = "Wuber/Core/FlightTimes.lua:460",
+		fake = "time() returns unix epoch seconds integer in WoW Lua sandbox",
+		evidence = "guess",
+		source = "the maintainer's field notes, section 8.6 (time() is the real clock); in apisurface.lua via S.called.g",
+		build = nil,
+		offline = "epoch timestamp arithmetic",
 	},
 }
