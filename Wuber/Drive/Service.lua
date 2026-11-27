@@ -627,6 +627,19 @@ function DR.AdvertText()
 	return ""
 end
 
+-- (3045 answer 4) Wuber's own advert line as the driver would see it in the editor: the line
+-- DR.AdvertText posts when no own words are saved, without the [Wuber] tag Wuber adds in front. "" when none.
+function DR.DefaultAdvertLine()
+	if not W.AdvertText then return "" end
+	local dest = DR.Dest and DR.Dest() or ""
+	if dest == "" and W.DestHere then dest = W.DestHere() end
+	local ok, text = pcall(W.AdvertText, dest, DR.char().price)
+	if not ok or type(text) ~= "string" then return "" end
+	local tag = W.ADVERT_TAG or "[Wuber]"
+	if text:sub(1, #tag) == tag then text = text:sub(#tag + 1):gsub("^%s+", "") end
+	return text
+end
+
 function DR.CheckAdvert()
 	local due = DR.AdvertDue()
 	DR.adDue = due or nil
