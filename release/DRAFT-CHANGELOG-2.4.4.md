@@ -1,52 +1,53 @@
-# Wuber 2.4.4 (DRAFT: the wording is for the author to approve)
+# Wuber 2.4.4 (DRAFT: the wording is for the maintainer to approve)
 
-This is everything since Wuber 2.4.2.
+This is everything since Wuber 2.4.3, the version players have now. Nothing here is in 2.4.3.
 
 No entry below adds a new addon file, so no **[FULL RESTART]** mark applies this time. Update, then type `/reload`.
 
-## Finding other Wuber drivers
-- If someone says "wuber" in public chat (a channel, /say or /yell), in any spelling or case ("Wuber", "WUBER", "wuber's", "Wubers"), Wuber quietly asks that player's Wuber once, with the same hidden message it already uses between Wuber users. If they are a driver, they show in your list like any other driver. Because it is a hidden addon message, it also finds drivers on another layer. Nobody sees anything in chat.
-- It is polite by design: one ask per name per hour, 12 an hour in all, at least 10 seconds apart, never in the first minute after login or a reload, never in combat or in a raid, and each one goes out a few seconds late at random so your several game windows do not all send at once.
-- A line tagged "[Wuber]" works as before, and an advert still never invites anyone by itself.
+## Words that changed
+The maintainer answered a words page, and these lines now say what they mean:
+- Settings, Driving: "Invite public chat buyers" is now "Invite public chat riders". Its tooltip now says Wuber "asks you once when you switch this on" (it used to say it "asks first", which sounded like before every invite). The `/wuber drive` line, the Advert button tooltip, Earnings ("n riders asked") and the `/wuber stats` line say "riders" too.
+- The "Do nothing" choice for riders who don't pay says "you only get a toast" instead of "a note".
+- The raid alert says "Raid summons stopped: the raid leader left the group." (it said "the runner").
+- The Settings row "Tips" is now "Login tips", and the line shown when tips are off says "Tips are off. Turn Login tips back on in Settings > Riding, or type /wuber tips."
+- The Skip the bird line says "Skip the bird: off. Turn Flight offers on in Settings, Riding."
+- The "Crew is full" message says "Crew is full (8 players)".
+- On the crew member card, "my account" is now "my window" (the tooltip title is "My own window").
+- The reasons Wuber gives for not whispering back to a public request now say which switch is off: "Inviting riders who whisper you or ask in the app is off", "Listing people who ask for a summon in public chat is off" or "Whisper back to public requests is off".
+- The "Reduce motion" tooltip now says "Nothing slides, grows, pulses or turns. Pages and sheets fade in place instead."
 
-## Clicks and buttons
-- Group Finder, "List me" sheet: a click in the note box selects the whole note, so you can copy it with Ctrl+C. The box stays read-only and Escape still lets go of the keyboard.
-- The big Drive button now picks its spot to stay off the clickable buttons of the open window, not only off its area. Before, on a small screen or at a large Wuber size it could sit on top of buttons on Earnings, Customers or Messages. It is never hidden or made smaller. On the smallest screens at the largest size on Messages, every spot covers something, so it takes the one that covers the least.
+## For drivers
+- Customers: a customer's line and the note sheet show the last ride's tip and the total tipped, for example "2 rides with you · last 12 Nov · Orgrimmar · tipped 5s (10%) · 7s 50c tipped in all", or "no tip" when the last ride had none. This comes from your own payment log; nothing new is saved.
+- Advanced mode: a lead row says how many rides that person has had so far ("2 rides with you") instead of an ordinal.
+- Advanced mode: the returning-rider chip now shows for a rider who paid, was dropped and came back. Before, it stayed hidden for them.
+- Simple mode: "Your business" has one "My advert line" row. It opens the advert editor straight away, and Back leaves the screen. The other message screens stay in Advanced mode.
+- You can type "WTS" in your own advert line and your own messages, for example "WTS summons to Ratchet". Wuber still refuses "WTB", gold amounts, digits and money words, and links, and it still reads someone else's "WTS" line as a seller.
+- The default advert line now starts "Selling summons to <place>, <price>" (or "Selling summons, <price>") and ends ". Pay after you land. /w me or use my Wuber addon (on curse), you can also set it up and become a driver". The "[Wuber]" tag is still added for you.
+- Group Finder, "List me" sheet: the game's Note box does not accept paste. The sheet now shows a short note in big letters to type by hand ("Wuber summons to <place>"), and the steps say "Open the Group Finder, go to List yourself, pick a Playstyle, click the Note box and type the note below by hand, then List me." The copy box and the Ctrl+C step are gone.
+- Alert character: its tooltip adds a line when the game's "Sound in Background" setting is off ("Sound in Background is off in the game's sound settings, so the bell is silent while another window is in front").
+- The big Drive button, when it is docked to the Wuber window, now follows the window while you drag it (not in combat). It goes back to its place when you let go.
+
+## For riders
+- If the driver removes you from the group while the summon box is up, Wuber now ends the ride at once and shows the "Ride ended" page with the line "Removed from the group". It no longer shows the "Drivers can block riders who don't pay" warning or the pay-by-mail line, because no summon was taken. Before, the page went back to "Waiting for the invite" and said nothing. Leaving the group yourself, a normal end, a cancel and a removal before the summon box is up work as before.
+- Every map pulse is calmer: one soft ring every 3 seconds instead of one or two quicker, stronger ones. This covers the "Waiting for riders" ring, the Home map and world map "you" dot, a chosen driver's pin and the pin ring on the game's map. "Reduce motion" still stops them.
+- Trips, folded view: the "Milestones" title and card appear only when a medal is shown. Before, an empty title could show.
 
 ## Text that was cut off or ran into something
-Wuber's own width table measures text a few percent narrower than the real game draws it. These places were made roomier. No words were shortened or changed.
-- The "Don't show again" label on the Skip the bird card.
-- Continent names in the World view.
-- Names and "owes" amounts in the Drive queue rows and on the floating bar.
-- The "Replay" and "Reset place" buttons in Settings.
-- The "Summon to" choice ("Where I stand") on the Places sheet.
-- The title on Home's driver search no longer runs under the bell button.
-- The Earnings target value ("50g / hour") has more room.
-- Settings' "Always narrow" choice.
-- The four quick picks on the bounty card, including "Custom".
-- Paragraphs now leave a little more room for a line the game may wrap: the "Founder (automatic)" line in Settings, Help's "Whispers are the backup" paragraph, the Messages lines and the group card's second line.
-
-## Words that were wrong or out of date
-Every help and tip text was read against the code. These now say what Wuber really does:
-- Help: "every Wuber nearby" and "every layer and every copy of the world" now say "on your realm" and "every Wuber on your realm". "Nobody can fake a driver or a price" now says "A driver's price comes only from that driver's own character."
-- First-open tips: the line "Cheaper drivers glow brighter" is gone (cards no longer glow), "then Request" says "then Request summon", and the Skip tips tooltip names the real way back: Settings, Riding, Tips, Replay.
-- Login tips describe the Skip the bird card by what it shows, and "Drive setup" says "Set up driving".
-- Settings tips: the Hidden drivers tip says right-click works in Advanced mode; the "Fit window" and keep-closed button tips and the bug report's "player 1" names are explained correctly.
-- The `/wuber` check-in line, the not-on-network line and the driver setup card ("Yes or No thanks") say what happens.
-- The no-click promise in Help and the driver intro now also names the Messages lines you switch on (greeting, pay reminder, "You're next"), not only the auto-reply.
-- What's new: Auto mode invites by itself only when a whisper clearly asks; buyers in public chat only if you switch that on; unclear whispers wait as a lead.
-- Help: "Wuber adds the [Wuber] tag to your advert for you."
-- The tooltip on the old-summoning-addon card ("Switch it off") says it asks you to type /reload to finish, instead of saying it reloads for you.
+No words were shortened or changed.
+- The pay page: the instruction line can wrap to three lines, and it no longer runs under the "Accepted, Invite, Portal, Arrived, Pay" bar. The bar moves down by the room the line needs.
+- The flight map's price tags: when no spot beside a pin is free, the tag takes the nearest clear spot on the screen and slides in as a last resort. Before, one could be drawn partly off the screen.
+- Settings: the "Reset" button next to Wide pages is wider, so "Reset" fits at a big window scale.
+- The What's new card steps aside the moment the Wuber window resizes or shows, and follows a moved window within a quarter of a second (it took up to a second). A flight-map price tag no longer sits under it.
+- The Customers note sheet has a little more room for the tip line.
 
 ## Behind the scenes
-- Reading a public chat line for place names costs about 3.7 times fewer Lua instructions, with the same places found and the same typo allowance. You should notice nothing except less work in a busy chat.
-- A small unused helper was removed from the World map code. Nothing you see changes.
+- Scroll bars no longer re-measure their list on every frame. You should notice nothing except less work.
 
 ## Not yet tried in the real game
 All of the above passes its automatic tests in the offline fake game, but none of 2.4.4 has been played in the real game yet, so please do not count on it. The ones most worth a look:
-- Clicking the Group Finder note box and pressing Ctrl+C (the order in which the real game places the cursor and runs the mouse scripts is not proven).
-- Asking someone who says "wuber" in chat: that a driver on another account or another layer shows up, and that nothing appears in chat.
-- The big button's new spot on a small screen at a large Wuber size, especially Messages.
-- The wider text rooms: the game's text widths were measured only at font sizes 11, 14 and 22, so the sizes in between are estimated. A label may still be tight at an odd setting.
-- The tooltip on the old-summoning-addon card: it only appears with that addon installed, which no test account has.
-- Still known and not fixed: at the largest UI scale, a long-word toast can be 5 px wider than the room beside the window, with no free place when the What's new card is up.
+- Being removed from the group by the driver while the summon box is up: the "Removed from the group" page, and that the "You have been removed from the group." line is what the game really sends.
+- Typing the Group Finder note by hand and listing yourself with it.
+- The big button following the window while you drag it, and settling back when you let go.
+- The calmer pulses on the Home map, the world map and the pin ring, at the real frame rate.
+- The Alert character tooltip line (needs the Sound in Background setting off).
+- Layout fixes (pay page, flight-map price tags, Settings Reset button, What's new card): each should be checked once with the game's real fonts.
