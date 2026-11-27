@@ -559,7 +559,7 @@ test("ui.driver.customers: I27 the Note sheet and the unfolded Customers pane: n
 	local function visibleOne(text)
 		for _, fs in ipairs(a2:findText(text, true, true)) do if H.visible(fs) and fs:GetParent() then return fs end end
 	end
-	local privacy = visibleOne("Only you and the crew windows you marked as your own accounts see notes. Never the rider.")
+	local privacy = visibleOne("Only you and your own windows see notes. Never the rider.")
 	local save = visibleOne("Save")
 	local gift = visibleOne("Gifted")
 	local box
@@ -873,7 +873,7 @@ test("ui.driver.customers: (BRIEF19 F4) a past customer (not in the queue) gets 
 	DR.Log().rides[1] = table.concat({ a.env.time() - 600, 5000, DAN, "Orgrimmar", "t", 5000 }, ",")
 	W.Driver.ShowScreen("customers")
 	w:advance(2)
-	ok(texts(a):find("Only you and the crew windows you marked", 1, true), "the privacy line stays")
+	ok(texts(a):find("Only you and your own windows", 1, true), "the privacy line stays")
 	ok(not texts(a):find("Not in your queue", 1, true), "no queue line")
 	T.clean(w)
 end)

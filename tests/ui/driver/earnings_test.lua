@@ -125,7 +125,7 @@ test("ui.driver.earnings: F5 the lit period pill is the one the totals use (firs
 	T.clean(w2)
 end)
 
--- one busy hour: Wed 20:00, 2.9g in an hour open, 5 rides, 6 buyers asked (tour #49, #50)
+-- one busy hour: Wed 20:00, 2.9g in an hour open, 5 rides, 6 riders asked (tour #49, #50)
 local function busy(W)
 	W.Drive.Heatmap = function()
 		return { { wday = 3, hour = 20, copper = 29000, rides = 5, open = 60, asks = 6 } }
@@ -143,7 +143,7 @@ test("ui.driver.earnings: F6 the tapped hour's pill holds all its words with roo
 		cell:GetScript("OnClick")(cell, "LeftButton")
 		w:advance(1)
 		local text = hm.info:GetText() or ""
-		ok(text:find("Wed 20:00", 1, true) and text:find("6 buyers asked", 1, true), view .. ": every number is there: " .. text)
+		ok(text:find("Wed 20:00", 1, true) and text:find("6 riders asked", 1, true), view .. ": every number is there: " .. text)
 		ok(not hm.info:IsTruncated(), view .. ": nothing cut: " .. text)
 		local lines = H.textLines(hm.info) or 1
 		local need = lines * 11 * 1.2 + 12

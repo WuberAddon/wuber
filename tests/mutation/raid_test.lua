@@ -176,7 +176,7 @@ test("mutation raid: a crew window keeps raid summons running for a few seconds 
 	local told = 0
 	local alert = C.Alert
 	C.Alert = function(text, kind, ...)
-		if tostring(text):find("Raid summons stopped: the raid leader left", 1, true) then told = told + 1 end
+		if tostring(text):find("Raid summons stopped: the crew captain left", 1, true) then told = told + 1 end
 		return alert(text, kind, ...)
 	end
 	ok(C.RaidOn(), "control: raid summons run on Cal's window")

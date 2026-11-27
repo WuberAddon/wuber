@@ -112,7 +112,7 @@ test("d4 f2: the heatmap tip keeps the original sentence, changing only the colo
 	local w, a, s = world()
 	local tip = s.heat.wuberTip and s.heat.wuberTip.text
 	local want = "Each square is one hour of one weekday: the stronger the violet, the more you earned per hour open. "
-		.. "Outlined squares: buyers asked while you were closed. Tap a square for its numbers."
+		.. "Outlined squares: riders asked while you were closed. Tap a square for its numbers."
 	eq(tip, want, "the tip's words")
 	T.clean(w)
 end)

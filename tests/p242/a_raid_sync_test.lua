@@ -141,7 +141,7 @@ for _, step in ipairs({ 1, 5 }) do
 		ok(not C.RaidOn(), "the runner left and Lea (no Wuber) leads: Cal's window no longer says raid summons run")
 		ok(next(C.raidRows) == nil, "Cal's window lists nobody: no window keeps that queue")
 		local told = 0
-		for _, t in ipairs(said) do if t:find("Raid summons stopped: the raid leader left", 1, true) then told = told + 1 end end
+		for _, t in ipairs(said) do if t:find("Raid summons stopped: the crew captain left", 1, true) then told = told + 1 end end
 		eq(told, 1, "Cal is told once that raid summons stopped")
 		w:botWhisper("Raider Rb", cal, "123")
 		w:advance(5)

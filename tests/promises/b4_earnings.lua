@@ -318,7 +318,7 @@ return function(Hunt)
 	Hunt.promise{
 		id = "b4earnings.try_this_hour_when_closed_asks",
 		area = "Earnings",
-		text = "In Advanced mode, when buyers asked for summons in an hour while you were closed, Earnings shows a 'Try <Day> <HH>:00' tip.",
+		text = "In Advanced mode, when riders asked for summons in an hour while you were closed, Earnings shows a 'Try <Day> <HH>:00' tip.",
 		source = "Wuber/UI/Driver/Earnings.lua:716",
 		kind = "scenario",
 		needs = { phone = "drive_earnings" },

@@ -637,7 +637,7 @@ test("lab photo: the tour's demo data adds up (shift split = takings, casts = ri
 			check((tot.rides or 0) > 0, tag .. "rides logged")
 			if e.s.id == "earnings_heatmap" then
 				check(p.picked ~= nil, tag .. "no square tapped")
-				check(p.info and not has(p.info, "Tap a square") and has(p.info, "buyers asked"), tag .. "the tapped square's numbers: " .. tostring(p.info))
+				check(p.info and not has(p.info, "Tap a square") and has(p.info, "riders asked"), tag .. "the tapped square's numbers: " .. tostring(p.info))
 			end
 		elseif e.s.id == "shift" then
 			local ls = p.lastShift or {}
