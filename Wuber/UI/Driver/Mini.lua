@@ -109,23 +109,26 @@ local function buildOffer()
 	return f
 end
 
--- (issue 102) the big summon button and its console, while they show: boxes { left, right, bottom,
--- top } in UIParent units, for the card to keep off
+-- (issue 102, 108) the big summon button, its console, and any full-screen dialog at the same spot,
+-- while they show: boxes { left, right, bottom, top } in UIParent units, for the card to keep off
+local function addBox(out, ue, g)
+	if type(g) == "table" and W.Plain(Try(g, "IsVisible")) then
+		local l, r, b, t = N(Try(g, "GetLeft")), N(Try(g, "GetRight")), N(Try(g, "GetBottom")), N(Try(g, "GetTop"))
+		local e = N(Try(g, "GetEffectiveScale"))
+		if l and r and b and t and e and r > l and t > b then
+			local k = e / ue
+			out[#out + 1] = { l * k, r * k, b * k, t * k }
+		end
+	end
+end
 local function buttonBoxes()
 	local out = {}
 	local ue = N(Try(UIParent, "GetEffectiveScale"))
 	if not (ue and ue > 0) then return nil end
-	for _, name in ipairs({ "WuberDriveButton", "WuberDriveMini" }) do
-		local g = rawget(_G, name)
-		if type(g) == "table" and W.Plain(Try(g, "IsVisible")) then
-			local l, r, b, t = N(Try(g, "GetLeft")), N(Try(g, "GetRight")), N(Try(g, "GetBottom")), N(Try(g, "GetTop"))
-			local e = N(Try(g, "GetEffectiveScale"))
-			if l and r and b and t and e and r > l and t > b then
-				local k = e / ue
-				out[#out + 1] = { l * k, r * k, b * k, t * k }
-			end
-		end
+	for _, name in ipairs({ "WuberDriveButton", "WuberDriveMini", "WuberNewsCard", "WuberInFlight", "WuberTipCard", "WuberDriveFrame", "WuberFrame" }) do
+		addBox(out, ue, rawget(_G, name))
 	end
+	addBox(out, ue, st.pop)
 	return #out > 0 and out or nil
 end
 
