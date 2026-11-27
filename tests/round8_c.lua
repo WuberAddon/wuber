@@ -1,10 +1,10 @@
--- Round 8 (Wuber 2.3.0, SPEC7), agent C (rider): the folded rider UI of every new feature, on the
+-- Round 8 (Wuber 2.3.0), agent C (rider): the folded rider UI of every new feature, on the
 -- Net/Drive stubs (W.Bounty, W.Raincheck, W.Passphrase, W.FounderSummon replaced per test).
 -- Test names start "r8 c:". Loaded by run.lua with the module tests' helpers.
 --   Two clients (SPEC7 8.2, "r8 c e2e:"): the PvP warning on Confirm from a real beacon, the
 --     passphrase on Found matching the driver's, the live tracker from real G messages, a raincheck
 --     asked on Sorry / accepted on the card / used on rebooking, a bounty served -> the toast.
---   Unfolded pages (SPEC7 2.8, 2.9): ride, confirm (and Finding), trips, settings (and Help): what
+--   Unfolded pages: ride, confirm (and Finding), trips, settings (and Help): what
 --     moves into the side pane, what stays, folding back exactly, no new frames the second time,
 --     PAGE from Settings.
 --   Confirm: the dial (and the pill's words under it), the route header, the PvP card per level,
@@ -719,7 +719,7 @@ test("r8 c: settings - the new rows (flight offers, wide pages, reset; the split
 end)
 
 ---------------------------------------------------------------------------
--- Unfolded pages (SPEC7 2.8; 2.9 page tests)
+-- Unfolded pages (2.9 page tests)
 ---------------------------------------------------------------------------
 
 -- a rider on a wide screen (1920 x 1080), every page free to unfold; the pages' starting
@@ -899,7 +899,7 @@ test("r19 c: F3 - About this driver after a tight folded layout, unfolded: back 
 	clean(w)
 end)
 
--- (2.3.2, I29: Google's shots 8 and 9) "About this driver" covered the south of both continents in the
+-- (2.3.2, I29: a reviewer's shots 8 and 9) "About this driver" covered the south of both continents in the
 -- side pane, and folded Confirm never said "10th ride with Mia"
 test("r8 c: I29 - '10th ride with Mia' in the driver card folded and unfolded; About this driver in the booking column, never over the map", function()
 	local check = dofile(T.dir .. "/lib/listfade.lua")(H)
@@ -985,7 +985,7 @@ test("r8 c: unfolded trips - the milestones three to a row on the right; folded,
 	clean(w)
 end)
 
--- (round 9, C3: Google's report was not a real bug - UI.Window builds Settings with the window, so
+-- (round 9, C3: a reviewer's report was not a real bug - UI.Window builds Settings with the window, so
 -- "settings" is registered with UI.Fold before Help can open; this test keeps it that way)
 test("r8 c: round 9 C3 - Help opened before Settings while unfolded stays wide, its text inside the window", function()
 	local w, r = wideWorld()
@@ -1078,7 +1078,7 @@ test("r8 c: unfolded settings - sections left, the chosen one right; Help wide; 
 end)
 
 ---------------------------------------------------------------------------
--- Two clients over the real wire (SPEC7 8.2): what the rider sees
+-- Two clients over the real wire: what the rider sees
 ---------------------------------------------------------------------------
 
 local ANITA, TESTCHAR = T.ANITA, T.TESTCHAR

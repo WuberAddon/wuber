@@ -24,7 +24,7 @@ local DR = W.Drive
 local plain, str, num = W.Plain, W.Str, W.Num
 
 ---------------------------------------------------------------------------
--- Raid summons (SPEC4 3): free summons for the runner's own raid
+-- Raid summons: free summons for the runner's own raid
 ---------------------------------------------------------------------------
 -- A raid member asks (raid/party chat, a whisper, or their Wuber's "Request a summon": RQ),
 -- or the runner adds them by hand; the picked Warlocks' buttons take the next raider (the
@@ -154,7 +154,7 @@ function DR.RaidSpot()
 end
 
 local function atSpot(unit, spotMap)
-	local sim = DR.SimHooks -- the test addon's shard-free test mode (SPEC5): see DR.Here
+	local sim = DR.SimHooks -- the test addon's shard-free test mode: see DR.Here
 	if sim and sim.here and unit then
 		local ok, v = pcall(sim.here, unit)
 		if ok and v == true then return true end
@@ -455,7 +455,7 @@ function DR.RaidTick(now)
 				DR.raidKeeperGoneAt = nil
 				DR.crewRaidRun = false
 				for k in pairs(DR.raidRows) do DR.raidRows[k] = nil end
-				DR.Alert("Raid summons stopped: the runner left the group.", "raid")
+				DR.Alert("Raid summons stopped: the raid leader left the group.", "raid")
 				if W.InGroup() then DR.Hello() end
 				W.Fire("DRIVE_RAID")
 				W.Fire("SETTINGS", "drive")

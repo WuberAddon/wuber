@@ -1,4 +1,4 @@
--- tools/profile-tests.lua: where the suite's time goes (BRIEF21 S3).
+-- tools/profile-tests.lua: where the suite's time goes.
 --
 --   lua5.1 tools/profile-tests.lua "<filter>" [run.lua flags]     (from the repo or a worktree)
 --

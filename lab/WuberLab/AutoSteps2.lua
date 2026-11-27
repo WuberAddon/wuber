@@ -173,9 +173,15 @@ screen({ id = "a_bug_report", side = "settings",
 		local special = rawget(_G, "UISpecialFrames")
 		if name and type(special) == "table" then
 			b.listed = false
-			for _, n in ipairs(special) do if n == name then b.listed = true end end
+			-- an open sheet takes its window's slot (Wuber/Theme/Forms.lua escTake): the sheet's name counts too, and the sheet is what Escape hides
+			local sheetName = type(f) == "table" and fn(f, "GetName") and str(f:GetName())
+			local target = holder
+			for _, n in ipairs(special) do
+				if n == name then b.listed = true end
+				if sheetName and n == sheetName then b.listed, target = true, f end
+			end
 			if b.listed then
-				pcall(holder.Hide, holder)
+				pcall(target.Hide, target)
 				b.escGame = not B.Shown()
 				B.Open()
 			end

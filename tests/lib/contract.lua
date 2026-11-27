@@ -1,7 +1,7 @@
 -- tests/lib/contract.lua: the contract test every new module's test file starts with
 -- (REFACTOR-MAP 4.2): the module is registered, its dependencies are exactly its header's
 -- `Uses:`, its header names this test file, and every public name it promises exists with the
--- right type. Round 8 (SPEC7 section 1) uses it for the 17 new modules.
+-- right type. Round 8 uses it for the 17 new modules.
 --
 --   local W, w, r, Mod = T.contract("Net.Portal", "tests/net/portal_test.lua",
 --       { ["W.Passphrase"] = "function", ["W.Bounty.Demand"] = "function", ["Mod.Month"] = "function" })

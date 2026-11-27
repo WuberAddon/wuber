@@ -32,6 +32,10 @@ return {
 		evidence = "one-real-case", source = "Lab run 2 (B3: a plain frame ate every key)", build = "71139", bug = "B3", fed_by = "keys" },
 	{ id = "edit.focus-outside-click", what = "a click outside a focused EditBox does not clear its focus",
 		evidence = "one-real-case", source = "Lab run 2: the Settings search box kept keys after a click elsewhere", build = "71139", bug = "B2", was = "guess" },
+	{ id = "keys.editbox-takes-key", what = "a focused, shown EditBox takes a key press: nothing else (no binding, no keyboard frame) sees it",
+		evidence = "guess", source = "FAKE-GAPS: key routing in the fake game (tests/fakegame/key_routing_test.lua); not yet seen in a recording", bug = "-" },
+	{ id = "keys.propagate-off-swallows", what = "a shown keyboard-enabled frame whose propagate flag is off swallows the key, so a binding does not fire",
+		evidence = "guess", source = "FAKE-GAPS: key routing in the fake game (tests/fakegame/key_routing_test.lua); same claim as keys.propagate-default-off, now for routing", bug = "-" },
 	-- hit order
 	{ id = "hit.clip-ancestor-level", what = "a frame inside a SetClipsChildren ancestor competes with outside frames at the ancestor's strata and level",
 		evidence = "one-real-case", source = "tests/fixtures/rec/focus-run3-back.lua: 122 of 122 Lab rows where level order and the game disagreed",
@@ -87,8 +91,12 @@ return {
 		differs = "OPEN: the real client may say ADDON_ACTION_FORBIDDEN, not BLOCKED (FAKE-GAPS job 2860)" },
 	{ id = "combat.secure-frozen", what = "a protected frame (a secure button, or a frame holding one) cannot be shown, hidden, moved or changed in combat",
 		evidence = "one-real-case", source = "Logs/taint.log of 19 Nov: 7 blocked actions; the 'Paused during combat' label (B6)", build = "71037", bug = "B6", was = "guess" },
+	{ id = "combat.protected-child", what = "a plain frame parented to a secure frame, or anchored to one, is protected too (IsProtected true, so no Show/Hide/SetPoint in a fight); only when a probe fixture taught it (H.protectRule)",
+		evidence = "guess", source = "job 2908: WuberProbe protprop (own secure button, a plain child, an anchored frame); no real run yet, the stand-in is synthetic", bug = "B6", fed_by = "protect" },
 	{ id = "combat.protected-propagation", what = "a plain frame becomes protected when it holds a secure child (the fake: any descendant)",
 		evidence = "guess", source = "FAKE-GAPS job 2860 OPEN 'which frames count as protected'; the pay pill under TradeFrame", bug = "B6" },
+	{ id = "combat.can-change-protected", what = "CanChangeProtectedState(frame) is false for a protected frame while the player is in combat",
+		evidence = "guess", source = "FAKE-GAPS: protected state in the fake game (tests/fakegame); same claim as combat.secure-frozen, read through the API", bug = "B6" },
 	-- frames
 	{ id = "drag.anchor-center", what = "a dragged frame is re-anchored by its CENTER",
 		evidence = "guess", source = "FAKE-GAPS HUNT-01: the real game picks the point nearest a screen edge or corner", bug = "-" },

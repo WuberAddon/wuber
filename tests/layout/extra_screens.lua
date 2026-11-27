@@ -42,7 +42,7 @@ local function homeWith(W)
 	return true
 end
 
--- (BRIEF26 item 3) realistic, DIFFERENT world sizes for the two continents (the harness gives both the same fake
+-- realistic, DIFFERENT world sizes for the two continents (the harness gives both the same fake
 -- 10000-yard square, so a scale rule could never fail). u runs along -y and v along -x, as the game's maps:
 -- Kalimdor from the author's saved calibration (u = 0.4507 - 4.1085e-5 wy, v = 0.5123 - 4.1085e-5 wx); the Eastern
 -- Kingdoms taller than wide (33333 yards along y, 21739 along x).
@@ -777,6 +777,29 @@ function X.install(L, W)
 				local oki, ids = pcall(Q.install, L, W)
 				if oki and type(ids) == "table" then for _, id in ipairs(ids) do added[#added + 1] = id end end
 			end
+		end
+	end
+	-- (words244 C) the ended page of a rider removed from the group: the "Removed from the group" line above the unpaid card
+	do
+		local base, at
+		for i, s in ipairs(L.PHOTO_SCREENS) do if s.id == "done_unpaid" then base, at = s, i end end
+		if base and type(base.run) == "function" then
+			table.insert(L.PHOTO_SCREENS, at + 1, { id = "done_removed", side = "rider", unfold = base.unfold, only = base.only,
+				title = "Ride ended: removed from the group while the summon box was up",
+				run = function(w)
+					local r = base.run(w)
+					if r ~= true then return r end
+					if type(w.ride) ~= "table" then return "no demo ride" end
+					w.ride.removed = true
+					w.Fire("RIDE")
+					w.UI.Show("done")
+					local scr = type(w.UI.state) == "table" and type(w.UI.state.screens) == "table" and w.UI.state.screens.done
+					if type(scr) == "table" and type(scr.update) == "function" then scr.update() end
+					local text = type(scr) == "table" and scr.unpaidText and scr.unpaidText:GetText() or ""
+					if not tostring(text):find("Removed from the group", 1, true) then return "the card does not show the line" end
+					return true
+				end })
+			added[#added + 1] = "done_removed"
 		end
 	end
 	-- (design 4, group H) "Don't serve again until": tests/layout/d4_h_screens.lua (note_serve, customers_serve)

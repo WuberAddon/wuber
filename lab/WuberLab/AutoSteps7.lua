@@ -1169,6 +1169,137 @@ for _, tid in ipairs({ "skip_the_bird", "drive_setup" }) do
 		end })
 end
 
+---------------------------------------------------------------------------
+-- a_pulse_ring: the "Waiting for riders" ring pulses once every 3 s (the play test said it flashed)
+---------------------------------------------------------------------------
+-- The open console with nobody in the list: the real game times the ring's alpha for about 9 s. Each time the alpha jumps up from a
+-- faded ring a new ring starts; the gaps between starts must be about 3 s, with one ring only. Local only: no chat, no network, no click.
+local RING_WATCH = 9.0
+screen({ id = "a_pulse_ring", side = "driver", maxWait = 16,
+	title = "Driver console: the Waiting for riders ring starts once every 3 seconds",
+	run = function(W)
+		data().ring = { phase = 0, starts = {}, samples = 0 }
+		local r = runOf("console_open")(W)
+		if r ~= true then return r end
+		local DR = W.Drive
+		if type(DR) == "table" and fn(DR, "Sorted") then K.stub(DR, "Sorted", function() return {} end) end
+		local D = W.Driver
+		if type(D) == "table" and fn(D, "RefreshNow") then D.RefreshNow() end
+		return true
+	end,
+	ready = function(W)
+		local d = data().ring
+		if not d or d.phase == 2 then return true end
+		local D = W.Driver
+		local v = type(D) == "table" and type(D.ui) == "table" and D.ui.console or nil
+		local pulse = type(v) == "table" and type(v.empty) == "table" and v.empty.pulse or nil
+		local t = clock()
+		if not d.t0 then d.t0 = t end
+		guarded(d, "err", function()
+			if type(pulse) ~= "table" or type(pulse.rings) ~= "table" or not pulse.rings[1] then d.none = true return end
+			d.rings = #pulse.rings
+			d.period = num(pulse.period)
+			local a = num(callm(pulse.rings[1], "GetAlpha")) or 0
+			d.samples = d.samples + 1
+			d.peak = math.max(d.peak or 0, a)
+			-- a start: the alpha rises again after it had faded (below a third of the peak so far)
+			if d.last and a > d.last + 0.08 and d.low then
+				d.starts[#d.starts + 1] = t
+				d.low = false
+			end
+			if a < (d.peak or 0) / 3 then d.low = true end
+			d.last = a
+		end)
+		if d.none or d.err or t - d.t0 >= RING_WATCH then d.phase = 2 return true end
+		return false
+	end,
+	verify = function()
+		local d = data().ring
+		if not d then return "skip", "the console did not set up" end
+		if d.err then return "look", "the check itself broke: " .. tostring(d.err.broke) end
+		if d.none then return "skip", "no Waiting for riders ring on the console (UI.Driver ui.console.empty.pulse)" end
+		if (d.peak or 0) <= 0 then return "skip", "the ring never showed any alpha (Reduce motion on, or the console is not open)" end
+		local out = {}
+		if d.rings ~= 1 then
+			out[#out + 1] = result("one ring", "look", "the pulse has " .. tostring(d.rings) .. " rings, not one", nil)
+		else
+			out[#out + 1] = result("one ring", "pass", "the pulse has one ring", nil)
+		end
+		local n = #d.starts
+		if n < 2 then
+			out[#out + 1] = result("ring every 3 s", "look", ("only %d ring start(s) in %.0f s (%d samples, peak alpha %.2f): too slow or not measurable"):format(n, RING_WATCH, d.samples, d.peak or 0), nil)
+		else
+			local gap = (d.starts[n] - d.starts[1]) / (n - 1)
+			if gap >= 2.6 and gap <= 3.4 then
+				out[#out + 1] = result("ring every 3 s", "pass", ("a ring starts every %.2f s (%d starts, peak alpha %.2f)"):format(gap, n, d.peak or 0), nil)
+			else
+				out[#out + 1] = result("ring every 3 s", "look", ("a ring starts every %.2f s, not about 3 s (%d starts)"):format(gap, n), nil)
+			end
+		end
+		return out
+	end })
+
+---------------------------------------------------------------------------
+-- a_pulse_map: the rider Home map's you-dot ring pulses once every 3 s (the play test said the map pulse was too fast)
+---------------------------------------------------------------------------
+-- Same timing as a_pulse_ring, read from the Home map's you dot (UI state screens.home.map.me.pulse). Local only: no chat, no network, no click.
+screen({ id = "a_pulse_map", side = "rider", maxWait = 16,
+	title = "Home map: the you-dot ring starts once every 3 seconds",
+	run = function(W)
+		data().mring = { starts = {}, samples = 0 }
+		return runOf("home_empty")(W)
+	end,
+	ready = function(W)
+		local d = data().mring
+		if not d or d.done then return true end
+		local st = type(W.UI) == "table" and W.UI.state
+		local hs = type(st) == "table" and type(st.screens) == "table" and st.screens.home
+		local m = type(hs) == "table" and hs.map
+		local pulse = type(m) == "table" and type(m.me) == "table" and m.me.pulse or nil
+		local t = clock()
+		if not d.t0 then d.t0 = t end
+		guarded(d, "err", function()
+			if type(pulse) ~= "table" or type(pulse.rings) ~= "table" or not pulse.rings[1] then d.none = true return end
+			d.rings = #pulse.rings
+			local a = num(callm(pulse.rings[1], "GetAlpha")) or 0
+			d.samples = d.samples + 1
+			d.peak = math.max(d.peak or 0, a)
+			if d.last and a > d.last + 0.08 and d.low then
+				d.starts[#d.starts + 1] = t
+				d.low = false
+			end
+			if a < (d.peak or 0) / 3 then d.low = true end
+			d.last = a
+		end)
+		if d.none or d.err or t - d.t0 >= RING_WATCH then d.done = true return true end
+		return false
+	end,
+	verify = function()
+		local d = data().mring
+		if not d then return "skip", "the Home screen did not set up" end
+		if d.err then return "look", "the check itself broke: " .. tostring(d.err.broke) end
+		if d.none then return "skip", "no you-dot ring on the Home map (UI.state.screens.home.map.me.pulse)" end
+		if (d.peak or 0) <= 0 then return "skip", "the ring never showed any alpha (Reduce motion on, or the map is not showing)" end
+		local out = {}
+		if d.rings ~= 1 then
+			out[#out + 1] = result("one ring", "look", "the map pulse has " .. tostring(d.rings) .. " rings, not one", nil)
+		else
+			out[#out + 1] = result("one ring", "pass", "the map pulse has one ring", nil)
+		end
+		local n = #d.starts
+		if n < 2 then
+			out[#out + 1] = result("map ring every 3 s", "look", ("only %d ring start(s) in %.0f s (%d samples, peak alpha %.2f): too slow or not measurable"):format(n, RING_WATCH, d.samples, d.peak or 0), nil)
+		else
+			local gap = (d.starts[n] - d.starts[1]) / (n - 1)
+			if gap >= 2.6 and gap <= 3.4 then
+				out[#out + 1] = result("map ring every 3 s", "pass", ("a ring starts every %.2f s (%d starts, peak alpha %.2f)"):format(gap, n, d.peak or 0), nil)
+			else
+				out[#out + 1] = result("map ring every 3 s", "look", ("a ring starts every %.2f s, not about 3 s (%d starts)"):format(gap, n), nil)
+			end
+		end
+		return out
+	end })
+
 -- the WATCH list (AutoCheck.lua): each thing the round changed, the words that must appear on a walked screen or in a tooltip, and the
 -- screens that walk it. "tip": a tooltip a hover opened; "text": a drawn text. Judged at the end of a whole run.
 local function watch(id, what, words, screens, on, steps)

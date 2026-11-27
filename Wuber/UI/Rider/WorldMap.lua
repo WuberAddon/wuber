@@ -19,7 +19,7 @@
 -- Events: listens (from the first Build: Listen DRIVERS, Listen BOUNTY, Listen FLIGHTS); fires (none)
 -- Standalone: no
 -- Test: tests/ui/rider/worldmap_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 3; owner B)
+-- From: new in Wuber 2.3.0
 --
 -- Callers (C's `ride` and `confirm` pages) reach it through the handle:
 --   local WorldMod = W.Mod("UI.Rider.WorldMap")
@@ -41,9 +41,9 @@
 --       nil when it is not drawn). Kalimdor (1) is on the left, the Eastern Kingdoms (0) on the right.
 --   WorldMod.CutEdge(cont) -> x, top, bottom, dir: the box's inner edge (the cut sea between the two),
 --       its y range, and dir +1 when the other continent lies to the right (Kalimdor), -1 to the left.
---       For a "continues by boat / zeppelin" arrow drawn at the cut (BRIEF25 M2). Pane coordinates as Project.
+--       For a "continues by boat / zeppelin" arrow drawn at the cut. Pane coordinates as Project.
 -- Never drawn while folded (UI.Fold.IsUnfolded() false) or hidden; nothing redraws while hidden.
--- Art (SPEC7 3.1): C_Map continent art (uiMapIDs found under Azeroth 947), else the legacy
+-- Art: C_Map continent art (uiMapIDs found under Azeroth 947), else the legacy
 -- WorldMap tiles, else Media/mapbg. Coordinates (3.3): C_Map's map corners, else the calibration
 -- learned at flight masters (Core.FlightTimes, W.db.mapCal), else W.TAXI_BOUNDS (fallback art
 -- only). Routes (3.4): W.TAXI_PATHS for this side's legs, Line objects with Media/dash (the dash
@@ -65,7 +65,7 @@ local WM = {
 	SEG_W = 184, SEG_H = 28, SEG_Y = 14, SEG_X = 16,
 	BOX = { [1] = { name = "Kalimdor", left = true }, [0] = { name = "Eastern Kingdoms" } },
 	BOX_Y = 44, BOX_H = 470, LEGEND_Y = 516,
-	-- (BRIEF25 M1) the area both crops share and the cut between them (none now: the crops touch); (round 26) the crop's margin past the
+	-- the area both crops share and the cut between them (none now: the crops touch); (round 26) the crop's margin past the
 	-- land (yards) and the boxes' margin inside the area (pane units)
 	AREA = { x = 6, y = 44, w = 348, h = 470 }, GAP = 0,
 	CROP = { yards = 250, fit = 6 },
@@ -302,7 +302,7 @@ local function layout(cont, kind, art)
 		end
 	end
 	if not u0 or u1 - u0 <= 0 or v1 - v0 <= 0 then return nil end
-	-- (BRIEF25 D2) where you stand, and the driver, own and bounty pins, count as land too
+	-- where you stand, and the driver, own and bounty pins, count as land too
 	for _, e in ipairs(type(Mod.extraPoints) == "function" and Mod.extraPoints() or {}) do
 		if e.cont == cont then
 			local u, v = uv(e.wx, e.wy)
@@ -553,7 +553,7 @@ local function drawPolyline(wm, pts, colour, thick, period, spacing, solid)
 				else
 					l:SetTexture(T.MEDIA .. "dash", "REPEAT", "CLAMP")
 					l:SetTexCoord(phase, phase + len / period, 0, 1)
-					-- (BRIEF22 G1) a reused line keeps alpha 1 in its colour; the route's alpha is the region's
+					-- a reused line keeps alpha 1 in its colour; the route's alpha is the region's
 					l:SetVertexColor(colour[1], colour[2], colour[3], 1)
 					l:SetAlpha(colour[4] or 1)
 				end
@@ -600,7 +600,7 @@ local function placeArt(wm)
 	end
 	for cont, L in pairs(V) do
 		local box = wm.boxes[cont]
-		-- (BRIEF25 M1) the cropped box, where arrange() put it; the focus continent brighter, its name violet
+		-- the cropped box, where arrange() put it; the focus continent brighter, its name violet
 		box.clip:ClearAllPoints()
 		box.clip:SetPoint("TOPLEFT", wm.view, "TOPLEFT", L.x, -L.y)
 		box.clip:SetSize(L.w, L.h)
@@ -663,7 +663,7 @@ end
 -- The static layer: art, routes, boats and node dots, built once per session and side.
 local function drawStatic(wm)
 	local s = side() or "H"
-	-- (BRIEF25 M1) a new focus (or calibration) re-arranges the boxes: a new views table, so redraw
+	-- a new focus (or calibration) re-arranges the boxes: a new views table, so redraw
 	if wm.staticFor == s and wm.staticViews == views() then return end
 	wm.staticFor, wm.staticViews = s, views()
 	placeArt(wm)
@@ -795,7 +795,7 @@ local function coinFor(wm, i)
 	return c
 end
 
--- (BRIEF25 D2) the spots the map shows besides the flight masters: you, the driver pins, your own pin, the
+-- the spots the map shows besides the flight masters: you, the driver pins, your own pin, the
 -- bounty coins. layout() folds them into the crop; drawDrivers keeps price tags off them.
 function Mod.extraPoints()
 	local out = {}
@@ -968,7 +968,7 @@ local function drawDrivers(wm)
 	local focus = S(wm.focus) or (type(fr) == "table" and S(fr.to)) or nil
 	local fpl = focus and select(4, placeWorld(focus))
 	spread(groups, order, fpl and W.NormPlace(fpl.name) or nil)
-	-- (BRIEF25 M1) what a price tag must not cover: the continents' names and every pin
+	-- what a price tag must not cover: the continents' names and every pin
 	local half, keep, pinBox = WM.PIN / 2, baseKeep(wm, false), {}
 	for k, gk in ipairs(order) do
 		if k > WM.PINS then break end
@@ -1013,7 +1013,7 @@ local function drawDrivers(wm)
 			end
 			p.tag:SetTag(money(d.price))
 			-- (2.3.2, S7) the price stays inside its continent: near a box's right edge it goes left of the pin
-			-- (BRIEF25 M1) right of the pin, else left; neither clear of the names, pins and tags: no tag
+			-- right of the pin, else left; neither clear of the names, pins and tags: no tag
 			local bx, _, bw = Mod.Box(g.cont)
 			local tw = N(p.tag:GetWidth()) or (#money(d.price) * 7 + 14)
 			local th, ty = WM.TAG_H, g.y - WM.TAG_H / 2
@@ -1174,7 +1174,7 @@ local ZEPPELIN = { [11] = true, [20] = true, [23] = true }
 
 local function drawGold(wm)
 	release(wm.gold)
-	-- (BRIEF25 M2) no stale "continues by" arrow when the route has gone; it is drawn again below when needed
+	-- no stale "continues by" arrow when the route has gone; it is drawn again below when needed
 	local SeaHide = W.Mod("UI.Rider.SeaRoute")
 	wm.seaSpec = nil
 	if wm.seaArrow and SeaHide then SeaHide.Hide(wm.seaArrow) end
@@ -1224,7 +1224,7 @@ local function drawGold(wm)
 			end
 		end
 		wm.lines, wm.dots = saveLines, saveDots
-		-- (BRIEF25 M2) your side's legs are drawn above; the arrow at the cut edge says how the route goes on
+		-- your side's legs are drawn above; the arrow at the cut edge says how the route goes on
 		local SeaMod = W.Mod("UI.Rider.SeaRoute")
 		local split = SeaMod.Split(seaLegs, seaLegs[1] and seaLegs[1].cont)
 		local x = split.cross and Mod.CutEdge(split.cross.cont)
@@ -1286,10 +1286,10 @@ end
 
 local function redraw(wm)
 	if not (wm and wm.mode == "world" and wm.view:IsVisible() and unfolded()) then return false end
-	-- (BRIEF25 M1) where you are: the continent you're on gets the focus (a new arrangement when it changes)
+	-- where you are: the continent you're on gets the focus (a new arrangement when it changes)
 	local here = hereCont()
 	if here ~= CACHE.focus then CACHE.focus, CACHE.views = here, nil end
-	-- (BRIEF25 D2) you moved outside the crop: lay out again (once per spot, so an art edge can't loop)
+	-- you moved outside the crop: lay out again (once per spot, so an art edge can't loop)
 	local V = CACHE.views
 	if V and here and V[here] then
 		local c, wx, wy = W.WorldPos(W.MyPosition())
@@ -1398,7 +1398,7 @@ local function buildView(wm)
 	wm.me:SetSize(WM.ME, WM.ME)
 	wm.me.dot = T.Circle(wm.me, WM.ME, "white", "OVERLAY")
 	wm.me.dot:SetPoint("CENTER", wm.me, "CENTER")
-	wm.me.pulse = A.Pulse(wm.me, { size = 40, colour = "glow", alpha = 0.4, period = 2.2, rings = 2, texture = "ring" }) -- flat rings, not the blurred pulse
+	wm.me.pulse = A.Pulse(wm.me, { size = 40, colour = "glow", alpha = 0.3, period = 3, rings = 1, texture = "ring" }) -- flat rings, not the blurred pulse
 	wm.me:Hide()
 	-- legend: -- flight  .. boat (or zeppelin)  * driver  $ bounty
 	-- (round 13, I21) the Horde's dashed crossings are mostly zeppelins: the legend says so
@@ -1470,7 +1470,7 @@ end
 
 -- (round 9, S15) Here/World in the app's dark segmented look (gold is for primary actions): a dark
 -- track, the chosen half violet with white words, the other muted (white on hover).
--- (BRIEF20 B1) T.Segmented lights the chosen half with its own opaque pill, shown or hidden (never an
+-- T.Segmented lights the chosen half with its own opaque pill, shown or hidden (never an
 -- alpha change); this only sets the look.
 local function calmSeg(seg)
 	seg.bg:SetColor("panel")

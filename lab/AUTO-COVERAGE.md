@@ -125,6 +125,7 @@ To run only the ported rows: `/lab auto <id> <id> ...` (an id or its start), or 
 | float_summon_held | AutoLayout.lua | folded |
 | done_unpaid_mail | AutoLayout.lua | folded |
 | customers_mail | AutoLayout.lua | folded+unfolded |
+| done_removed | AutoLayout.lua | folded |
 | note_serve | AutoLayout.lua | folded |
 | customers_serve | AutoLayout.lua | folded+unfolded |
 | d4c_ride_stranger | AutoLayout.lua | folded |
@@ -213,5 +214,7 @@ Rows added for it (all local, nothing sent, nothing pressed that talks to anyone
 | a_settings_adv | Settings home in Advanced mode: the Report a bug card and its tooltip |
 | a_coach_2 | the first-open tip "Pick a driver" |
 | a_tip_skip_the_bird, a_tip_drive_setup | the login tip card for the two tips whose words changed |
+| a_pulse_ring | the driver console's "Waiting for riders" ring: one ring, starting about every 3 seconds (timed in the real game) |
+| a_pulse_map | the rider Home map's you-dot ring: one ring, starting about every 3 seconds (timed in the real game) |
 
 One check was added to every screen's "buttons" kind: the floating big button (WuberDriveButton) over any clickable control of the phone is a finding (#255, HUNT-07).

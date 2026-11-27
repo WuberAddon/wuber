@@ -317,7 +317,7 @@ local function raidPlan(plan, add, whisperOf)
 	plan.raid, plan.queued = true, 0
 	for _, r in ipairs(rows) do
 		if type(r) == "table" and not settled(r.state) then plan.queued = plan.queued + 1 end
-		-- (BRIEF20 B5) a raider with the summon window is still on the console's rows
+		-- a raider with the summon window is still on the console's rows
 		if type(r) == "table" and r.state == "waiting" and not plan.accepting then plan.accepting = r end
 	end
 	if call("IsPaused") == true then return end
@@ -431,7 +431,7 @@ local function raidTitle(plan)
 		plan.title = n .. (n == 1 and " raider wants" or " raiders want") .. " a summon"
 		plan.sub = "your summoners take them in turn"
 	elseif plan.accepting then
-		-- (BRIEF20 B5, shot 87) never "nobody waiting" while their row says "has the summon window"
+		-- never "nobody waiting" while their row says "has the summon window"
 		plan.color = "wait"
 		plan.title = "Summon sent to " .. short(plan.accepting.name or "?")
 		plan.sub = "waiting for them to accept it"
@@ -506,7 +506,7 @@ end
 
 -- { type, macrotext | clickbutton, marks, box, title, sub, color, say, here, below }
 -- (here, round 9: the words under the title while the button sits in Wuber's Drive tab, when they
--- differ from sub, which is for the button floating on screen; below, BRIEF20 B5: floating with its
+-- differ from sub, which is for the button floating on screen; below: floating with its
 -- console under it, when that differs from sub, which is then for the button alone)
 function DR.Plan()
 	local plan = { marks = {}, color = "idle", title = "", sub = "", doing = {}, says = {}, lines = 0 }
@@ -520,7 +520,7 @@ function DR.Plan()
 		plan.color, plan.title = "off", raid and "Raid summons stopped" or "Closed"
 		plan.sub = raid and "tap Start in Wuber's Drive tab" or "tap Open in Wuber's Drive tab"
 		plan.here = raid and "Tap Start below to begin raid summons" or "Tap Open below to start taking riders"
-		-- (BRIEF20 B5, shots 83 and 88) floating with its console right under it: the pill is below
+		-- floating with its console right under it: the pill is below
 		plan.below = raid and "tap Start below" or "tap Open below"
 		return plan
 	end

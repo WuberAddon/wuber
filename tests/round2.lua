@@ -259,7 +259,7 @@ test("TOC order: SPEC3's list (Core ... Map, Drive_*, Driver, UI_Drive, Nameplat
 	-- what the addon reports (W.VERSION in Core/Base.lua), read from the file: no world, so this test's transcript is unchanged
 	local addonVer = (readFile(WDIR .. "/Core/Base.lua") or ""):match('\nW%.VERSION = "([^"]+)"')
 	eq(addonVer, tocVer, "the addon's W.VERSION (Core/Base.lua) equals the TOC version")
-	-- SPEC5 rrmentions: no load-order tie to the old summoning addon (its data is read at login)
+	-- no load-order tie to the old summoning addon (its data is read at login)
 	-- SPEC7 4.1 / H11: Enhanced Flight Map support is removed; OpenMap stays optional
 	ok(toc:find("## OptionalDeps: OpenMap\n", 1, true), "OptionalDeps: OpenMap only")
 	ok(not toc:find("EnhancedFlightMap", 1, true), "no EnhancedFlightMap in the TOC")
@@ -275,7 +275,7 @@ test("every Media file the Lua names exists (Media/fx too); every TGA uncompress
 		end
 	end
 	eq(#missing, 0, "missing media: " .. list(missing))
-	-- (SPEC5 paths: no Unix find; Media and its folders listed through H.listFiles)
+	-- (no Unix find; Media and its folders listed through H.listFiles)
 	local tgas = H.listFiles(WDIR .. "/Media", "tga")
 	for _, sub in ipairs({ "fx", "fonts" }) do
 		for _, f in ipairs(H.listFiles(WDIR .. "/Media/" .. sub, "tga")) do tgas[#tgas + 1] = f end
@@ -298,7 +298,7 @@ test("every Media file the Lua names exists (Media/fx too); every TGA uncompress
 	end
 	ok(n > 0, "no TGA files")
 	eq(#bad, 0, "bad TGA: " .. list(bad))
-	-- (BRIEF16) + 4 MB: the Pioneer emblem's two 1024x512 atlases (violet and teal), loaded only when one shows
+	-- + 4 MB: the Pioneer emblem's two 1024x512 atlases (violet and teal), loaded only when one shows
 	ok(fxBytes <= 19 * 1024 * 1024, ("Media/fx is %.1f MB (budget about 18 MB: 9 MB violet + 5 MB founder gold + 4 MB Pioneer emblem)"):format(fxBytes / 1048576))
 	if HAVE_FX then ok(fxBytes > 0, "FX.lua exists but Media/fx has no TGA sheets") end
 end)
@@ -426,7 +426,7 @@ test("P: queue position from the driver, coalesced, only from the ride's driver 
 	clean(w)
 end)
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "Driver.lua tells a waiting rider its place with P (the same path as WuberAPI.Queue)"
+-- () deleted, superseded by the 2.0 engine: "Driver.lua tells a waiting rider its place with P (the same path as WuberAPI.Queue)"
 --   covered by round4 "drive: Wuber: riders waiting are told their place and the wait, by one window, as it changes"
 
 ---------------------------------------------------------------------------
@@ -1760,7 +1760,7 @@ test("Trips tab (Ride · Trips · Drive): level and progress, stats tiles, miles
 	ok(#r:findText("^4$") + #r:findText("4 rides") > 0, "rides tile")
 	-- locked milestones say how to earn them
 	local tipped = false
-	-- (BRIEF19 F6) the folded page leaves out a milestone row its view would slice: walk the page top to end
+	-- the folded page leaves out a milestone row its view would slice: walk the page top to end
 	-- (DS24-01: the end is now the real end, so the milestones are seen on the way, not only at the end)
 	do
 		local TM = r.W.Mod("UI.Rider.Trips")
@@ -2319,7 +2319,7 @@ test("a queue change alone does not beat the 5 s beacon coalesce", function()
 	clean(w)
 end)
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "the driver sees the rider's level: 'Silver rider · 12 rides' on the request card"
+-- () deleted, superseded by the 2.0 engine: "the driver sees the rider's level: 'Silver rider · 12 rides' on the request card"
 --   covered by round6_engine "r6 engine: pending (#30): a Wuber rider's level reaches the driver's queue row (c.wuberLabel)"
 
 test("hidden drivers get no favourite toast and no nameplate badge", function()

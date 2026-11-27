@@ -18,11 +18,11 @@ You need Lua 5.1 (not LuaJIT), Python 3, and Git Bash on Windows. Run from the r
 
 On Windows, see "Set up on Windows" in `AGENTS.md` (Lua 5.1 binaries, `WUBER_LUA`, and running `tools/suite-par.sh` in Git Bash, not WSL's bash).
 
-Run `tools/check.lua` after every change, a filtered `tests/run.lua` (or `bash tools/quick-check.sh`, which runs only the tests a change touches) while you work, and the whole suite, the layout check and the scrub check before you open a pull request.
+Run `tools/check.lua` after every change, a filtered `tests/run.lua` (or `bash tools/quick-check.sh`, which runs only the tests a change touches) while you work, and the whole suite, the layout check and the scrub check before you open a pull request. The hosted checks on a pull request are the quick set only; the full hosted suite runs on main after merging, and if main goes red, fixing it comes before anything else is merged.
 
 ## How to work
 - Issues are the work list. One issue per pull request.
-- Branch names: `claude/<n>`, `google/<n>`, `author/<topic>` (n = the issue number). Make the branch in its own git worktree, not in your main checkout.
+- Branch names: `claude/<n>`, `author/<topic>` (n = the issue number). Make the branch in its own git worktree, not in your main checkout.
 - Commit messages start with `#<issue>`, for example `#42 Stop the queue showing a driver twice`.
 - While you work, `bash tools/quick-check.sh` runs only the tests your change touches (it does not replace the whole suite before a pull request). `tests/README.md` explains the fake game and what it cannot prove.
 - Fix a bug test-first: write the test, see it fail, then fix.
@@ -30,7 +30,6 @@ Run `tools/check.lua` after every change, a filtered `tests/run.lua` (or `bash t
 - A pull request says: what changed, the test that fails before and passes after, and anything not proven.
 - Words that players see are never changed without the maintainer's approval (label `needs-author`).
 - Never add paths, e-mail addresses, account ids, recordings, screenshots with names, or anything that starts an AI tool.
-- The `google` label is only added by the maintainer.
 - No pushes to main, no force pushes, no tags or releases: those are the maintainer's.
 
 Read AGENTS.md and CODE-RULES.md for the code rules.

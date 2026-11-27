@@ -9,7 +9,7 @@
 -- Events: listens On TAXIMAP_OPENED, On TAXIMAP_CLOSED, Listen FLIGHTMAP_SHOWN (the map frame's OnShow, from Core.Flights); fires SETTINGS (birdTip, from "Don't show again")
 -- Standalone: no
 -- Test: tests/ui/bird_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.11; owner C)
+-- From: new in Wuber 2.3.0
 --
 -- The common rules for opening by itself (combat, a cinematic, the first seconds after login) are UI.MayOpen("bird") (UI.Kit).
 -- Not annoying: at most once per flight-map open (reset on close), and on EVERY open where a summon beats flying by at least a minute (no per-session limit); never in combat or during a
@@ -345,7 +345,7 @@ function Mod.Why()
 	if card and card:IsShown() then return nil end
 	if shownThisOpen then return "Skip the bird: already shown for this flight map." end
 	if not W.db then return nil end
-	if W.db.birdTip == false then return "Skip the bird: off in Settings (Riding, Flight offers)." end
+	if W.db.birdTip == false then return "Skip the bird: off. Turn Flight offers on in Settings, Riding." end
 	local _, gate = UI.MayOpen("bird")
 	if gate == "combat" then return "Skip the bird: not in combat." end
 	if gate == "cinematic" then return "Skip the bird: not during a cinematic." end

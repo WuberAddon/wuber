@@ -79,7 +79,7 @@ local TOGGLES = {
 	kick = { key = "kickAfter", text = "Removing riders after their ride", shared = true },
 	autotrade = { key = "autoTrade", text = "Opening the trade for a rider who landed" },
 	public = { key = "watchPublic", text = "Listing people who ask for a summon in public chat" },
-	market = { key = "autoPublic", text = "Inviting buyers in the public chat channels you read who name your place" },
+	market = { key = "autoPublic", text = "Inviting riders in the public chat channels you read who name your place" },
 	oneatatime = { key = "oneAtATime", text = "One rider at a time" },
 	autoblock = { key = "autoBlock", text = "Blocking riders who leave without paying" },
 	tellblocked = { key = "tellBlocked", text = "Telling blocked players why" },
@@ -661,7 +661,7 @@ local function run(line)
 		local db = toggle.db and (W.db or {}) or opts()
 		if v == "on" or v == "off" then
 			local on = v == "on"
-			-- (2.3.2, BRIEF19 R4) inviting public chat buyers is turned on only after its warning
+			-- (2.3.2) inviting public chat buyers is turned on only after its warning
 			-- (Yes / Cancel on screen); the answer is said when it comes
 			if toggle.key == "autoPublic" and type(DR.SetAutoPublic) == "function" then
 				local res = DR.SetAutoPublic(on, function(yes)

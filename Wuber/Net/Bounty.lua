@@ -11,7 +11,7 @@
 -- Events: listens (none); fires BOUNTY
 -- Standalone: no
 -- Test: tests/net/bounty_test.lua
--- From: new in Wuber 2.3.0 (SPEC7 section 5.3; owner E)
+-- From: new in Wuber 2.3.0
 --
 -- A bounty is a wish, not a payment: a rider who wants a place no open driver serves pins one
 -- ("Gadgetzan, 60s") so drivers see the demand. Pledges never move gold; the rider still pays

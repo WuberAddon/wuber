@@ -358,8 +358,8 @@ test("gf c8.1: the List me sheet's note with no known destination uses a DRAFT_W
 	d:clickText(WD.listButton)
 	w:advance(1.5)
 	local sh = d.W.Driver.ui.sheets.gflist
-	ok(sh and sh.note and sh.note.edit, "the sheet opens")
-	local dest = sh.note.edit:GetText():match("^Wuber summons to (.*), request in Wuber$")
+	ok(sh and sh.note, "the sheet opens")
+	local dest = sh.note:GetText():match("^Wuber summons to (.*)$")
 	ok(dest and dest ~= "", "a destination word stands in the note")
 	T.clean(w)
 end)

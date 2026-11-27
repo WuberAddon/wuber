@@ -1,4 +1,4 @@
--- p242 round 2, group E, DS24-04: the words on "Invite public chat buyers" (the settings row, its tooltip and the
+-- p242 round 2, group E, DS24-04: the words on "Invite public chat riders" (the settings row, its tooltip and the
 -- /wuber drive market line) said "Trade and LookingForGroup only", but an auto-invite comes from any channel in
 -- the player's watchChannels list (default: services, trade, lookingforgroup, world, general; Drive/Queue.lua market()).
 -- Promise: the words say it is the public chat channels you read (the "Chat channels" list), and name no fixed pair.

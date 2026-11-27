@@ -1,4 +1,4 @@
--- Tests of UI.Rider.Booking (SPEC7 5.1, 5.2; owner C). Loaded by tests/run.lua with its helper table T.
+-- Tests of UI.Rider.Booking. Loaded by tests/run.lua with its helper table T.
 -- The dial's score (sign, clamping, three knob fixtures), hidden with no data, "about" for
 -- estimates, the knob moved along the arc without scale; the route header's names, truncation
 -- at 324 px, the unknown origin, the zone-only fallback and ZONE_CHANGED.

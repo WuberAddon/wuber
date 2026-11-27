@@ -38,7 +38,7 @@ local GOLD_STEPS = { "heading", "body", "sub", "caption" } -- the take gives up 
 -- Building the console
 ---------------------------------------------------------------------------
 
--- (2.3, SPEC7 5.4; design 1 J) The fuel gauge: the Soul Shard count in words, "12 shards" ("1 shard"),
+-- (2.3; design 1 J) The fuel gauge: the Soul Shard count in words, "12 shards" ("1 shard"),
 -- white (red when it warns), no picture. D.PaintFuel sets its words; g:SetShards(text, colour) fits its width
 -- to them (g.w is that width), so a row's layout reads the real room. w, h and px are the first size and
 -- the type size, a T.SIZE name (the mini console passes "caption" too: nothing is smaller).
@@ -81,7 +81,7 @@ local function buildStatus(v)
 	s.word = T.Text(s, "body", "white", "LEFT", "bold")
 	s.word:SetPoint("LEFT", s.dot, "RIGHT", 8, 0)
 	s.word:SetWidth(60)
-	-- (2.3, SPEC7 5.4) the Soul Shard gauge right of the words, the number on it
+	-- (2.3) the Soul Shard gauge right of the words, the number on it
 	s.fuel = D.FuelGauge(s, 34, 16, "caption")
 	s.fuel:SetPoint("LEFT", s.word, "RIGHT", 6, 0)
 	-- "· 50s to Undercity  ›": opens the price and place sheet
@@ -141,7 +141,7 @@ local function layStatus(v)
 	-- (round 13, I18) the word with a little spare: the game draws it a touch wider than measured
 	local ww = math.ceil(textW(s.word) * 1.06) + 1
 	s.word:SetWidth(ww)
-	ww = ww + (s.pioneerShift or 0) -- (BRIEF15) a Pioneer's badge before the dot takes room too
+	ww = ww + (s.pioneerShift or 0) -- a Pioneer's badge before the dot takes room too
 	local function spare(fs) return math.ceil(textW(fs) * 1.06) + 1 end
 	-- (round 9) measured at the size asked for (a fitted label is smaller), plus 5 left, 16 for the
 	-- chevron and a spare 3; then the words fit the room by size (T.Fit), never "..."
@@ -304,7 +304,7 @@ local function buildSlot(v)
 	hero:SetPoint("TOPLEFT", v.up, "TOPLEFT", PAD, -(STRIP_H + 10))
 	hero:SetSize(SLOT_W, HERO_H)
 	hero.glow = T.StateGlow(hero, "accent", 1, 14) -- (design 1) the big button keeps its state glow until its own redesign
-	hero.glow:SetAlpha(0.5) -- (BRIEF22 G1) strength by region alpha (D.HERO_LOOK)
+	hero.glow:SetAlpha(0.5) -- strength by region alpha (D.HERO_LOOK)
 	hero.rim = T.Rounded(hero, "glow", 17, "BACKGROUND", -2, 1.5)
 	hero.bg = T.Rounded(hero, "hover", 16, "BACKGROUND", 0)
 	hero.fill = D.HeroFill(hero, SLOT_W, HERO_H, 16, 1)
@@ -459,7 +459,7 @@ local function buildControls(v)
 	T.Tip(v.advert, "Advertise", function()
 		local plan = D.AdvertPlan()
 		local line = type(plan) == "table" and S(plan.text)
-		return "Posts one line in public chat, always starting [Wuber], so buyers find you and get the addon."
+		return "Posts one line in public chat, always starting [Wuber], so riders find you and get the addon."
 			.. (line and ("\n\n" .. line) or "")
 			.. "\n\nTyping your own adverts in Trade? Put Wuber in them: other Wuber players' addons hear it and add you."
 			.. "\n\nAt most once every 15 minutes, never in combat, only when you click. Change the line in Messages."
@@ -495,7 +495,7 @@ local function buildMiddle(v)
 	v.empty = CreateFrame("Frame", nil, c)
 	v.empty:SetSize(SLOT_W, 64)
 	v.empty.bg = T.Rounded(v.empty, "card", 14, "BACKGROUND", 0)
-	v.empty.pulse = A.Pulse(v.empty, { size = 44, colour = "accent", alpha = 0.5, period = 2.2, rings = 2, start = false })
+	v.empty.pulse = A.Pulse(v.empty, { size = 44, colour = "accent", alpha = 0.35, period = 3, rings = 1, start = false }) -- (playtest) one soft ring every 3 s
 	v.empty.pulse.frame:ClearAllPoints()
 	v.empty.pulse.frame:SetPoint("CENTER", v.empty, "LEFT", 32, 0)
 	v.empty.ring = T.Icon(v.empty, "ring", 26, "accent", "ARTWORK")
@@ -552,7 +552,7 @@ local function crewChip(parent)
 		if self.turn then t = t .. " Casts the next summon." end
 		if m.silent then t = t .. " Not heard from for a while (no Wuber running, or away)." end
 		if m.app == false then t = t .. " Doesn't have Wuber: never treated as a rider." end
-		-- (2.3, SPEC7 5.5) this shift's casts and clicks
+		-- (2.3) this shift's casts and clicks
 		local casts, clicks
 		if D.CutFor then casts, clicks = D.CutFor(m.key) end
 		if casts and D.CutWords then t = t .. "\nThis shift: " .. D.CutWords(casts, clicks) .. "." end
@@ -566,6 +566,8 @@ end
 local LINKS = {
 	{ "crew", "Crew", "Who summons and clicks with you. Add friends or your own other characters.", "summon" },
 	{ "messages", "Messages", "What Wuber whispers to riders (greeting, price, thanks...). Change any of them.", "chat" },
+	-- (playtest) Simple mode: ONE row for the advert line (the rest of Messages stays Advanced); it opens Messages on the advert
+	{ "advert", "My advert line", "The public line the Advertise button posts. Change its words here.", "chat" },
 	{ "blocked", "Blocked", "Players you won't serve, and why. Unblock anyone here.", "lock" },
 	{ "earnings", "Earnings", "Rides, gold and which hours of the day pay best.", "coin" },
 	-- round 9 (Y3): everyone who rode with you, your notes and gifts (UI.Driver.Customers)
@@ -586,7 +588,9 @@ local function buildBusiness(v)
 	v.links = {}
 	for i, l in ipairs(LINKS) do
 		local b = g:Row({ title = l[2], icon = l[4], right = "chevron", tip = { body = l[3] },
-			onClick = function(row) D.ShowScreen(row.what) end })
+			onClick = function(row)
+				if row.what == "advert" then D.ShowScreen("messages", "advert") else D.ShowScreen(row.what) end
+			end })
 		b.what = l[1]
 		b.label = b.title
 		b.badge = T.Text(b.lead, "caption", "ink", "CENTER", "bold")
@@ -620,7 +624,7 @@ local function buildBusiness(v)
 	g:Layout()
 end
 
--- Sell summons / Raid summons (SPEC4 3): only for characters that set up driving
+-- Sell summons / Raid summons: only for characters that set up driving
 function D.SetMode(m)
 	if type(DR.SetMode) ~= "function" then
 		toast("Raid summons aren't ready in this Wuber yet", "warn")
@@ -635,7 +639,7 @@ end
 
 -- A segmented choice made calm (round 7): gold is for the big button; the chosen part is a
 -- violet pill with ink words (item 2 of the design audit), the others muted (UI_Drive.lua's Earnings uses it too).
--- (BRIEF20 B1) T.Segmented lights the chosen part with its own opaque pill (shown or hidden, never an
+-- T.Segmented lights the chosen part with its own opaque pill (shown or hidden, never an
 -- alpha change); this only sets its look: no gold glow (ghost), the lighter pill, white words.
 function D.CalmSegmented(seg)
 	seg.bg:SetColor("panel")
@@ -745,7 +749,7 @@ local function buildConsole(root)
 end
 
 -- Closed and never set up: "Sell summons with Wuber" (a Warlock), "Run a summoning service"
--- (any other class: a Warlock friend or your own Warlock casts, SPEC4 1.1)
+-- (any other class: a Warlock friend or your own Warlock casts)
 local WELCOME = {
 	lock = {
 		title = "Sell summons with Wuber",

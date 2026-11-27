@@ -59,7 +59,7 @@ function D.RaidTonight()
 	return n and math.max(0, math.floor(n)) or 0
 end
 
--- (2.3, SPEC7 5.4) The fuel gauge's number, colour, tip and fill (0..1). The number is my own
+-- (2.3) The fuel gauge's number, colour, tip and fill (0..1). The number is my own
 -- Soul Shards when I'm a Warlock selling, else the summoners' total (a runner who isn't a
 -- Warlock; raid summons). Violet above 2 x lowShards, amber at or below it, red at or below
 -- lowShards, grey "?" when nobody's count is known.
@@ -127,7 +127,7 @@ local function drawStatus(v)
 	local raid = RaidMode()
 	if raid and key ~= "combat" then key = "r" .. key end
 	local st = STATUS[key]
-	local pb = T.ShowPioneer(s, "pioneer", T.PioneerLook(W.myKey), 16, nil, true) -- (BRIEF15) mine, left of the dot
+	local pb = T.ShowPioneer(s, "pioneer", T.PioneerLook(W.myKey), 16, nil, true) -- mine, left of the dot
 	if pb then pb:ClearAllPoints() pb:SetPoint("LEFT", s, "LEFT", 0, 0) end
 	if (s.pioneerShift or 0) ~= (pb and 20 or 0) then
 		s.pioneerShift = pb and 20 or 0
@@ -136,7 +136,7 @@ local function drawStatus(v)
 	end
 	s.dot:SetVertexColor(T.RGB(st[2]))
 	s.halo:SetVertexColor(T.RGB(st[2], 0.45))
-	s.halo:SetShown(key ~= "closed" and key ~= "rclosed") -- (BRIEF22 G1) hidden when closed, never an alpha change
+	s.halo:SetShown(key ~= "closed" and key ~= "rclosed") -- hidden when closed, never an alpha change
 	local c = Char()
 	local cap = c and S(c.captain) or nil
 	s.word:SetText(helper and ((cap and cap ~= "" and short(cap) or "Your captain") .. "'s crew") or st[1])
@@ -151,7 +151,7 @@ local function drawStatus(v)
 		layStatus(v)
 		return
 	end
-	-- 2+ stations: one price, each Warlock summons where they stand (SPEC4 2.1)
+	-- 2+ stations: one price, each Warlock summons where they stand
 	local nst = #D.Stations()
 	v.fare.text:SetText(T.Code("gold") .. money(Price()) .. "|r to " .. (nst >= 2 and (nst .. " places") or Dest()))
 	setShown(v.fare, not helper)
@@ -208,7 +208,7 @@ local function drawSlot(v)
 	local colour = ({ go = "gold", wait = "amber", alert = "red", off = "off", idle = "off" })[pc] or "accent"
 	slot.barFill:SetColor(colour)
 	local look = HERO[pc] or HERO.off
-	-- (BRIEF22 G1) the colours keep alpha 1; how strong each is, is the region's alpha
+	-- the colours keep alpha 1; how strong each is, is the region's alpha
 	hero.glow:SetColor(look[1])
 	hero.glow:SetAlpha(look[2])
 	hero.rim:SetColor(look[3])
@@ -295,7 +295,7 @@ function D.WhisperWord()
 end
 
 -- (round 9) a summoner chip's count, the same words folded and unfolded: "10 shards" (red at 0),
--- "no Wuber" for a Warlock without the app (nobody sees their shards, SPEC4 1.1), else "".
+-- "no Wuber" for a Warlock without the app (nobody sees their shards), else "".
 -- D.ChipCount(m) -> words, colour
 function D.ChipCount(m)
 	local sh = N(m.shards)
@@ -332,7 +332,7 @@ local function drawReady(v, y)
 		-- (round 9, S7/S10) one way to pick: the Warlocks pill beside Start (no second button here)
 		if not running and #List("Summoners") == 0 then addBad("Pick who summons: tap Warlocks", nil) end
 	elseif runner and not IsWarlock() and #List("Summoners") == 0 then
-		-- a runner who isn't a Warlock needs a Warlock to cast (SPEC4 1.1)
+		-- a runner who isn't a Warlock needs a Warlock to cast
 		addBad("Choose who summons", { label = "Choose", run = function() D.ShowScreen("wizard", 3) end, tip = "Pick the Warlock (a friend or your own) who casts the summons." })
 	end
 	local c = Char()
@@ -411,7 +411,7 @@ local function drawReady(v, y)
 	return y + ly + 8 + 12
 end
 
--- (2.3, SPEC7 5.6) "PvP nearby · riders are warned": a chip while Drive.Danger's level is 1 or
+-- (2.3) "PvP nearby · riders are warned": a chip while Drive.Danger's level is 1 or
 -- 2 (made the first time it shows; no setting hides it)
 local function drawDanger(v, y)
 	local level, ago = dr("DangerLevel")
@@ -442,7 +442,7 @@ local function drawDanger(v, y)
 	return y + 20 + 10
 end
 
--- 2+ stations: filter chips over the queue, "All · Undercity · Orgrimmar" (SPEC4 2.2)
+-- 2+ stations: filter chips over the queue, "All · Undercity · Orgrimmar"
 local function filterChip(parent)
 	local b = CreateFrame("Button", nil, parent)
 	b:SetSize(60, 24)
@@ -846,11 +846,13 @@ local function drawBusiness(v, y)
 	local showMessages = isAdv and not helper
 	local showBlocked = not helper and (isAdv or n > 0)
 	local showCustomers = isAdv
-	local key = (showCrew and "1" or "0") .. (showMessages and "1" or "0") .. (showBlocked and "1" or "0") .. (showCustomers and "1" or "0")
+	local showAdvert = not isAdv and not helper -- (playtest) Simple: one "My advert line" row instead of Messages
+	local key = (showCrew and "1" or "0") .. (showMessages and "1" or "0") .. (showBlocked and "1" or "0") .. (showCustomers and "1" or "0") .. (showAdvert and "1" or "0")
 	if v.linksFor ~= key then
 		v.linksFor = key
 		links.crew:SetShown(showCrew)
 		links.messages:SetShown(showMessages)
+		links.advert:SetShown(showAdvert)
 		links.blocked:SetShown(showBlocked)
 		links.earnings:SetShown(true)
 		links.customers:SetShown(showCustomers)
@@ -878,7 +880,7 @@ local function drawConsole(v)
 	else
 		RaidMod.hideRaid(v)
 		y = drawDanger(v, y)
-		-- (2.3, SPEC7 2.8; r18) unfolded: the riders stay on the left under the buttons; the crew, today's takings
+		-- (2.3; r18) unfolded: the riders stay on the left under the buttons; the crew, today's takings
 		-- and the best hours are in the side pane
 		local wide = D.Wide("console")
 		-- (round 13, I9) what riders want: folded, a line above the riders; unfolded, a card at the top of the side pane

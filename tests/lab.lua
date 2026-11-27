@@ -608,7 +608,7 @@ test("lab: adverts are logged (posted with channel and text, tagged lines heard,
 	local plan = d.W.AdvertPlan("Ratchet", 5000)
 	ok(plan, "a plan")
 	d.W.AdvertPosted(plan) -- (the click itself is tested in discovery.lua)
-	ok(#find(d, "advert", "posted in Trade: [Wuber] Summons to Ratchet 50s") == 1, "posted logged: " .. list(lines(d), "\n"))
+	ok(#find(d, "advert", "posted in Trade: [Wuber] Selling summons to Ratchet, 50s") == 1, "posted logged: " .. list(lines(d), "\n"))
 	w:chatFrom("Bob Stone", plan.text, "CHANNEL", "Trade")
 	w:advance(8)
 	ok(#find(r, "advert", "heard from Bob Stone in Trade: [Wuber]") == 1, "heard logged")
@@ -617,7 +617,7 @@ test("lab: adverts are logged (posted with channel and text, tagged lines heard,
 end)
 
 ---------------------------------------------------------------------------
--- Shard-free test mode ("Pretend to summon (no shards)", SPEC5)
+-- Shard-free test mode ("Pretend to summon (no shards)")
 ---------------------------------------------------------------------------
 
 local SIM_SPOT = "Undercity"

@@ -112,7 +112,7 @@ local function buildMapPanel(home, height, visible)
 	-- (design 1) the "you are here" dot is flat: no blur round it
 	m.me.dot = T.Circle(m.me, 14, "white", "OVERLAY")
 	m.me.dot:SetPoint("CENTER", m.me, "CENTER")
-	m.me.pulse = A.Pulse(m.me, { size = 64, colour = "glow", alpha = 0.4, period = 2.2, rings = 2, texture = "ring" }) -- flat rings
+	m.me.pulse = A.Pulse(m.me, { size = 64, colour = "glow", alpha = 0.3, period = 3, rings = 1, texture = "ring" }) -- flat rings
 	m.me:Hide()
 	m.pins = {}
 	-- during a ride, a look at Home shows the way back to it
@@ -181,7 +181,7 @@ local function mapPin(m, i)
 	p.dot:SetPoint("CENTER", p, "CENTER")
 	p.glyph = T.Icon(p, "summon", 10, "white", "OVERLAY")
 	p.glyph:SetPoint("CENTER", p, "CENTER")
-	p.pulse = A.Pulse(p, { size = 60, colour = "magenta", alpha = 0.6, period = 2, rings = 2, start = false })
+	p.pulse = A.Pulse(p, { size = 60, colour = "magenta", alpha = 0.4, period = 3, rings = 1, start = false })
 	p:RegisterForClicks("LeftButtonUp")
 	safeScript(p, "OnClick", function(self)
 		if self.key then UI.Show("confirm", self.key) end
@@ -192,7 +192,7 @@ local function mapPin(m, i)
 		-- (design 4) Wuber's own tip card (T.TipShow); the words are as they were
 		local lines = {}
 		if d.creator then lines[#lines + 1] = { "Wuber founder", "gold" } end
-		local look = T.PioneerLook(d.key) -- (BRIEF15) the shipped list only
+		local look = T.PioneerLook(d.key) -- the shipped list only
 		if look then lines[#lines + 1] = { T.PIONEER[look].tip, T.PIONEER[look].colour } end
 		lines[#lines + 1] = d.name .. " · to " .. d.dest
 		lines[#lines + 1] = { money(d.price), "gold" }
@@ -532,7 +532,7 @@ local function updateMap(m, list)
 end
 
 ---------------------------------------------------------------------------
--- Docking into an unfolded side pane (SPEC7 2.8) and back
+-- Docking into an unfolded side pane and back
 ---------------------------------------------------------------------------
 
 -- (p242 r3 F) top 44, not 32: the window's round buttons (fold, cog, x) run from 12 to 44 down the pane, so a map that

@@ -111,13 +111,13 @@ local EXPECT = {
 	done_unpaid = "Not paid", raincheck = "offers a raincheck", trips = "Your trips", wrapped = "Azeroth", wrapped_summary = "That's a wrap",
 	console_open = "Summon Dan", button_summoning = "Summoning Dan", button_portal = "CLICK THE PORTAL",
 	button_waiting = "Waiting for Eve", console_closed = "Closed", menu_chat = "Get Wuber", note = "Never the rider",
-	row_marks = "Dan Rider", customers = "Fay Storm", crew = "my account", demand = "want Gadgetzan", pvp = "PvP nearby",
+	row_marks = "Dan Rider", customers = "Fay Storm", crew = "my window", demand = "want Gadgetzan", pvp = "PvP nearby",
 	raid = "Gus", earnings = "Earnings", earnings_heatmap = "Earnings", earnings_empty = "Earnings", shift = "Fair split",
 	messages = "Messages", messages_edit = "Tap to add", settings = "Settings", settings_driving = "Driving",
 	settings_search = "price", settings_nomatch = "No settings match", settings_opened = "passphrase",
 	help = "How Wuber finds drivers",
-	-- (BRIEF20 B9) the bug report, the Driving switch that asks first, wide Customers with a queued rider
-	settings_bug = "Report a bug", settings_invite = "Invite public chat buyers", settings_invite_warning = "Invite public chat buyers",
+	-- the bug report, the Driving switch that asks first, wide Customers with a queued rider
+	settings_bug = "Report a bug", settings_invite = "Invite public chat riders", settings_invite_warning = "Invite public chat riders",
 	help_bug = "Something not working?", bug_window = "Select all", customers_queued = "Fay Storm",
 }
 -- (round 18, 3c) the floating button + console in every plan state: its title is on screen at the shot
@@ -218,7 +218,7 @@ test("lab photo: the tour shoots every screen, folded and unfolded (720 wide), n
 	local sent = sentBy(w, "Anita Lift")
 	local labLines = #c.env.WuberLabDB.chars["Anita Lift"].lines
 	local result = runTour(c, w)
-	-- (BRIEF22 G1) no screen changes a texture's alpha where the game would not draw it (tests/ui/alpha_test.lua)
+	-- no screen changes a texture's alpha where the game would not draw it (tests/ui/alpha_test.lua)
 	local heldAlpha = {}
 	for line in pairs(w.alphaKept or {}) do if line:find("^Wuber/") and not (H.alphaKnown or {})[line] then heldAlpha[#heldAlpha + 1] = line end end -- known: tests/fixtures/alpha-known.txt
 	table.sort(heldAlpha)
@@ -577,7 +577,7 @@ local function sum(t, k)
 end
 
 test("lab photo: the tour's demo data adds up (shift split = takings, casts = rides, bars = heatmap = summary, ride counts, trips)", function()
-	-- (round 13, I33: Google's review of the 19 Nov tour: '1g to your crew' but the split gives 2g, 9 rides
+	-- (round 13, I33: a reviewer's review of the 19 Nov tour: '1g to your crew' but the split gives 2g, 9 rides
 	-- from 7 casts, bars at 00-12 where the heatmap is empty, 8 rides from 6 buyers, 'Eve 1 ride' vs
 	-- '11th ride', 11 rides vs 12, Hour Saver locked after 1h 50m saved)
 	local w = newWorld()
@@ -757,7 +757,7 @@ test("lab photo: the queue rows follow the big button, the waiting line is neutr
 		local text = joined(shots[i] and shots[i].texts or {})
 		local tag = e.s.id .. " " .. e.view .. ": "
 		if e.s.id == "button_summoning" or e.s.id == "button_portal" then
-			-- (BRIEF20 B5) button_portal says Vex Ember is casting, so Dan's row says (Vex), not (you)
+			-- button_portal says Vex Ember is casting, so Dan's row says (Vex), not (you)
 			local want = e.s.id == "button_portal" and "summoning (Vex)" or "summoning (you)"
 			if not has(text, want) then bad[#bad + 1] = tag .. "Dan's row doesn't say he is being summoned" end
 			if has(text, "ready to summon") then bad[#bad + 1] = tag .. "a row still 'ready to summon'" end
@@ -799,7 +799,7 @@ test("lab photo: no made-up flight price (Orgrimmar to Undercity is a zeppelin):
 	clean(w)
 end)
 
--- (BRIEF20 B9) the shots Google asked for, and the two demo states that contradicted their own names. Each is judged
+-- the shots a reviewer asked for, and the two demo states that contradicted their own names. Each is judged
 -- the way the real client draws it: the texts on screen, the popup up, the help page at its end, the log really empty.
 test("lab photo: B9 - empty Earnings is empty, the tips shot has sparse hours, and the bug report, the public-chat warning and a queued rider's pill each have a shot", function()
 	local w = newWorld()
@@ -847,7 +847,7 @@ test("lab photo: B9 - empty Earnings is empty, the tips shot has sparse hours, a
 		ok(by["settings_invite_warning/" .. view].popup, "the public-chat warning is on screen (" .. view .. ")")
 		ok(not by["settings_invite/" .. view].popup, "not in the shot before it")
 		ok(not by["help_bug/" .. view].popup, "nor elsewhere")
-		ok(by["settings_invite/" .. view].texts and text("settings_invite", view):find("Invite public chat buyers", 1, true), "the row is on screen")
+		ok(by["settings_invite/" .. view].texts and text("settings_invite", view):find("Invite public chat riders", 1, true), "the row is on screen")
 		ok(text("help_bug", view):find("Something not working?", 1, true), "Something not working? on screen in Help (" .. view .. ")")
 		ok(by["help_bug/" .. view].helpShown, "Help is open (" .. view .. ")")
 		ok((by["help_bug/" .. view].helpMax or 0) > 0 and by["help_bug/" .. view].helpScroll >= by["help_bug/" .. view].helpMax - 1,
@@ -856,7 +856,7 @@ test("lab photo: B9 - empty Earnings is empty, the tips shot has sparse hours, a
 	ok(by["bug_window/folded"].bug and not by["settings/folded"].bug, "the bug window is in its own shot only")
 	ok(text("bug_window", "folded"):find("Select all", 1, true), "its Select all and report")
 	-- Settings folded: the scrolled shots are scrolled (the row isn't at the top of the page)
-	ok((by["settings_invite/folded"].scroll or 0) > 100, "Invite public chat buyers scrolled to: " .. tostring(by["settings_invite/folded"].scroll))
+	ok((by["settings_invite/folded"].scroll or 0) > 100, "Invite public chat riders scrolled to: " .. tostring(by["settings_invite/folded"].scroll))
 	-- the home has a visible Report a bug card
 	ok(text("settings", "folded"):find("Report a bug", 1, true), "Settings home offers Report a bug")
 	-- wide Customers with a queued rider picked: one more Invite to Wuber (the right pane's), only in that shot
@@ -867,7 +867,7 @@ test("lab photo: B9 - empty Earnings is empty, the tips shot has sparse hours, a
 	clean(w)
 end)
 
--- (BRIEF20 B4) the tour shows Wuber's own default place, not a place of its own saved as the player's choice
+-- the tour shows Wuber's own default place, not a place of its own saved as the player's choice
 test("lab photo: the phone stands at Wuber's default place for every shot (no saved position), and the player's own place is put back", function()
 	local w = newWorld()
 	local c = photoClient(w, "Anita Lift", "WARLOCK")
@@ -887,7 +887,7 @@ test("lab photo: the phone stands at Wuber's default place for every shot (no sa
 	clean(w)
 end)
 
--- (BRIEF20 B5) the floating-button shots agree with their own titles (they were demo contradictions, not Wuber's)
+-- the floating-button shots agree with their own titles (they were demo contradictions, not Wuber's)
 test("lab photo: B5 - the floating button shots match their titles (who casts, shards, helper, empty raid, tap Open below)", function()
 	local w = newWorld()
 	local c = photoClient(w, "Anita Lift", "WARLOCK")

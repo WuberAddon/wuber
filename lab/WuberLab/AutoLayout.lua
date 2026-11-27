@@ -77,6 +77,7 @@ do
 	allow("cut", "^tip_whole", '^"Aaaaaaaaaaaaaaa%-Bbbbbbbbbbbbbbbbbbb"', "the scene gives one rider a name too long for its place on purpose, to show the hover tip carrying the name whole")
 	allow("under", "^finding_grouped", "route", "Waiting for the driver: the route header sits at the radar's top left corner on purpose")
 	allow("under", "^confirm_dial_low", "destPin", "Confirm, the destination far to the top right of the map strip: the destination pin is part of the map the window's buttons lie on")
+	allow("under", "^raid", 'half under .-"%+%d+ more below"', "the raid page's scroll hint pill sits over the list's bottom edge on purpose (Raid.lua updateCue); the rows it covers are faded, the texts just past the view edge only touch it by a few pixels")
 	-- (worldmap_sea: tests/layout/allow.lua allows price tags beside pins, cut pin counts at the map edge and a tag over its
 	-- own pin. No allow here yet: in the fake game the row reports none of them, and an allow for the whole row would hide
 	-- real findings. Add one, scoped to its text, only when an in-game run reports it.)
@@ -932,6 +933,30 @@ do
 				if tostring(t):find(NOTE, 1, true) then return true end
 			end
 			return "no customer row shows the mail note"
+		end })
+end
+
+---------------------------------------------------------------------------
+-- tests/layout/extra_screens.lua (words244 C): the ended page of a rider removed from the group (done_removed)
+---------------------------------------------------------------------------
+
+do
+	local done = tourScreen("done_unpaid")
+	screen({ id = "done_removed", side = "rider", unfold = done and done.unfold, only = done and done.only,
+		title = "Ride ended: removed from the group while the summon box was up",
+		need = gate("the tour's done_unpaid", function() return haveTour("done_unpaid") end),
+		run = function(w)
+			local r = runOf("done_unpaid")(w)
+			if r ~= true then return r end
+			if type(w.ride) ~= "table" then return "no demo ride" end
+			w.ride.removed = true
+			w.Fire("RIDE")
+			w.UI.Show("done")
+			local scr = type(w.UI.state) == "table" and type(w.UI.state.screens) == "table" and w.UI.state.screens.done
+			if type(scr) == "table" and type(scr.update) == "function" then scr.update() end
+			local text = type(scr) == "table" and scr.unpaidText and scr.unpaidText:GetText() or ""
+			if not tostring(text):find("Removed from the group", 1, true) then return "the card does not show the line" end
+			return true
 		end })
 end
 

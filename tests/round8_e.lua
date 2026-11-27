@@ -1,4 +1,4 @@
--- Round 8 (Wuber 2.3.0, SPEC7 8.2), agent E (Net): two-client scenarios over the real wire.
+-- Round 8 (Wuber 2.3.0), agent E (Net): two-client scenarios over the real wire.
 -- D field 18 (PvP), bounty -> driver demand -> serve -> the rider's toast, the passphrase on
 -- both sides, a raincheck end to end on F's real book (Drive.Raincheck) and crew, the live
 -- portal tracker over G. Loaded by tests/run.lua with its helper table T.

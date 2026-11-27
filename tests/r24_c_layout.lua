@@ -1,4 +1,4 @@
--- BRIEF24 B2: the layout check covers the "Skip the bird" card (Wuber/UI/Bird.lua): FILE_SCREENS maps the file to the
+-- the layout check covers the "Skip the bird" card (Wuber/UI/Bird.lua): FILE_SCREENS maps the file to the
 -- lab's gated "bird" shot, the sweep opens the fake flight map so that shot is taken at every size, and a text half
 -- over a pill ("straddle") is a problem (the card's "Don't show again" over "Open Wuber" before B1's fix).
 -- Run by tests/run.lua (T = its helper table); lua tests/run.lua "layout bird"

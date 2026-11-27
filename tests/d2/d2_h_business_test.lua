@@ -61,7 +61,7 @@ test("d2 h: five rows under 'Your business' in one card, inside the scroll area,
 		local v = W.Driver.ui.console
 		local g = v.business
 		ok(type(g) == "table" and type(g.rows) == "table", k.name .. ": the list is a row group")
-		eq(#g.rows, 5, k.name .. ": five rows")
+		eq(#g.rows, 6, k.name .. ": six rows (My advert line shows in Simple only)")
 		eq(plain(v.businessHead:GetText()), "Your business", k.name .. ": the heading")
 		ok(v.businessHead:IsVisible(), k.name .. ": the heading shows")
 		ok(inside(g, v.scroll.content), k.name .. ": the card is in the scrolling page")
@@ -70,15 +70,21 @@ test("d2 h: five rows under 'Your business' in one card, inside the scroll area,
 			eq(l, g.rows[i], k.name .. ": link " .. i .. " is row " .. i .. " of the one card")
 			eq(l.group, g, k.name .. ": the same card")
 			ok(l.icon and l.chevron, k.name .. ": " .. l.what .. " has an icon and a chevron")
-			ok(l:IsVisible(), k.name .. ": " .. l.what .. " shows")
+			if l.what ~= "advert" then ok(l:IsVisible(), k.name .. ": " .. l.what .. " shows") end
 			ok(l:GetHeight() >= 44, k.name .. ": " .. l.what .. " is a row (" .. l:GetHeight() .. " high)")
 			ok(type(l.SetLabel) == "function" and l.dot and l.badge, k.name .. ": " .. l.what .. " keeps SetLabel, dot and badge")
 			words[#words + 1] = l.what .. "=" .. l.titleText
 		end
-		eq(table.concat(words, " "), "crew=Crew messages=Messages blocked=Blocked earnings=Earnings customers=Customers", k.name .. ": the words")
+		eq(table.concat(words, " "), "crew=Crew messages=Messages advert=My advert line blocked=Blocked earnings=Earnings customers=Customers", k.name .. ": the words")
 		-- the heading sits above the card and the card's rows follow each other
 		ok(v.businessHead:GetBottom() >= g:GetTop(), k.name .. ": the heading is above the card")
-		for i = 2, 5 do ok(g.rows[i]:GetTop() <= g.rows[i - 1]:GetBottom() + 0.5, k.name .. ": row " .. i .. " under row " .. (i - 1)) end
+		local prevRow
+		for _, r in ipairs(g.rows) do
+			if r:IsVisible() then
+				if prevRow then ok(r:GetTop() <= prevRow:GetBottom() + 0.5, k.name .. ": " .. r.what .. " under " .. prevRow.what) end
+				prevRow = r
+			end
+		end
 		-- the page is as long as the list: its last row can be scrolled to
 		local contentTop = v.scroll.content:GetTop()
 		ok((v.scroll.content:GetHeight() or 0) >= contentTop - g:GetBottom(), k.name .. ": the page reaches the list's end")
@@ -115,7 +121,7 @@ test("d2 h: each row opens what its link opened", function()
 		W.Driver.ShowScreen = function(name) asked[#asked + 1] = tostring(name) end
 		v.scroll:ScrollTo(100000, true)
 		w:advance(1)
-		for _, l in ipairs(v.links) do a:clickOn(l) end
+		for _, l in ipairs(v.links) do if l.what ~= "advert" then a:clickOn(l) end end -- (My advert line shows in Simple only)
 		eq(table.concat(asked, " "), "crew messages blocked earnings customers", k.name .. ": the five pages")
 		T.clean(w)
 	end
@@ -134,7 +140,7 @@ test("d2 h: the Messages dot until Messages was opened once; the Blocked count i
 	local found = false
 	for _, t in ipairs(a:visibleTexts()) do if plain(t) == "Blocked (2)" then found = true end end
 	ok(found, "Blocked (2) is on the page")
-	eq(#v.business.rows, 5, "still five rows")
+	eq(#v.business.rows, 6, "still six rows")
 	W.Driver.ShowScreen("messages")
 	w:advance(1)
 	W.UI.ShowDrive("console")

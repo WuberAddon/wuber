@@ -166,7 +166,7 @@ D.screens.sheet = function(parent)
 		s.save:SetActive(okPrice and not why)
 		return okPrice and not why
 	end
-	-- 2+ stations: each Warlock summons where they stand; no place to choose (SPEC4 4)
+	-- 2+ stations: each Warlock summons where they stand; no place to choose
 	s.multi = T.Text(b, "sub", "white", "LEFT", "medium")
 	s.multi:SetWidth(320)
 	s.multi:SetText("Each Warlock summons to where they stand")
@@ -279,7 +279,7 @@ D.screens.sheet = function(parent)
 		local c = Char() or {}
 		s.price:SetText(money((K.Price and K.Price()) or N(c.price) or 5000))
 		s.dest = S(c.dest) ~= "" and S(c.dest) or nil
-		-- (2.3, SPEC7 5.3) "Serve it" from what riders want: that place chosen
+		-- (2.3) "Serve it" from what riders want: that place chosen
 		local want = type(arg) == "table" and S(arg.dest) or nil
 		if want and want ~= "" then s.dest = W.Clean(want, 40) end
 		s.mode = s.dest and "choose" or "here"
@@ -296,8 +296,9 @@ D.screens.sheet = function(parent)
 end
 
 ---------------------------------------------------------------------------
--- (Group Finder, B1) "List me in the Group Finder": the steps and the note to paste, in a Wuber-owned box the driver selects and
--- copies. Wuber never creates the listing: he does it in Blizzard's own window. Words: W.GroupFinder.DRAFT_WORDS (drafts).
+-- (Group Finder, B1) "List me in the Group Finder": the steps and a short note in big letters for the driver to TYPE by hand
+-- (the game's Note box refuses paste and addon SetText, so there is no copy box). Wuber never creates the listing: he does it in
+-- Blizzard's own window. Words: W.GroupFinder.DRAFT_WORDS (drafts).
 ---------------------------------------------------------------------------
 
 D.screens.gflist = function(parent)
@@ -307,45 +308,23 @@ D.screens.gflist = function(parent)
 	local b = sh.body
 	s.steps = T.Para(b, "caption", "muted", 320)
 	s.steps:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -8)
-	local function selectAll()
-		pcall(s.note.edit.SetFocus, s.note.edit)
-		pcall(s.note.edit.HighlightText, s.note.edit)
-	end
-	-- read-only: anything typed or pasted puts the note back, all selected
-	s.note = T.Field(b, 320, 64, { multi = true, max = 300, size = "caption",
-		get = function() return s.text or "" end,
-		onChange = function(t)
-			if t ~= (s.text or "") then s.note:SetText(s.text or "") end
-			selectAll()
-		end,
-		onEscape = function() sh:Close() end })
-	-- the client puts the cursor where the click landed, which drops a selection made on the mouse down: select now and again a
-	-- frame later, so the whole note is selected for Ctrl+C after a click or a focus
-	local function selectWhole(self)
-		pcall(self.HighlightText, self)
-		if C_Timer and C_Timer.After then
-			C_Timer.After(0, function() if self:HasFocus() then pcall(self.HighlightText, self) end end)
-		end
-	end
-	pcall(s.note.edit.HookScript, s.note.edit, "OnEditFocusGained", selectWhole)
-	pcall(s.note.edit.HookScript, s.note.edit, "OnMouseDown", selectWhole)
-	pcall(s.note.edit.HookScript, s.note.edit, "OnMouseUp", selectWhole)
-	T.Tip(s.note.edit, WD.listButton, WD.steps)
-	sh.onClose = function() pcall(s.note.edit.ClearFocus, s.note.edit) end
+	-- the note to type: big letters, never edited here (a label, not a box)
+	s.note = T.Para(b, "title", "white", 320, "bold")
+	T.Tip(s.note, WD.listButton, WD.steps)
 	s.enter = function()
 		local dest = K.Dest and K.Dest() or WD.here
 		s.text = string.format(WD.note, dest)
 		local h = s.steps:SetPara(WD.steps)
 		s.note:ClearAllPoints()
 		s.note:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -(8 + h + 12))
-		s.note:SetText(s.text)
-		sh:SetSheetHeight(56 + 8 + h + 12 + 64 + 24)
+		local nh = s.note:SetPara(s.text)
+		sh:SetSheetHeight(56 + 8 + h + 12 + nh + 24)
 	end
 	return s
 end
 
 ---------------------------------------------------------------------------
--- Raid summons: "Pick summoners" (SPEC4 3.1, 4): the raid's Warlocks, tick who summons
+-- Raid summons: "Pick summoners": the raid's Warlocks, tick who summons
 ---------------------------------------------------------------------------
 
 -- the raid's Warlocks (DR.RaidWarlocks(): key, name, shards, app), me first when I'm one
@@ -414,7 +393,7 @@ D.screens.raidpick = function(parent)
 	local function crewFull()
 		local max = tonumber(DR.CREW_MAX) or 8
 		local c = dr("char")
-		if type(c) ~= "table" or type(c.crew) ~= "table" or #c.crew >= max then toast("Crew is full (" .. max .. ")", "warn") end
+		if type(c) ~= "table" or type(c.crew) ~= "table" or #c.crew >= max then toast("Crew is full (" .. max .. " players)", "warn") end
 	end
 	local function onTick(r, on)
 		local p = r.p
@@ -533,7 +512,7 @@ D.screens.menu = function(parent)
 	item("oops", "Oops, wrong invite", "Says sorry and removes them", "close", "glow")
 	item("drop", "Take off the list", "Nothing is said (right-click)", "close", "muted")
 	item("block", "Block...", "Never serve them again (shift-right-click)", "lock", "red")
-	-- raid summons (SPEC4 3.2): no money, no blocks
+	-- raid summons: no money, no blocks
 	item("top", "Move to top", "Summoned next, before the others (click)", "summon", "glow")
 	item("rdrop", "Take off the list", "Nothing is said (right-click)", "close", "muted")
 	-- the block step: a reason, then Block
@@ -598,7 +577,7 @@ D.screens.menu = function(parent)
 		end
 		if not s.raid and c.state == "lead" then list[#list + 1] = "invite" end
 		local iou = isAdv and not s.raid and D.RaincheckRide and D.RaincheckRide(c) ~= nil
-		-- (2.3, SPEC7 5.8) a paid ride that failed before they arrived: one free summon later
+		-- (2.3) a paid ride that failed before they arrived: one free summon later
 		-- (the row is made the first time it is offered)
 		if iou and not s.items.raincheck then
 			item("raincheck", "Give raincheck", "One summon later at no charge from your crew, instead of a refund", "coin", "glow")
@@ -646,7 +625,7 @@ D.screens.menu = function(parent)
 		s.c = c
 		s.blocking = nil
 		s.raid = K.RaidMode and K.RaidMode() == true
-		-- (BRIEF15) a Pioneer rider's header says so first (the shipped list only)
+		-- a Pioneer rider's header says so first (the shipped list only)
 		local look = T.PioneerLook(S(c and c.name))
 		local pioneer = look and T.PIONEER[look].word or nil
 		if s.raid then
@@ -656,7 +635,7 @@ D.screens.menu = function(parent)
 			return
 		end
 		if c and c.iouOnly then
-			-- (2.3, SPEC7 5.8) from the raincheck alert: only "Give raincheck"
+			-- (2.3) from the raincheck alert: only "Give raincheck"
 			local yes, why = nil, nil
 			if D.RaincheckRide then yes, why = D.RaincheckRide(c) end
 			sh:SetTitle(S(c.name) or "Rider", yes and "Paid by trade · the summon failed before they arrived"
@@ -667,7 +646,7 @@ D.screens.menu = function(parent)
 		local reason = (c and (N(c.paid) or 0) == 0 and (c.state == "arrived" or c.state == "waiting")) and "didn't pay" or "blocked by hand"
 		s.reason:SetText(reason)
 		local sub = S(c and c.wuberLabel) or (c and c.source == "wuber" and "Booked through Wuber") or nil
-		-- (2.3, SPEC7 5.7) the app rider's passphrase in the header
+		-- (2.3) the app rider's passphrase in the header
 		local pass = D.Passphrase and D.Passphrase(c) or nil
 		if pass then sub = (sub and (sub .. " · ") or "") .. pass end
 		if pioneer then sub = pioneer .. (sub and (" · " .. sub) or "") end
@@ -766,7 +745,7 @@ local function hoursText(minutes)
 end
 
 
--- (2.3, SPEC7 5.5) The fair split under the tiles: "Farra · 9 clicks · 1g 40s" per person (from
+-- (2.3) The fair split under the tiles: "Farra · 9 clicks · 1g 40s" per person (from
 -- the cut taken when the shift closed: D.lastShift.cut), the rule in small words, "Wuber never
 -- moves gold", and "Post to party" (a share pill: the secure WuberShareButton posts it on the
 -- player's click, once per card). Without a crew's casts or clicks the card is as in 2.2.
@@ -870,7 +849,7 @@ local function buildSplit(s, b, sh)
 	return p
 end
 
--- (BRIEF20 B8) how tall the shift card may be: its top stays under the driver status strip (the real
+-- how tall the shift card may be: its top stays under the driver status strip (the real
 -- client drew it over the strip's words). nil when the console's rects are not known yet.
 local function roomUnderStrip()
 	local ui = D.ui
@@ -943,11 +922,11 @@ function D.PaintSplit(s, sh)
 			l = { name = T.Text(b, "sub", "white", "LEFT", "medium"), what = T.Text(b, "sub", "gold", "RIGHT", "bold") }
 			l.name:SetWidth(230)
 			l.what:SetWidth(86)
-			l.name.wuberMin = T.SIZE.sub -- (BRIEF20 B8) one size for every row: never shrunk to fit
+			l.name.wuberMin = T.SIZE.sub -- one size for every row: never shrunk to fit
 			l.what.wuberMin = T.SIZE.sub
 			p.lines[i] = l
 		end
-		-- (BRIEF20 B8) one size: a line too long for 230 px drops its casts and clicks, never shrinks
+		-- one size: a line too long for 230 px drops its casts and clicks, never shrinks
 		local who = x.key == W.myKey and "You" or W.Short(x.name)
 		local words = " · " .. D.CutWords(x.casts, x.clicks)
 		if T.MeasureText(who .. words, "sub", "medium") * 1.04 > 230 then words = "" end

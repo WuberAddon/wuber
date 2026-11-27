@@ -267,7 +267,7 @@ local function structure(ty, va, li, n)
 	return fnOf, fns, info
 end
 
-local function matchFwd(ty, va, i, n) -- i = index of an opening ( [ {: the index of its match
+local function matchFwd(ty, va, i, n) -- i = index of an opening ([ {: the index of its match
 	local depth = 0
 	for j = i, n do
 		if ty[j] == "o" then

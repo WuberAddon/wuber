@@ -66,7 +66,7 @@ local function maybeHidden()
 	return type(h) == "table" and next(h) ~= nil
 end
 
--- "DRIVERS" once for a burst of beacons (SPEC5 redraws, review #10): 80 beacons in 2 s make
+-- "DRIVERS" once for a burst of beacons: 80 beacons in 2 s make
 -- one map / list / nameplate pass, not 80. A tenth of a second later.
 local driversSoon = false
 function W.DriversChanged()
@@ -576,7 +576,7 @@ end
 ---------------------------------------------------------------------------
 
 NETK.RIDER_KEEP = 330   -- a rider who whispered us a Q gets our changes for this long (5.5 min: riders ask a quiet driver every 5 min)
-NETK.PUSH_MAX = 25      -- ... at most this many riders (the latest; SPEC5 stagger: was 10)
+NETK.PUSH_MAX = 25      -- ... at most this many riders (the latest; was 10)
 NETK.REPLY_QUIET = 15   -- one whispered answer per rider per this many seconds
 NETK.REPLY_CAP = 10     -- whispered answers in any 15 s at once (more are staggered, below)
 NETK.STAGGER_MAX = 24   -- answers past the cap: one about a second apart, at most this many more
@@ -608,7 +608,7 @@ local function recentRiders()
 	return list
 end
 
--- Whether a rider has booked already (SPEC5 stagger: no answers to riders who have a ride):
+-- Whether a rider has booked already (no answers to riders who have a ride):
 -- they asked us for a ride (R), their ride with us ended paid/done, or they are in our group.
 local function booked(key)
 	local at = fb.booked[key]
@@ -624,7 +624,7 @@ W.RiderBooked = booked
 -- Q by whisper: a rider who can't hear the channel asks us. Answered with our D by whisper
 -- after a moment (0.3-1.5 s), at most once per rider per 15 s and ten in any 15 s; not at
 -- all while we aren't driving (the rider still gets our D when we go online, for 5.5 min).
--- (SPEC5 stagger, review #9: past ten answers in 15 s the next 24 are spread about a second
+-- (past ten answers in 15 s the next 24 are spread about a second
 -- apart instead of dropped; one answer per rider per Q (a pending one is not doubled); none
 -- to a rider who has booked, checked again when it goes.)
 local pushPending = {} -- [key] = true: a staggered push to this rider is still to go (tickPush)
@@ -813,7 +813,7 @@ local function heardPing(viaComm)
 	if now() - lastQReply < NETK.Q_QUIET then return end
 	replyPending = true
 	lastQReply = now()
-	-- (SPEC5 redraws, review #10: our unchanged D went on the channel in the last 25 s: answer
+	-- (our unchanged D went on the channel in the last 25 s: answer
 	-- later and further apart, so one Q doesn't set off every driver's beacon at once)
 	local recent = beacon.online and now() - beacon.at < 25 and signature(b) == beacon.sig
 	local delay = recent and (1.5 + math.random() * 5.5) or (0.5 + math.random() * 2.5)

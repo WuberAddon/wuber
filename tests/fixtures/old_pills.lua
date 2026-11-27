@@ -1,5 +1,5 @@
 -- tests/fixtures/old_pills.lua: the code of two bugs the offline harness passed and the real client
--- showed (BRIEF21 S5), as git has it. Each entry is one hunk of the fix commit: `fixed` is today's
+-- showed, as git has it. Each entry is one hunk of the fix commit: `fixed` is today's
 -- text (found exactly once in the file, else the test says this fixture is out of date) and `old` is
 -- what the file said before the fix. tests/harness_draw.lua loads Wuber with the old text put back
 -- (the client's opts.rewrite) and checks that the harness now draws the bug as the game did.
@@ -9,7 +9,7 @@ return {
 		why = "BRIEF20 B1: the top nav before its fix (one fill per tab, its style and alpha changed on every tab change)",
 		fixed = [[
 -- (design 2, C) the chosen tab has a violet glyph and a violet word, the others are grey; no pill. Only colours
--- change, never an alpha or a texture shown or hidden ((BRIEF20 B1) in the game a texture keeps the alpha it had
+-- change, never an alpha or a texture shown or hidden (in the game a texture keeps the alpha it had
 -- when the tab changed while the window was shut), on every change and at open.
 local function paintTab(b)
 	local c = b.tabName == ui.tab and "accent" or ((b.hover or b.wuberPressed) and "white" or "offText")
@@ -105,7 +105,7 @@ end]] },
 		-- (2.3.2 C1) the first-show text refresh used to be a HookScript, which this SetScript dropped
 		pcall(onShowRefresh)
 		pcall(syncTabs)
-		pcall(paintTabs) -- (BRIEF20 B1) the lit tab at open, whatever changed while shut
+		pcall(paintTabs) -- the lit tab at open, whatever changed while shut
 		ui.dirty = true
 		UI.FlashMinimap(false)
 		-- the Fold: this page's width at once (no tween while the window zooms in)]],
@@ -124,7 +124,7 @@ end
 
 -- T.Segmented(parent, choices, value, onChange(value), width, height): a pill split into
 -- choices ({ { value =, label =, tip = } }); the chosen one is violet with ink words. s:SetValue(v), s:Paint().
--- (BRIEF20 B1) the chosen part is lit by its own opaque pill (b.chosen), shown or hidden; the parts'
+-- the chosen part is lit by its own opaque pill (b.chosen), shown or hidden; the parts'
 -- own fills stay hidden. In the game a fill kept its alpha when the choice changed while it was not
 -- drawn (a clear part stayed clear, a lit one turned solid white). Looks: s.onStyle (a T.PILL_STYLES
 -- name; "chosen" by default, which is no pill style but the look below) and s.litFor(b) (a colour for the lit pill)
@@ -209,7 +209,7 @@ function T.Segmented(parent, choices, value, onChange, width, height)
 
 -- A segmented choice made calm (round 7): gold is for the big button; the chosen part is a
 -- violet pill with ink words (item 2 of the design audit), the others muted (UI_Drive.lua's Earnings uses it too).
--- (BRIEF20 B1) T.Segmented lights the chosen part with its own opaque pill (shown or hidden, never an
+-- T.Segmented lights the chosen part with its own opaque pill (shown or hidden, never an
 -- alpha change); this only sets its look: no gold glow (ghost), the lighter pill, white words.
 function D.CalmSegmented(seg)
 	seg.bg:SetColor("panel")
@@ -284,7 +284,7 @@ end]] },
 	s.update = function()
 		s.side = s.side or eside
 		local isAdv = adv()
-		-- (BRIEF19 F5) the totals' period is s.range; the lit pill follows it in every path (a tap, the
+		-- the totals' period is s.range; the lit pill follows it in every path (a tap, the
 		-- photo tour setting it, a fold, a tab coming back)
 		if not RANGES[s.range] then s.range = "today" end
 		if s.seg.value ~= s.range then s.seg:SetValue(s.range) else s.seg:Paint() end

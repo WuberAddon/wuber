@@ -56,7 +56,7 @@ local D = W.Driver or {}
 W.Driver = D
 D.screens = D.screens or {}  -- UI_Drive.lua: name -> builder(parent) -> { frame, update, enter }
 D.kit = D.kit or {}
--- (2.3, SPEC7 2) the driver pages that unfold: page -> { build = fn(holder), layout = fn(unfolded,
+-- (2.3) the driver pages that unfold: page -> { build = fn(holder), layout = fn(unfolded,
 -- holder) }, filled by UI.Driver.Console (console), Raid (raid), Earnings (earnings) and Messages
 -- (messages); UI.Driver.Console registers them with UI.Fold when the Drive tab is built
 D.FOLD = D.FOLD or {}
@@ -157,7 +157,7 @@ end
 
 local function IsOpen() return dr("IsOpen") == true end
 local function IsPaused() return dr("IsPaused") == true end
--- raid summon mode (SPEC4 3): free summons for your own raid; "sell" otherwise
+-- raid summon mode: free summons for your own raid; "sell" otherwise
 local function RaidMode() return dr("Mode") == "raid" end
 
 -- a list from the engine (nil or a stub: empty)
@@ -233,7 +233,7 @@ function D.Wide(page)
 	return type(F) == "table" and type(F.IsUnfolded) == "function" and call(F.IsUnfolded) == true
 end
 
--- (2.3, SPEC7 2.1) selling or raid summons: the console's page is "console" or "raid"
+-- (2.3) selling or raid summons: the console's page is "console" or "raid"
 W.Listen("DRIVE_MODE", function() W.Fire("PAGE") end)
 
 local function plural(n, one, many) return n == 1 and ("1 " .. one) or (n .. " " .. (many or (one .. "s"))) end
@@ -243,7 +243,7 @@ D.kit.Char, D.kit.IsWarlock, D.kit.Provider, D.kit.Price, D.kit.Dest = Char, IsW
 D.kit.safeScript, D.kit.plural, D.kit.inCombat = safeScript, plural, inCombat
 D.kit.RaidMode, D.kit.List = RaidMode, List
 
--- The stations (SPEC4 2.1): places where a crew summoner stands. 2+ = several stations.
+-- The stations: places where a crew summoner stands. 2+ = several stations.
 function D.Stations()
 	local out = {}
 	for _, st in ipairs(List("Stations")) do
@@ -252,7 +252,7 @@ function D.Stations()
 	return out
 end
 
--- a station is ready with a summoner and two others there (SPEC4 2.1)
+-- a station is ready with a summoner and two others there
 function D.StationReady(st)
 	if type(st) ~= "table" then return false end
 	if st.ready ~= nil then return st.ready == true end
@@ -261,7 +261,7 @@ function D.StationReady(st)
 	return n1 >= 1 and n1 + n2 >= 3
 end
 
--- the payee's short name for a rider when it isn't the one speaking (SPEC4 1.2), else nil
+-- the payee's short name for a rider when it isn't the one speaking, else nil
 function D.PayeeName(c)
 	if type(c) ~= "table" then return nil end
 	local k = S(dr("Payee", c.name)) or S(c.payee)
@@ -284,7 +284,7 @@ function D.Mode()
 	if dr("Lock") == "rr" or Provider() then return "provider" end
 	local role = D.Role()
 	if role == "helper" then return "console" end
-	-- any class runs a service once set up (SPEC4 1.1); before that: the welcome
+	-- any class runs a service once set up; before that: the welcome
 	if role ~= "driver" then return "welcome" end
 	if type(W.Advanced) == "function" and not W.Advanced() and IsWarlock() and D.CrewCount() == 0 then return "console" end
 	local c = Char()
@@ -308,7 +308,7 @@ D.OPEN_WHY = {
 
 -- The shift that ends when a seller closes (review #20): DR.ShiftSummary() taken just before
 -- the close, shown as a card (UI_Drive.lua's "shift" sheet) when there was a ride.
--- (2.3, SPEC7 5.5) `cut` = the crew's casts, clicks and shares taken just before the close
+-- (2.3) `cut` = the crew's casts, clicks and shares taken just before the close
 -- ({ rows, rule, pct, text }; else read now): the card's "Fair split".
 local function cutNow()
 	if type(D.CutRows) ~= "function" then return nil end
@@ -462,7 +462,7 @@ end
 function D.AdvertTarget(which)
 	local v = D.ui and D.ui.console
 	if not (v and v:IsVisible()) or D.sub or D.SheetOpen() or Provider() or not Char() then return nil end
-	-- any class may run (and advertise) a service; raid summons never advertise (SPEC4 3.2)
+	-- any class may run (and advertise) a service; raid summons never advertise
 	if D.Role() ~= "driver" or RaidMode() then return nil end
 	if inCombat() then return nil end
 	local open = IsOpen()

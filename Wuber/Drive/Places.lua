@@ -107,7 +107,7 @@ local RR_PLACES = {
 	{ "The Riverglades", "the riverglades", "riverglades", "river glades" },
 	{ "Mount Hyjal", "mount hyjal", "hyjal", "mt hyjal" },
 	{ "Shen'dralas", "shendralas", "shen dralas" },
-	-- (BRIEF22 P1) every other Classic zone and city riders name: a line asking for one is somewhere else
+	-- every other Classic zone and city riders name: a line asking for one is somewhere else
 	{ "Loch Modan", "loch modan", "lochmodan", "loch", "thelsamar" },
 	{ "Dun Morogh", "dun morogh", "dunmorogh", "morogh", "kharanos" },
 	{ "Elwynn Forest", "elwynn forest", "elwynn", "elwyn", "goldshire" },
@@ -214,7 +214,7 @@ end
 ---------------------------------------------------------------------------
 
 -- The edit distance between a and b (added, dropped, changed, two swapped), or limit + 1.
--- Three rows kept for every call (SPEC5 public, review #18: no tables made per call).
+-- Three rows kept for every call (no tables made per call).
 local ROWS = { {}, {}, {} }
 -- (perf audit, 26 Nov 2026) Most words a chat line holds are nowhere near a place name, and the grid below costs
 -- length x length steps for each name. Every edit (added, dropped, changed, two swapped) takes at most one letter
@@ -314,7 +314,7 @@ local function topicish(w)
 	return false
 end
 
--- Every place name and alias in one table (SPEC5 public, review #18: a lookup, not a scan of
+-- Every place name and alias in one table (a lookup, not a scan of
 -- ~350 names): BYNAME[name or alias] = entry (the first entry that has it, in PLACES order);
 -- ALIAS[alias] = { entry, order } for the exact search in a line; MAXW = the most words in one.
 local BYNAME, ALIAS, MAXW = {}, {}, 1
@@ -399,7 +399,7 @@ local function wordBefore(words, at)
 end
 local FROM = { from = true, frm = true, fron = true, ["in"] = true, at = true, leaving = true, outside = true, near = true }
 
--- (BRIEF22 P1) Words that follow "to"/"2" and are no place: pronouns, verbs ("to pay"), groups, counts
+-- Words that follow "to"/"2" and are no place: pronouns, verbs ("to pay"), groups, counts
 -- ("2 ppl"), fillers. Any other word there is a place, known or not ("summons to loch modan?").
 local NOT_PLACE = {}
 for w in ([[me us you u ya yall him her them it its my our your ur their his this that these those there here where
@@ -591,7 +591,7 @@ function DR.Mentions(words)
 			scan(names, found, entry)
 			for _, m in ipairs(found) do
 				local taken = false
-				-- (BRIEF23 H4) one word names one place: "darkshore" is Darkshore, not Duskwood's "darkshire"
+				-- one word names one place: "darkshore" is Darkshore, not Duskwood's "darkshire"
 				-- one letter off; the nearest spelling wins, and the first place at a tie
 				for j, x in ipairs(others) do
 					if x.at == m.at then
@@ -603,7 +603,7 @@ function DR.Mentions(words)
 			end
 		end
 	end
-	-- (BRIEF23 H4) the driver's own place against the others, word by word: the nearer spelling wins,
+	-- the driver's own place against the others, word by word: the nearer spelling wins,
 	-- the driver's own place at a tie ("summon to darkshore" in Duskwood is Darkshore, "darkshire" is ours)
 	local keptOthers = {}
 	for _, m in ipairs(others) do
@@ -750,18 +750,18 @@ function DR.PublicWant(text)
 		end
 		if marked(TO) then return "match" end
 		if marked(FROM) then return "elsewhere" end
-		-- (BRIEF22 P1) "org to xanadu": a place nobody knows after "to" is where they go
+		-- "org to xanadu": a place nobody knows after "to" is where they go
 		if unknownTo(words, covered({ mine, others }), DR.DestNames(), notPlace) then return "elsewhere" end
 		return "match"
 	end
 	if not want then return nil end
 	if #others > 0 then return "elsewhere" end
-	-- (BRIEF22 P1) "Any summons to loch modan?" with no list knowing it: somewhere else, never a buyer
+	-- "Any summons to loch modan?" with no list knowing it: somewhere else, never a buyer
 	if unknownTo(words, covered({ mine, others }), DR.DestNames(), notPlace) then return "elsewhere" end
 	return "noplace"
 end
 
--- (BRIEF18 00:53) The places a request (a whisper, a Wuber app line) asks to go to: { {name, to} },
+-- The places a request (a whisper, a Wuber app line) asks to go to: { {name, to} },
 -- to = written after "to". A place after "in"/"at"/"from" is where the rider stands, never where
 -- they go ("summon pls, I'm in Ironforge"), so it is left out. Empty: no place named.
 function DR.AskedPlaces(text)
@@ -781,7 +781,7 @@ function DR.AskedPlaces(text)
 		local e = m.entry
 		add(m, e and ((e.place and e.place.name) or e[1]) or m.name)
 	end
-	-- (BRIEF22 P1) a place nobody knows after "to" ("summon to astranaar"): asked for, as written
+	-- a place nobody knows after "to" ("summon to astranaar"): asked for, as written
 	local hasTo = false
 	for _, p in ipairs(out) do if p.to then hasTo = true end end
 	if not hasTo then
@@ -793,7 +793,7 @@ function DR.AskedPlaces(text)
 end
 
 ---------------------------------------------------------------------------
--- Stations (SPEC4 2): several crew Warlocks summoning from different places, one service
+-- Stations: several crew Warlocks summoning from different places, one service
 ---------------------------------------------------------------------------
 -- A station = a place where at least one of the crew's summoners stands. Riders are routed
 -- to the station their destination names; each summoner's button plans its own station.
@@ -1056,7 +1056,7 @@ function DR.DestIn(text)
 	return longest
 end
 
--- Routes a rider (SPEC4 2.2): "ok" (c.station set, or one station), "ask" (no place named:
+-- Routes a rider: "ok" (c.station set, or one station), "ask" (no place named:
 -- the station they have if it is still open, else the runner's, and "Where to?" once: c.askWhere), "elsewhere" (a place no open
 -- station summons to: not queued, c.elsewhere).
 function DR.Route(c, text)
@@ -1091,11 +1091,11 @@ function DR.Route(c, text)
 	return "ask"
 end
 
--- Arrived (SPEC4 2.2): with one station, or at the station I stand at, here (DR.Here: I can see
+-- Arrived: with one station, or at the station I stand at, here (DR.Here: I can see
 -- them). (r32 AUD-50) At another window's station: on its map and, for a town station, at that
 -- town by their map position (only the map when the position is unknown).
 function DR.ArrivedAt(c, unit)
-	local sim = DR.SimHooks -- the test addon's shard-free test mode (SPEC5): see DR.Here
+	local sim = DR.SimHooks -- the test addon's shard-free test mode: see DR.Here
 	if sim and sim.here and unit then
 		local ok, v = pcall(sim.here, unit, c)
 		if ok and v == true then return true end

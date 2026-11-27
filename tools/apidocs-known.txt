@@ -32,3 +32,4 @@ protected:StopMovingOrSizing	not fixed: the fake does not refuse this protected 
 enums:TooltipDataType	not fixed: the fake keeps 5 of 28 TooltipDataType values; Wuber uses none of the others, filling the table needs its own item
 events:PARTY_INVITE_REQUEST#7	not proven: slots 7 and 8 of the fake's payload are swapped against the docs, but the real client's order was never captured. To prove it: record one PARTY_INVITE_REQUEST on the real client and compare slots 7 and 8
 events:PARTY_INVITE_REQUEST#8	not proven: same as #7, waits for a capture
+exists:C_LFGList.RemoveListing	the addon uses it (Net/GroupFinder.lua) and the Blizzard API docs list no such function; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a recording shows the real client has or lacks it

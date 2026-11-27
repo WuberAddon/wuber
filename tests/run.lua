@@ -76,7 +76,7 @@ if split.files then
 		if byRun and rel and not ONLY[rel] and rel:find("^[%w_/]+$") and not rel:find("^lib/") then return function() end end
 		local chunk, err = realLoad(path, ...)
 		if not chunk or not rel or not ONLY[rel] then return chunk, err end
-		return function(...) inPart = true local ok2, e = pcall(chunk, ...) inPart = false if not ok2 then error(e, 0) end end
+		return function(...) inPart = true local ok2, e = pcall(chunk, ...) inPart = false if not ok2 then error(e, 0) end return e end -- (a part that returns a value, like tools/check.lua's module, hands it on)
 	end
 end
 -- --names=<file> (in-round runs, tools/quick-check.sh): every part loads, only the tests named, one exact name a line, run
@@ -353,7 +353,7 @@ local function openDrive(d)
 	d.world:advance(1)
 end
 
--- GO ONLINE is the console's Open / Close pill (SPEC3 2.1); a click where it is drawn (the
+-- GO ONLINE is the console's Open / Close pill; a click where it is drawn (the
 -- secure WuberGoButton lies over it while going online also posts the advert)
 local function clickGo(d)
 	local ui = d.W.Driver and d.W.Driver.ui
@@ -466,7 +466,7 @@ end)
 -- SPEC5 rrmentions (the author: "no mentions of it anywhere"): no string a player can see names the
 -- old summoning addon, in any of Wuber's files, nor the TOC. Code identifiers and saved-variable
 -- names ("RitualRides", "RitualRidesDB") may stay, and comments are not shown to anyone.
--- (Files are listed from the TOC in pure Lua: SPEC5 paths, review #30 - the old check scanned
+-- (Files are listed from the TOC in pure Lua: review #30 - the old check scanned
 -- nothing when the path was relative.)
 local function luaStrings(src)
 	local out, i, n = {}, 1, #src
@@ -741,7 +741,7 @@ end)
 
 test("TGA files are uncompressed 32-bit with power-of-two sizes", function()
 	local bad, n = {}, 0
-	for _, path in ipairs(H.listFiles(H.ADDONS.Wuber .. "/Media", "tga")) do -- (SPEC5 paths: no ls)
+	for _, path in ipairs(H.listFiles(H.ADDONS.Wuber .. "/Media", "tga")) do -- (no ls)
 		n = n + 1
 		local t = readFile(path)
 		local imgType, w, h, bpp = t:byte(3), t:byte(13) + t:byte(14) * 256, t:byte(15) + t:byte(16) * 256, t:byte(17)
@@ -1004,13 +1004,13 @@ for _, mode in ipairs({ { "modern, key-down on", "modern", true }, { "modern, ke
 	end)
 end
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "full ride (Driver.lua): accept, invite, summon, arrive, pay, rate"
+-- () deleted, superseded by the 2.0 engine: "full ride (Driver.lua): accept, invite, summon, arrive, pay, rate"
 --   covered by round4 "drive: Wuber: a request is invited and accepted once; each step goes to the rider once, from one window"
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "decline: the rider is told and can try another driver"
+-- () deleted, superseded by the 2.0 engine: "decline: the rider is told and can try another driver"
 --   covered by round4 "drive: Wuber: blocked is declined 'blocked'; closed and paused are declined 'closed'"
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "driver's own mode: no answer in 30 s -> N busy"
+-- () deleted, superseded by the 2.0 engine: "driver's own mode: no answer in 30 s -> N busy"
 --   covered by round4 "scenario 9: an old (1.0) rider rides with a 2.0 crew; the away guard pauses an idle driver" (no ACCEPT_WINDOW with the engine)
 
 test("timeout: no answer at all -> R resent once at 8 s, timeout at 40 s, C sent", function()
@@ -1966,7 +1966,7 @@ test("a trade from another of the driver's Warlocks still counts as paying", fun
 	w:advance(2.5)
 	r:clickText("Accept invite")
 	w:advance(1)
-	-- (SPEC5 tradecheck, review 2.2 #1: only the driver, the payee or crew it names, or the
+	-- (review 2.2 #1: only the driver, the payee or crew it names, or the
 	-- Warlock whose summon the rider accepted counts - not just anyone in the group)
 	w:join(w:player(ANITA), w:player(BOB))
 	w:advance(1)
@@ -2054,10 +2054,10 @@ test("the Request overlay follows the window when it is dragged", function()
 	clean(w)
 end)
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "secret UnitName and GetMoney on the rider: the full ride still ends (driver's S messages)"
+-- () deleted, superseded by the 2.0 engine: "secret UnitName and GetMoney on the rider: the full ride still ends (driver's S messages)"
 --   covered by round4 "scenario 18: secret values on names, money, trade money, spell ids and senders: no errors"
 
--- (SPEC5 pending, review #30) deleted, superseded by the 2.0 engine: "two riders at once: the driver takes one, shows busy, the other is declined"
+-- () deleted, superseded by the 2.0 engine: "two riders at once: the driver takes one, shows busy, the other is declined"
 --   covered by round4 "drive: Wuber: the chat line first, then the request: still one rider; a second rider waits and is told"
 
 ---------------------------------------------------------------------------
@@ -2142,7 +2142,7 @@ for _, part in ipairs({ "round5_engine", "round5_action", "round5_ui" }) do
 	})
 end
 
--- Round six (SPEC5.md, Wuber 2.2: the Google review fixes, flight-cost savings): one file per
+-- Round six (SPEC5.md, Wuber 2.2: the an outside review fixes, flight-cost savings): one file per
 -- agent (engine A, action B, UI C), loaded with the same helpers as round five
 for _, part in ipairs({ "round6_engine", "round6_action", "round6_ui", "round6_review", "round6_flights" }) do
 	local chunk = assert(loadfile(dir .. "/" .. part .. ".lua"))
@@ -2247,7 +2247,7 @@ do
 end
 
 -- Round 15 (agent E): the forbidden list, the taint.log reader and the release checklist (tests/tools/)
-for _, part in ipairs({ "tools/forbidden_test", "tools/taint_test", "tools/known_bugs_check_test", "tools/checklist_test", "tools/shard_test", "tools/known_test", "tools/sweep_known_test", "tools/sweep_own_repro_test", "tools/transcript_test", "layout/engine_test", "r24_c_layout", "r25_b_tipsettings", "r25_g_layout", "r26_b_helptip", "r26_e_layout_world", "r13_d4c_scenes" }) do
+for _, part in ipairs({ "tools/forbidden_test", "tools/taint_test", "tools/known_bugs_check_test", "tools/checklist_test", "tools/shard_test", "tools/known_test", "tools/sweep_known_test", "tools/sweep_own_repro_test", "tools/transcript_test", "layout/engine_test", "r24_c_layout", "r25_b_tipsettings", "r25_g_layout", "r26_b_helptip", "r26_e_layout_world", "r13_d4c_scenes", "j2935_a_pay_trade" }) do
 	local chunk = loadfile(dir .. "/" .. part .. ".lua")
 	if chunk then
 		chunk({ H = H, test = test, runOne = runOne, eq = eq, ok = ok, list = list, newWorld = newWorld, rider = rider,

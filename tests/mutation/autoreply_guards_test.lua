@@ -49,13 +49,13 @@ test("mutation autoreply: every switch and state that forbids a whisper-back say
 	eq(why(DR, "Dan Miller"), "false/not open", "closed")
 	ok(DR.SetOpen(true), "reopen")
 	DR.opts().autoInvite = false
-	eq(why(DR, "Dan Miller"), "false/auto mode is off", "auto mode off")
+	eq(why(DR, "Dan Miller"), "false/Inviting riders who whisper you or ask in the app is off", "auto mode off")
 	DR.opts().autoInvite = true
 	DR.opts().watchPublic = false
-	eq(why(DR, "Dan Miller"), "false/public chat is off", "public chat off")
+	eq(why(DR, "Dan Miller"), "false/Listing people who ask for a summon in public chat is off", "public chat off")
 	DR.opts().watchPublic = true
 	DR.opts().autoReply = false
-	eq(why(DR, "Dan Miller"), "false/switched off", "auto-reply switched off")
+	eq(why(DR, "Dan Miller"), "false/Whisper back to public requests is off", "auto-reply switched off")
 	DR.opts().autoReply = true
 	DR.opts().whisperMode = "box"
 	eq(why(DR, "Dan Miller"), "false/whispers are not set to go by themselves", "chat box mode needs the player's Enter")

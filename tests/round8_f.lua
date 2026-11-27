@@ -1,4 +1,4 @@
--- Round 8 (Wuber 2.3.0, SPEC7 8.2), agent F (engine): two-client scenarios over the real wire.
+-- Round 8 (Wuber 2.3.0), agent F (engine): two-client scenarios over the real wire.
 -- A rider with the app and a 3-window crew: the live portal tracker (G from the engine's facts),
 -- the passphrase in a crew window (ST field 9), the PvP warning from a crew window's fight (HI
 -- field 11 -> beacon D field 18 -> the rider's driver list), a raincheck end to end on Drive.Raincheck's
@@ -152,7 +152,7 @@ test("r8 F: PvP: Cal fights an enemy player, the crew's beacon carries it, the r
 	T.clean(w)
 end)
 
--- Raincheck over the real wire (SPEC7 5.8). The crew stands at Ratchet; Wuber stands just over the
+-- Raincheck over the real wire. The crew stands at Ratchet; Wuber stands just over the
 -- Durotar border: within reach of a trade with Ana (the harness's trade range and UnitIsVisible are
 -- the zone) but on another map, so the driver's here check (DR.Here: visible AND the same map) never
 -- counts him arrived, and his own (W.DestHere) doesn't either. Nothing in tests/lib changes for it.

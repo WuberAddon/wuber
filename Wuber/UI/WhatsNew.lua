@@ -46,7 +46,7 @@ Mod.NOTES = {
 }
 Mod.NOTES["2.4.2"] = Mod.NOTES["2.4.3"] -- the same card for a 2.4.2 build (no new words; 2.4.3 only fixes and polishes)
 
-local K = { W = 300, PAD = 16, TOP = 56, FOOT = 70, LINK = 30, TOP_Y = -120, GAP = 32, FIRST = 3, RETRY = 10, TRIES = 60, SLOW = 30, MINH = 120 }
+local K = { W = 300, PAD = 16, TOP = 56, FOOT = 70, LINK = 30, TOP_Y = -120, GAP = 32, WATCH = 0.25, FIRST = 3, RETRY = 10, TRIES = 60, SLOW = 30, MINH = 120 }
 
 local st = { pending = nil, tries = 0, waiting = false, shown = false }
 local card
@@ -259,6 +259,14 @@ local function hookFollow()
 			end)
 		end
 	end
+	-- (gauntlet #42) the window opening wide, folding or showing moves its box: the card steps aside at once, not at the next second
+	local win = ui.win
+	if type(win) == "table" and not followHooked[win] and type(win.HookScript) == "function" then
+		followHooked[win] = true
+		local function again() if card and card:IsShown() then W.Safe("whatsnew", place, card) end end
+		call(win.HookScript, win, "OnSizeChanged", again)
+		call(win.HookScript, win, "OnShow", again)
+	end
 end
 
 local function close()
@@ -363,7 +371,7 @@ end
 
 local schedule
 local watch
--- while it shows: the phone opened or moved under it: beside the phone again, or hidden (not seen) until there is room
+-- while it shows (looks every K.WATCH s, so a moved window and the flight map's price tags are not kept waiting): the phone opened or moved under it: beside the phone again, or hidden (not seen) until there is room
 watch = function(token)
 	if token ~= st.watch or not (card and card:IsShown()) then return end
 	if not place(card) then
@@ -372,7 +380,7 @@ watch = function(token)
 		if st.pending then schedule(K.RETRY) end
 		return
 	end
-	W.After(1, function() watch(token) end)
+	W.After(K.WATCH, function() watch(token) end)
 end
 
 local function try()
@@ -389,7 +397,7 @@ local function try()
 	if st.shown then
 		st.watch = (st.watch or 0) + 1
 		local token = st.watch
-		W.After(1, function() watch(token) end)
+		W.After(K.WATCH, function() watch(token) end)
 	elseif st.noRoom then
 		st.tries = st.tries + 1
 		if st.tries < K.TRIES then schedule(K.RETRY) end

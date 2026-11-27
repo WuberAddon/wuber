@@ -1,7 +1,7 @@
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok
 
--- AUD-29 (Google C06b-1): a busy driver's price change, state change or going offline is
+-- AUD-29 (a reviewer C06b-1): a busy driver's price change, state change or going offline is
 -- whispered to every rider who asked by whisper in the last 5.5 min, not only the first 16
 -- (the outbox's burst of 4 and its 12 waiting whisper-fallback messages): the rest are spread
 -- about a second apart, inside the allowance, and nothing is dropped.

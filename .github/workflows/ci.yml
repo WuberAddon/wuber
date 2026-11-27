@@ -5,22 +5,29 @@
 # The transcript comparison is also left out (the baseline file is about 110 MB and is not stored here).
 # The suite needs no old addon: tests/fixtures/addons/OldDriver stands in for one.
 #
-# Jobs (all start at once; "all-checks" waits for them and is the one to require):
-#   quick          scrub check + its tests, check.lua                      (about 1 minute)
+# Which jobs run for which event (the required check is "all-checks"; do not rename it):
+#   pull_request (also Dependabot)     quick, quick-changed, layout-extra, all-checks   (a few minutes)
+#   push to main, workflow_dispatch,   quick, suite x16, layout x3, layout-extra, all-checks (waits for every job)
+#   nightly schedule (03:17 UTC)       (quick-changed is skipped: it only makes sense for a pull request)
+#   quick          scrub check + its tests, check.lua (which also fails on forbidden calls)   (about 1 minute)
+#   quick-changed  tools/quick-check.sh for the files the PR changes (pull_request only)
 #   suite (x16)    tools/ci-shard.sh K 16: one sixteenth of the tests each, its failing-test names uploaded
 #   layout (x3)    tools/layout-check.lua, one game window (3 sizes) each
-#   layout-extra   the Daylight pass and the route walks
-#   all-checks     merges the failing-test lists and fails if any job failed
+#   layout-extra   the Daylight pass and the route walks (under a minute, so it runs on PRs too)
+#   all-checks     merges the failing-test lists; on a PR it needs only the quick jobs, otherwise every job
 name: checks
 on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
 permissions:
   contents: read
 concurrency:
-  group: checks-${{ github.ref }}
-  cancel-in-progress: true
+  group: checks-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 env:
   WUBER_LUA: lua5.1
 jobs:
@@ -28,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Lua 5.1
         run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
       - name: Scrub check (no personal data in the tree)
@@ -37,7 +44,20 @@ jobs:
         run: python3 test_scrub_check.py
       - name: Syntax, globals and bytecode check
         run: lua5.1 tools/check.lua
+  quick-changed:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Install Lua 5.1
+        run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
+      - name: Quick check of the changed files
+        run: bash tools/quick-check.sh --since "origin/${{ github.base_ref }}"
   suite:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -45,7 +65,7 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Lua 5.1
         run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
       - name: Tests, shard ${{ matrix.shard }} of 16
@@ -55,13 +75,14 @@ jobs:
         run: |
           echo "failing tests in shard ${{ matrix.shard }}/16: $(grep -c . tests/out/failed-${{ matrix.shard }}-of-16.txt || true)"
           cat tests/out/failed-${{ matrix.shard }}-of-16.txt || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: failed-suite-${{ matrix.shard }}
           path: tests/out/failed-${{ matrix.shard }}-of-16.txt
           if-no-files-found: warn
   layout:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -69,7 +90,7 @@ jobs:
       matrix:
         window: ["2662x2089", "1920x1080", "3840x2160"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Lua 5.1
         run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
       - name: Layout check, window ${{ matrix.window }} at 3 sizes
@@ -85,7 +106,7 @@ jobs:
           w=${{ matrix.window }}
           { grep -E ' \| ' tests/out/layout-$w.log || true; grep -E '^GAUNTLET|result [0-9]' tests/out/layout-$w.log | tail -n 2; } > tests/out/failed-layout-$w.txt
           cat tests/out/failed-layout-$w.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: failed-layout-${{ matrix.window }}
@@ -95,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Lua 5.1
         run: sudo apt-get install -y --no-install-recommends lua5.1 || { sudo apt-get update && sudo apt-get install -y --no-install-recommends lua5.1; }
       - name: Layout check, Daylight pass
@@ -103,12 +124,12 @@ jobs:
       - name: Layout check, route walks
         run: lua5.1 tools/layout-check.lua --routes-only
   all-checks:
-    needs: [quick, suite, layout, layout-extra]
+    needs: [quick, quick-changed, suite, layout, layout-extra]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: failed-*
           path: failed
@@ -116,9 +137,16 @@ jobs:
         continue-on-error: true
       - name: Merge the failing-test lists and decide
         env:
-          RESULTS: ${{ join(needs.*.result, ' ') }}
+          EVENT: ${{ github.event_name }}
+          QUICK: ${{ needs.quick.result }} ${{ needs.quick-changed.result }} ${{ needs.layout-extra.result }}
+          FULL: ${{ needs.suite.result }} ${{ needs.layout.result }}
         run: |
-          echo "job results: $RESULTS"
+          if [ "$EVENT" = pull_request ]; then
+            RESULTS="$QUICK"   # a pull request is judged on the quick jobs only; the full suite runs on main
+          else
+            RESULTS="${QUICK/ skipped / success } $FULL"   # quick-changed is skipped outside pull requests
+          fi
+          echo "event: $EVENT; job results: $RESULTS"
           echo "== failing tests (all shards) =="
           cat failed/failed-*-of-*.txt 2>/dev/null | sort | tee merged-failed.txt
           echo "== failing layout lines (all windows) =="
@@ -127,7 +155,7 @@ jobs:
           for r in $RESULTS; do
             if [ "$r" != success ]; then echo "a job did not succeed ($r)"; exit 1; fi
           done
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: failed-merged
@@ -139,8 +167,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: leafo/gh-actions-lua@v10
+      - uses: actions/checkout@v7
+      - uses: leafo/gh-actions-lua@v13
         with:
           luaVersion: "5.1"
       - run: lua tools/check.lua

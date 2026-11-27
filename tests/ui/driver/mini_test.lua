@@ -37,7 +37,7 @@ test("mini console: the shard gauge never overlaps Pause or Close, and both labe
 	local combos, bad = 0, {}
 	for _, scale in ipairs({ 0.8, 1, 1.5, 2 }) do
 		-- 240 is the floor; 340 is the floating button's own width (Drive.Cast WIDTH), the only one
-		-- the console takes in game (BRIEF20: 120 was under the floor, so no wider bar was drawn)
+		-- the console takes in game (120 was under the floor, so no wider bar was drawn)
 		for _, width in ipairs({ 40, 340 }) do
 			for _, folded in ipairs({ false, true }) do
 				DR.button:SetScale(scale)
@@ -49,14 +49,14 @@ test("mini console: the shard gauge never overlaps Pause or Close, and both labe
 						st.raid = c == "Stop" or c == "Start"
 						st.open = c == "Close" or c == "Stop"
 						DR.Button.docked = folded and nil
-						-- (BRIEF20) repainted for each combination: without dirty the console keeps its last
+						-- repainted for each combination: without dirty the console keeps its last
 						-- paint for a second, so this loop checked one label pair only
 						local m0 = a.W.UI.drive.mini
 						if m0 then m0.dirty = true end
 						D.UpdateMini()
 						local m = a.W.UI.drive.mini
 						if m and m:IsShown() and m.fuel and not st.open then
-							-- (BRIEF20 B5) closed or stopped: no Pause pill; gauge | Open (or Start)
+							-- closed or stopped: no Pause pill; gauge | Open (or Start)
 							combos = combos + 1
 							local tag = p .. "/" .. c .. " x" .. scale .. " w" .. width .. (folded and " folded" or "")
 							local fr, cr, mr = rect(m.fuel), rect(m.close), rect(m)
@@ -72,7 +72,7 @@ test("mini console: the shard gauge never overlaps Pause or Close, and both labe
 							if not (apart(pr, fr) and apart(fr, cr) and apart(pr, cr)) then bad[#bad + 1] = tag .. ": overlap" end
 							if fr.l - pr.r < 8 or cr.l - fr.r < 8 then bad[#bad + 1] = tag .. ": gap under 8 (" .. (fr.l - pr.r) .. "/" .. (cr.l - fr.r) .. ")" end
 							if not (fr.l >= mr.l and fr.r <= mr.r and pr.l >= mr.l and cr.r <= mr.r) then bad[#bad + 1] = tag .. ": outside" end
-							-- (BRIEF20: the loop now repaints each pair) "Warlocks pause" needs the real width, not the floor
+							-- (the loop now repaints each pair) "Warlocks pause" needs the real width, not the floor
 							if m.pause.label:IsTruncated() and (width >= 340 or p ~= "Warlocks pause") then bad[#bad + 1] = tag .. ": Pause label cut" end
 							if m.close.label:IsTruncated() then bad[#bad + 1] = tag .. ": Close label cut" end
 							-- (design 3, fix wave Q1) the pills are equal where both labels fit in equal pills; a label too long
@@ -97,7 +97,7 @@ test("mini console: the shard gauge never overlaps Pause or Close, and both labe
 	T.clean(w)
 end)
 
--- (BRIEF20 B5, shots 83 and 88) Closed (or raid summons stopped) the console's Pause pill did nothing
+-- Closed (or raid summons stopped) the console's Pause pill did nothing
 -- but still showed, dimmed, beside Open: it is hidden (a Hide, not a faded alpha the client may not
 -- draw), and back as soon as the driver opens. The Open / Start pill takes its room, gauge first.
 test("mini console BRIEF20 B5: no Pause pill while Closed or Stopped, back when open", function()

@@ -4,11 +4,11 @@
 -- API: DR.AutoScale, DR.Scale, DR.SetScale, DR.ResetPosition, DR.ApplyBinding, DR.SetKey, B.Place,
 --   B.Dock, B.Floating, B.Docked, B.Solo, B.MiniRows, B.SetShown, B.SetLocked, B.KeepClosed, B.Refresh, B.Clicked,
 --   DR.BuildButton, DR.SkipTarget, DR.Skip
--- Internals: (none). (BRIEF18) the ticker's watch: a wanted floating button that is hidden, faded,
+-- Internals: (none). the ticker's watch: a wanted floating button that is hidden, faded,
 --   off the screen or under the window is re-placed; one that cannot clear the window goes above it,
 --   alone (round 31: B.Solo, its console would cover the phone), at the screen's least covering corner.
---   (BRIEF19 R6) at its default place (none saved) it keeps clear of the chat frame too (W.UI.ClearOfChat,
---   UI.Toasts, at run time) and is re-placed when the chat frame moves. (BRIEF20 B4) and of the action bars
+--   at its default place (none saved) it keeps clear of the chat frame too (W.UI.ClearOfChat,
+--   UI.Toasts, at run time) and is re-placed when the chat frame moves. and of the action bars
 --   and party frames (W.UI.ClearOfHud), also where the open phone pushes it off a place the player chose. (round 19 review) never over
 --   or under the open phone: with no room for its console beside it, a shorter console (round 31: fewer
 --   rows, B.MiniRows), then the button alone (B.Solo; the console waits); re-placed at once when the window folds or unfolds (FOLD). (BRIEF22 L3-L5) no clear place
@@ -42,7 +42,7 @@ local B = DR.Button
 
 local skinButton, skin -- (the look, below)
 
--- (BRIEF18) The words are fitted when they are set, to the room they have then. The button gets
+-- The words are fitted when they are set, to the room they have then. The button gets
 -- its size (the slot's docked, WIDTH floating) and its anchors only when it is placed, which is
 -- after the first paint at login and after the words change on docking, so a new place fits them
 -- again (cheap: two labels, only when the place really changed).
@@ -193,6 +193,9 @@ local function wanted()
 end
 
 local function placeDocked(b, slot)
+	-- (issue 11) while the window is dragged out of combat the card is anchored to its slot, so it moves with
+	-- the window every frame; nothing here moves it until the drag ends
+	if state.following then return true end
 	local l, bt = N(slot:GetLeft()), N(slot:GetBottom())
 	local w, h = N(slot:GetWidth()), N(slot:GetHeight())
 	local se = N(slot:GetEffectiveScale())
@@ -220,7 +223,7 @@ local function placeDocked(b, slot)
 	return true
 end
 
--- (BRIEF17 S1) The floating button and the mini console under it (about MINI_H tall, at the
+-- The floating button and the mini console under it (about MINI_H tall, at the
 -- button's scale) must stay on screen and clear of the open phone. The handset hangs outside
 -- WuberFrame (bezel at the sides, status bar on top, home strip below), so its box is the
 -- window padded by UI.PHONE. In UIParent units; nil when the window is not shown.
@@ -271,10 +274,10 @@ end
 
 -- After the normal anchor is set: when the button or its console would sit under the phone or
 -- run off the screen, move the anchor (never the saved position) to the nearest clear place:
--- right of it, left of it, below it, above it. (BRIEF19 R6) At its default place (free: none
+-- right of it, left of it, below it, above it. At its default place (free: none
 -- saved) it keeps clear of the chat frame too; a place the player chose is theirs.
--- (BRIEF20 B4) and the shown action bars and party frames (UI.HudBoxes): one moving re-places it
--- (BRIEF22 L5) the minimap and Wuber's button on its rim, in UIParent units: { l, r, b, t } or nil. At its default
+-- and the shown action bars and party frames (UI.HudBoxes): one moving re-places it
+-- the minimap and Wuber's button on its rim, in UIParent units: { l, r, b, t } or nil. At its default
 -- place the big button and its console keep off it (they sat on it at size 2.2).
 local function minimapBox()
 	local ue = N(UIParent:GetEffectiveScale())
@@ -293,7 +296,7 @@ local function minimapBox()
 	return box
 end
 
--- (BRIEF22 L4) the console's height now (its own units), or nil while it is hidden
+-- the console's height now (its own units), or nil while it is hidden
 local function miniHeight()
 	local m = rawget(_G, "WuberDriveMini")
 	return type(m) == "table" and type(m.IsShown) == "function" and m:IsShown() and N(m:GetHeight()) or nil
@@ -301,7 +304,7 @@ end
 
 local function chatKey()
 	local f, hud = W.UI and W.UI.ChatBox, W.UI and W.UI.HudBoxes
-	local k = boxKey(type(f) == "function" and f() or nil) .. "|" .. boxKey(minimapBox()) -- (BRIEF22 L5) the minimap too
+	local k = boxKey(type(f) == "function" and f() or nil) .. "|" .. boxKey(minimapBox()) -- the minimap too
 	if type(hud) == "function" then
 		for _, x in ipairs(hud()) do k = k .. "|" .. boxKey(x) end
 	end
@@ -320,13 +323,13 @@ local function keepClear(b, s, free)
 	local gw = math.max(240, WIDTH) * s
 	local bh = HEIGHT * s
 	local bx = state.winBox
-	-- (BRIEF20 B4) clear of the action bars and party frames too (UI.ClearOfHud), and not only at
+	-- clear of the action bars and party frames too (UI.ClearOfHud), and not only at
 	-- the default place: a place the player chose that the open phone pushes it off is no longer
 	-- theirs, so where it goes instead keeps off the chat and the bars as well
 	local away = W.UI and (W.UI.ClearOfHud or W.UI.ClearOfChat)
 	if type(away) ~= "function" then away = nil end
 	local pushed = false
-	-- (BRIEF22 L5) at its default place: off the minimap too (an avoid box, as the phone)
+	-- at its default place: off the minimap too (an avoid box, as the phone)
 	local mm = free and minimapBox() or nil
 	local avoid = bx and { bx } or nil
 	if mm then
@@ -370,7 +373,7 @@ local function keepClear(b, s, free)
 		end
 		return x, y, clear, onMap
 	end
-	-- (BRIEF22 L4) the room kept for the console is what the screen has under the button: a big button on a
+	-- the room kept for the console is what the screen has under the button: a big button on a
 	-- short screen (2.2 on 768 units: 880 with the whole console) went off the top; now its top stays on it
 	-- and when the whole console can't fit under it anyway, room for the console as it is now (so a short box
 	-- can still keep off the chat and the minimap)
@@ -389,7 +392,7 @@ local function keepClear(b, s, free)
 	end
 	local gh = bh + math.max(0, math.min(room, sh - bh))
 	local x, y, clear, onMap = find(gh)
-	-- (BRIEF22 L5) and where room for the whole console leaves no place clear of the chat, the bars and the
+	-- and where room for the whole console leaves no place clear of the chat, the bars and the
 	-- minimap (a big button on the square screen): room for the console as it is now, if that has one
 	if onMap or (x and not clear) then asNow() end -- (the console showing or growing may change this)
 	if (onMap or (x and not clear)) and mh and bh + mh * s + 8 < gh - 0.5 then
@@ -402,7 +405,7 @@ local function keepClear(b, s, free)
 	end
 	-- (round 19 review) no room for the console beside the open phone (the unfolded phone on a
 	-- square window): the button alone, above or below it, and its console waits (B.Solo).
-	-- (BRIEF20 B4) also when the console's only place would cover the chat or the bars and the
+	-- also when the console's only place would cover the chat or the bars and the
 	-- button alone has a clear one
 	if bx and (not x or not clear) then
 		-- (round 31) a shorter console first: fewer rows where that has a clear place
@@ -421,7 +424,7 @@ local function keepClear(b, s, free)
 		if sx and (not x or sclear) then x, y, gh, state.solo = sx, sy, bh, true end
 	end
 	state.chatKey = (free or pushed) and chatKey() or nil
-	-- (BRIEF18) no clear place on this screen (a small game window, a big button, the phone
+	-- no clear place on this screen (a small game window, a big button, the phone
 	-- unfolded): the least covered of the four, and the caller lifts the button above the
 	-- window. It stayed under it, where nobody could see it until the window moved.
 	-- (round 31, HUNT-92) and the button alone (B.Solo): its console there lay over the middle of the phone.
@@ -503,7 +506,7 @@ local function settleWindow(first)
 	return true
 end
 
--- (BRIEF22 L3) the largest size, below s and not under FIT_MIN, at which the button (with its console, or alone)
+-- the largest size, below s and not under FIT_MIN, at which the button (with its console, or alone)
 -- fits right or left of the open phone's box bx; nil: none
 local FIT_MIN = 0.8
 -- (prep-242 r3 H) the floating button that must lie over the open phone: above every layer the window raises
@@ -537,7 +540,7 @@ local function placeFloating(b)
 	else
 		b:SetPoint("CENTER", UIParent, "CENTER", 0, 200)
 	end
-	-- (BRIEF22 L3) no clear place at the chosen size beside the open phone (1.5 or 2.2 on a 1365 or 1331 unit wide
+	-- no clear place at the chosen size beside the open phone (1.5 or 2.2 on a 1365 or 1331 unit wide
 	-- screen): a smaller button where it fits beside it, never under FIT_MIN; the chosen size again once the
 	-- phone shuts or moves (a new window box re-places it). Out of combat, as every place.
 	local over = keepClear(b, s, free)
@@ -552,7 +555,7 @@ local function placeFloating(b)
 		end
 		over = keepClear(b, fit, free)
 	end
-	-- (BRIEF18) the window is HIGH: a floating button that has to overlap it goes above it,
+	-- the window is HIGH: a floating button that has to overlap it goes above it,
 	-- as the docked one does, never under it
 	-- (prep-242 r3 H) and above the window's own FULLSCREEN_DIALOG layers too: the report sheet (UI.Bug, WuberBug at
 	-- level 400) and the Raincheck sheet (UI.Moments, 400) lay over the button's foot (/wuber bug on the square screen,
@@ -566,7 +569,7 @@ local function placeFloating(b)
 	refit(b)
 end
 
--- The words under the title: docked in the Drive tab, plan.here; (BRIEF20 B5) floating with its
+-- The words under the title: docked in the Drive tab, plan.here; floating with its
 -- console right under it, plan.below ("tap Open below"); alone (B.Solo), plan.sub.
 local function subWords(plan)
 	if state.dockedNow then return plan.here or plan.sub end
@@ -583,7 +586,7 @@ function B.Place()
 	if slot and not placeDocked(b, slot) then slot = nil end
 	local was = state.dockedNow
 	state.dockedNow = slot ~= nil
-	-- (BRIEF18) leaving the slot: make room for the window as it is now (the box the ticker
+	-- leaving the slot: make room for the window as it is now (the box the ticker
 	-- settled may be from before the window opened)
 	if was and not slot then
 		local live = windowBox()
@@ -591,7 +594,7 @@ function B.Place()
 	end
 	if not slot then placeFloating(b) end
 	-- (round 9) docked or floating changes the words under the title (plan.here / plan.sub);
-	-- (BRIEF20 B5) so does its console coming or going beside the open phone (plan.below)
+	-- so does its console coming or going beside the open phone (plan.below)
 	if type(b.plan) == "table" and b.sub then
 		local words = subWords(b.plan) or ""
 		if words ~= b.words then
@@ -607,6 +610,31 @@ function B.Place()
 	end
 	if B.onPlace then pcall(B.onPlace, state.dockedNow) end
 end
+
+-- (issue 11) the window is being dragged (on = true) or was let go. Out of combat the docked card is
+-- anchored to its slot for the drag, so it follows every frame; in combat nothing is moved or anchored (the
+-- 0.25 s ticker stays the fallback and re-places it once the fight is over).
+local function windowDrag(on)
+	local b = DR.button
+	if on then
+		if not b or W.InCombat() or not state.dockedNow or not state.docked then return end
+		local slot = state.docked
+		if not (slot.IsVisible and slot:IsVisible()) then return end
+		b:ClearAllPoints()
+		b:SetPoint("BOTTOMLEFT", slot, "BOTTOMLEFT", 0, 0)
+		state.following = true
+		return
+	end
+	if not state.following then return end
+	state.following = false
+	state.sig = nil
+	if W.InCombat() then
+		W.AfterCombat(function() B.Place() end)
+	else
+		B.Place()
+	end
+end
+W.Listen("WINDOW_DRAG", windowDrag)
 
 -- C's console hands the slot while it shows (nil otherwise). Out of combat only: a fight
 -- freezes the button where it is until it is over.
@@ -956,7 +984,7 @@ skinButton = function(b)
 	b.sub:SetPoint("TOPLEFT", b, "LEFT", 20, -6)
 	b.sub:SetPoint("TOPRIGHT", b, "RIGHT", -16, -6)
 	b.sub:SetTextColor(0.85, 0.82, 0.95)
-	-- (BRIEF18) two lines at most: a longer text is cut by the game, so T.Fit's check of the game's
+	-- two lines at most: a longer text is cut by the game, so T.Fit's check of the game's
 	-- answer (IsTruncated) shrinks it, instead of a third line running into the accent
 	pcall(b.sub.SetMaxLines, b.sub, 2)
 	if T and T.Lines then pcall(T.Lines, b.sub, 2) end
@@ -1069,7 +1097,7 @@ function DR.Skip(block)
 	if not c then return nil end
 	if kind == "refuse" or kind == "moved" or kind == "mailpay" or (type(DR.refusals) == "table" and DR.refusals[c.key] == c)
 		or (type(DR.moved) == "table" and DR.moved[c.key] == c) then
-		c.told = true -- a blocked player (or BRIEF18: one dropped for a place we left; or a rider who left owing, Drive.Mail): just not answered
+		c.told = true -- a blocked player (or one dropped for a place we left; or a rider who left owing, Drive.Mail): just not answered
 		call("Changed")
 		return c
 	end
@@ -1092,7 +1120,7 @@ function DR.Skip(block)
 end
 
 ---------------------------------------------------------------------------
--- (BRIEF18) The watch: a floating button that is wanted is always seen
+-- The watch: a floating button that is wanted is always seen
 ---------------------------------------------------------------------------
 -- the author (20 Nov): "it randomly disappears; I can only see it if I wiggle the main menu". Only
 -- a new window box re-placed the floating button, so whatever left it hidden, faded, off the
@@ -1127,9 +1155,9 @@ end
 
 local function watch(b)
 	local why = wanted() and unseen(b) or nil
-	-- (BRIEF19 R6) at its default place: the chat frame moved (a UI pack, a drag)
+	-- at its default place: the chat frame moved (a UI pack, a drag)
 	if not why and wanted() and state.chatKey and chatKey() ~= state.chatKey then why = "chat moved" end
-	-- (BRIEF22 L4) on a screen too short for the whole console: the console came, went or grew
+	-- on a screen too short for the whole console: the console came, went or grew
 	if not why and wanted() and state.miniKey then
 		local mh = miniHeight()
 		if tostring(mh and math.floor(mh + 0.5) or "-") ~= state.miniKey then why = "console" end
@@ -1190,7 +1218,7 @@ W.OnLogin(function()
 		local b = DR.button
 		if not b or W.InCombat() then return end
 		-- docked: follow the slot; floating: follow the window (S1) so the two never overlap.
-		-- (BRIEF18) the box settles while docked too, so undocking never uses an old one
+		-- the box settles while docked too, so undocking never uses an old one
 		local moved = settleWindow(false)
 		if state.docked or (not state.dockedNow and moved) then
 			B.Place()

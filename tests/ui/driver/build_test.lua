@@ -1,4 +1,4 @@
--- Tests of UI.Driver.Build (round 13, agent B: Google's in-game screenshot findings). Loaded by
+-- Tests of UI.Driver.Build (round 13, agent B: a reviewer's in-game screenshot findings). Loaded by
 -- tests/run.lua with its helper table T. The console's footer (no second Settings) and the raid
 -- controls' summoner picker (its label fits its pill).
 local T = ...
@@ -51,10 +51,10 @@ test("ui.driver.build: I20 the console footer has no Settings (the top bar's gea
 		eq(count(a, "Settings"), 0, what .. ": no 'Settings' label on the page")
 		local names = {}
 		for _, l in ipairs(v.links) do names[#names + 1] = l.what end
-		eq(table.concat(names, " "), "crew messages blocked earnings customers", what .. ": the five links")
+		eq(table.concat(names, " "), "crew messages advert blocked earnings customers", what .. ": the six links (My advert line shows in Simple only)")
 		for _, l in ipairs(v.links) do
 			ok(l:GetWidth() >= 68, what .. ": " .. l.what .. " is " .. l:GetWidth() .. " wide")
-			ok(l:IsVisible(), what .. ": " .. l.what .. " shows")
+			if l.what ~= "advert" then ok(l:IsVisible(), what .. ": " .. l.what .. " shows") end
 		end
 		T.clean(w)
 	end

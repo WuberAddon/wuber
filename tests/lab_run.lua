@@ -397,7 +397,7 @@ local function loginRows(c)
 end
 
 
--- BRIEF18 00:33: another addon's Lua error (DaylightUI's unit frames) is not a fail of the login check
+-- another addon's Lua error (DaylightUI's unit frames) is not a fail of the login check
 -- for Lua errors; its name is said. Wuber's own error still fails it.
 test("lab: login errors: another addon's Lua error is named, not failed; Wuber's own fails", function()
 	local w = newWorld()
@@ -793,7 +793,7 @@ test("lab run: a whole test run on four windows in test mode marks itself: the r
 end)
 
 ---------------------------------------------------------------------------
--- Wuber 2.3's in-game probes (WuberLab/Probes.lua, SPEC7 10): Yes/No steps, self-marking probes
+-- Wuber 2.3's in-game probes (WuberLab/Probes.lua): Yes/No steps, self-marking probes
 ---------------------------------------------------------------------------
 
 -- copies of catalogue checks in a one-window scene of their own (a run of just these)

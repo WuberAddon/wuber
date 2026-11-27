@@ -38,7 +38,7 @@ GF.CATEGORY = nil
 GF.DRAFT_WORDS = {
 	settingName = "Group Finder (preview)",                                        -- draft
 	settingHint = "Find and be found through the game's Group Finder",             -- draft
-	note = "Wuber summons to %s, request in Wuber",                                -- draft: the note the driver copies (%s = destination)
+	note = "Wuber summons to %s",                                                  -- draft: the short note the driver types by hand (%s = destination); must contain "Wuber" (handleResults)
 	listed = "You are listed in the Group Finder",                                 -- draft: the driver's status line
 	notListed = "You are not listed in the Group Finder",                          -- draft: the driver's status line
 	listButton = "List me in the Group Finder",                                    -- draft
@@ -47,7 +47,7 @@ GF.DRAFT_WORDS = {
 	card = "In the Group Finder, %s",                                              -- draft: the driver card line (%s = zone)
 	extra = "%d more listings mention Wuber: open the Group Finder",               -- draft: the count line
 	stillListed = "You are offline but still listed in the Group Finder",          -- draft: the reminder
-	steps = "Open the Group Finder with its key, choose Create Listing, paste the note, press Post.", -- draft: the sheet's steps
+	steps = "Open the Group Finder, go to List yourself, pick a Playstyle, click the Note box and type the note below by hand, then List me.", -- draft: the sheet's steps
 	busy = "Searching...",                                                         -- draft: why the search button waits
 	nocategory = "No Group Finder category found",                                 -- draft: why the search button is off
 	nolfg = "The Group Finder is not available",                                   -- draft: why the search button is off

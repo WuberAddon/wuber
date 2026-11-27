@@ -38,6 +38,9 @@ local function sweep(n, step)
 			-- (merge 2.4.2) r50 H24-01 hides even the first medal row whole when the cue's band touches it: the
 			-- Medals heading above the grid is then the last thing shown
 			if tr.mHead:IsShown() and tr.gridTop - 6 - y >= 0 and tr.gridTop - 6 - y <= clipH - 30 then lowest = math.max(lowest, tr.gridTop - 6 - y) end
+			-- (#58) with no medal shown the Milestones title and card are out whole: what lies above the card (chips,
+			-- Rainchecks) is the last thing shown, and the cue sits right under it
+			if not tr.mHead:IsShown() and not tr.tray:IsShown() and tr.gridTop - 50 - y >= 0 and tr.gridTop - 50 - y <= clipH - 30 then lowest = math.max(lowest, tr.gridTop - 50 - y) end
 			local cueTop = clipH - 8 - 22 - (tr.cueLift or 0)
 			assert(cueTop - lowest <= 14, ("scroll %d: the cue's top is %d under the last shown medal row (blank band)"):format(y, cueTop - lowest))
 			assert(tr.cueClipped or cueTop >= lowest - 0.5, "the cue lies over a medal row at scroll " .. y)

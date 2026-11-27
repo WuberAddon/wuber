@@ -53,7 +53,7 @@ NETK.GOSSIP_NAMES = 8      -- names in a K
 NETK.GOSSIP_FRESH = 1800   -- only drivers heard directly in the last 30 min are passed on
 NETK.GOSSIP_PEER_GAP = 600 -- a K to the same peer at most once per 10 min
 NETK.GOSSIP_CAP = 6        -- Ks we send in any 60 s
-NETK.GOSSIP_LIVE_MIN = 6   -- fewer live names than this: recently seen ones follow (SPEC5 gossip)
+NETK.GOSSIP_LIVE_MIN = 6   -- fewer live names than this: recently seen ones follow
 NETK.GOSSIP_SEEN = 4       -- ... at most this many
 NETK.UNCONFIRMED_MAX = 60  -- names to confirm (150 on a founder's client: the hub)
 NETK.UNCONFIRMED_FOUNDER = 150
@@ -93,7 +93,7 @@ local function goodName(name)
 	return name
 end
 
--- The Wuber community's members online now (SPEC5 community, review #7): whisper seeds that
+-- The Wuber community's members online now: whisper seeds that
 -- reach across Forever's internal realms. Up to 10, Warlocks first, then the latest asked
 -- least; { key, name, addr, lock }. Read again at most once a minute; every field guarded
 -- (a secret or missing field just leaves that member out).
@@ -217,7 +217,7 @@ function W.KnownDrivers()
 		local e = on and entry(key, true)
 		if e then e.fav = true end
 	end
-	-- the Wuber community's members online (SPEC5 community): seeds across internal realms
+	-- the Wuber community's members online: seeds across internal realms
 	local okS, club = pcall(W.CommunitySeeds)
 	for _, m in ipairs(okS and club or {}) do
 		local e = entry(m.key, true)
@@ -267,7 +267,7 @@ function W.KnownDrivers()
 	for key, u in pairs(fb.unconfirmed) do
 		if not by[key] and key ~= me and not W.IsHidden(key) and (founderWorld or not W.CREATOR[key]) then un[#un + 1] = u end
 	end
-	-- (fresh before stale, SPEC5 gossip: a name a peer heard live goes before one seen hours ago)
+	-- (fresh before stale, a name a peer heard live goes before one seen hours ago)
 	table.sort(un, function(a, b)
 		local fa, fb2 = (a.age or 0) < 60, (b.age or 0) < 60
 		if fa ~= fb2 then return fa end
@@ -342,7 +342,7 @@ end
 -- "confirm" (unconfirmed names only, just after a K). Returns how many were queued.
 function W.WhisperRound(scope, force)
 	if not W.db or W.net.cantSend then return 0 end
-	-- (SPEC5 stagger: a rider whose ride is under way has booked: no Qs, so no answers)
+	-- (a rider whose ride is under way has booked: no Qs, so no answers)
 	if W.RideActive and W.RideActive() then return 0 end
 	local t = now()
 	if scope == "full" then round.lastFull = t end
@@ -427,7 +427,7 @@ local function gossipNames(except)
 		if a.at ~= b.at then return a.at > b.at end
 		return a.key < b.key
 	end)
-	-- (SPEC5 gossip, review #13: with few drivers live, up to 4 seen in the last 24 h follow,
+	-- (with few drivers live, up to 4 seen in the last 24 h follow,
 	-- each as "Name Surname:minutes" since last heard; old clients skip those names)
 	if #list < NETK.GOSSIP_LIVE_MIN then
 		local stamp, old, have = num(call(time)) or 0, {}, {}
@@ -599,7 +599,7 @@ local function heardGossip(key, f)
 	end
 	local added = 0
 	for i = 1, math.min(#f, NETK.GOSSIP_NAMES) do
-		-- "Name Surname:minutes": a driver the peer saw that long ago (SPEC5 gossip)
+		-- "Name Surname:minutes": a driver the peer saw that long ago
 		local raw, age = f[i], nil
 		local base, mins = tostring(raw or ""):match("^(.-):(%d+)$")
 		if base then raw, age = base, math.min(1440, tonumber(mins) or 1440) end
@@ -703,7 +703,7 @@ local function tickWhisper()
 	round.loginAt = round.loginAt or t
 	local shown = uiShown()
 	if not round.loginDone then
-		-- (SPEC5 firstround, review #13: with the window open the first round goes at once)
+		-- (with the window open the first round goes at once)
 		if t - round.loginAt >= 10 or (shown and t - round.loginAt >= 1.5) then
 			round.loginDone = true
 			W.WhisperRound("full")

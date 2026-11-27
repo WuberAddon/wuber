@@ -46,7 +46,7 @@ local SAVED = { "id", "driver", "addr", "driverKey", "service", "dest", "price",
 	"eta", "rated", "stars", "paid", "from", "reason", "summonAccepted", "inviter",
 	"destWire", "destOk", "saved", "savedHow", "fromZone", "position", "tier", "rides",
 	"origGroup", "wasGrouped", "waitingOut", "autoAccepted", "payClicked", "noAddon",
-	"startedAt", "arrivedAt", "arrivedZone", "unpaid", "endedBy", "flightCost", "flightExact", "paidSoFar",
+	"startedAt", "arrivedAt", "arrivedZone", "unpaid", "removed", "endedBy", "flightCost", "flightExact", "paidSoFar",
 	"payee", "payto", "summoner", "summonedBy", "crew",
 	"voucher", "voucherCover", "voucherTaken", "voucherRefused", "fare", "raincheck", "paidAt", "endedAt", "showPass", "arrivalSent" } -- (2.3.0: raincheck; round 9: showPass; 2.4: arrivalSent)
 
@@ -124,6 +124,19 @@ local function finish(r, state, reason)
 	fireRide(r)
 	return true
 end
+
+-- Removed from the group (the game's own line) while the summon box is up: the ride is over, unpaid, and the
+-- ended page says why (r.removed). Leaving by oneself says another line and changes nothing here.
+W.On("CHAT_MSG_SYSTEM", function(text)
+	local line = rawget(_G, "ERR_UNINVITE_YOU")
+	local r = W.ride
+	if type(line) ~= "string" or text ~= line then return end
+	if not (W.RideActive() and r.state == "portal" and r.summonUp) then return end
+	r.removed = true
+	r.unpaid = not r.paid or nil
+	r.endedBy = "removed"
+	advance(r, "done")
+end)
 
 -- A driver who logged off without saying so: the game answers our whisper with "No player
 -- named ...". Drop the driver at once, and end a ride still waiting on them (no resend, no C).
@@ -364,7 +377,7 @@ function W.CheckArrival()
 end
 
 -- (review 2.2 #14) Booked: the other drivers we whispered a Q in the last 5.5 min hear B, so
--- they stop pushing us their D (SPEC5 stagger). One tiny whisper each, once.
+-- they stop pushing us their D. One tiny whisper each, once.
 local function tellBooked(except)
 	local t = now()
 	for k, addr in pairs(fb.qAddr) do
@@ -778,7 +791,7 @@ function W.RideTrader(r, key)
 	return false
 end
 
--- Whether the trade open now is with our driver or the driver's crew (SPEC5 tradecheck,
+-- Whether the trade open now is with our driver or the driver's crew (
 -- review #3, 2.2 #1): true; false = anyone else (never pay them); nil = no ride, no trade, or
 -- the game didn't say who.
 function W.TradePartnerOK()
@@ -906,7 +919,7 @@ W.On("PLAYER_MONEY", function()
 	countPaid(r)
 end)
 
--- Before "Accept summon" (SPEC5 mapcheck, review #26): whether the group really stands where
+-- Before "Accept summon": whether the group really stands where
 -- the ride goes. The game's own map of each party/raid member (server-side, not the driver's
 -- beacon) against the booked place's map (or its zone's). Returns true (someone of the group
 -- - the summoner first - is there), false (readable, and nobody is: the screen warns, never

@@ -1,4 +1,4 @@
--- The layout checker's runs (tools/layout-check.lua; BRIEF21 S11): one game window and Wuber size, the photo
+-- The layout checker's runs (tools/layout-check.lua): one game window and Wuber size, the photo
 -- tour of Wuber Lab with E.check at every shot, then the late-font scenes (the font arrives after login).
 --   local Run = dofile("tests/layout/run.lua")(H, E, root)
 --   Run.config({ w, h, ui, scale }, { screens = { "trips", "side:driver" }, scenes = true })
@@ -152,7 +152,7 @@ local function tour(cfg, res, sel)
 	sizes(c, cfg)
 	local L = c.ns.WuberLab
 	if not (L and L.TourStart and L.PHOTO_SCREENS) then error("Wuber Lab has no photo tour (L.TourStart)") end
-	-- (BRIEF25 L1) the tip card and the new World map: tests/layout/extra_screens.lua adds them when their modules exist
+	-- the tip card and the new World map: tests/layout/extra_screens.lua adds them when their modules exist
 	do
 		local ch = loadfile(root .. "/tests/layout/extra_screens.lua")
 		if ch then
@@ -164,7 +164,7 @@ local function tour(cfg, res, sel)
 			end
 		end
 	end
-	-- (BRIEF24 B2) the game's flight map, open at a flight master's: the lab's gated "bird" shot (Wuber's "Skip the
+	-- the game's flight map, open at a flight master's: the lab's gated "bird" shot (Wuber's "Skip the
 	-- bird" card, UI.Bird, beside the map) is taken in every sweep. The harness can't time flights: Wuber's own
 	-- lookups are answered like tests/ui/bird_test.lua does. (Mia, the demo driver, summons to Thunder Bluff.)
 	W.FlightCost = function(_, to) if to == "Thunder Bluff" then return 4700, 1 elseif to == "Crossroads" then return 300, 1 end end
@@ -253,7 +253,7 @@ local function tour(cfg, res, sel)
 end
 
 ---------------------------------------------------------------------------
--- Scenes the tour can't show: the font arrives after login (BRIEF18: the Paused bar, "Advertis...")
+-- Scenes the tour can't show: the font arrives after login (the Paused bar, "Advertis...")
 ---------------------------------------------------------------------------
 
 local SCENES = {}

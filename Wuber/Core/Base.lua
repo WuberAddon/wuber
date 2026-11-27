@@ -386,7 +386,7 @@ W.CHAR_DEFAULTS = {
 	team = 1,               -- Warlocks summoning together (1..3); riders bring 3 - team helpers
 	badge = "",             -- the driver's badge (an id from W.BADGES), beaconed; "" none
 	starter = true,         -- "List me in Wuber's starter list": false is sent as D's last field "0"
-	-- 2.0: the built-in driver engine (W.Drive, Drive_*.lua; SPEC3 3.1). team above is no
+	-- 2.0: the built-in driver engine (W.Drive, Drive_*.lua). team above is no
 	-- longer read (the beacon's team is counted from the crew in the group).
 	paused = false,         -- no new invites; rides under way carry on
 	dest = "",              -- where I summon to, typed by hand ("" = where I stand)

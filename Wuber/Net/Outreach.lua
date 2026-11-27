@@ -19,7 +19,7 @@
 -- A driver may post ONE public line when he goes online (Settings "Post an advert when I go
 -- online") or with the Drive tab's Advertise pill - only by his own click on a secure macro
 -- button (UI.lua), never in combat, at most once per 15 min:
---   "[Wuber] Summons to Undercity 50s - I'm a Wuber driver, get the Wuber addon on CurseForge"
+--   "[Wuber] Selling summons to Undercity, 50s. Pay after you land. /w me or use my Wuber addon (on curse), you can also set it up and become a driver"
 -- In: a line with the tag "[Wuber]" (any case) in a public channel, /say or /yell makes its
 -- sender a name to ask (an unconfirmed name, or a known driver asked again soon): we whisper
 -- a Q within the usual caps and list him only when he answers with his own D. The line
@@ -56,6 +56,9 @@ W.ADVERT_CHANNELS = ADVERT_CHANNELS
 W.net.advertsHeard = 0  -- tagged lines heard this session
 W.net.advertsPosted = 0
 
+local DEFAULT_TAIL = ". Pay after you land. /w me or use my Wuber addon (on curse), you can also set it up and become a driver"
+local DEFAULT_TAIL_PATTERN = DEFAULT_TAIL:gsub("%p", "%%%0")
+
 -- The advert line for a dest and price (copper): at most 200 bytes, no links or codes.
 function W.AdvertText(dest, price)
 	local d = W.CleanDest(dest)
@@ -64,11 +67,11 @@ function W.AdvertText(dest, price)
 	price = math.max(W.MIN_PRICE, localInt(price) or W.MIN_PRICE)
 	local head
 	if d ~= "" and d ~= "Unknown" then
-		head = "Summons to " .. d .. " " .. W.Money(price)
+		head = "Selling summons to " .. d .. ", " .. W.Money(price)
 	else
-		head = "Warlock summons " .. W.Money(price)
+		head = "Selling summons, " .. W.Money(price)
 	end
-	return W.Clean(W.ADVERT_TAG .. " " .. head .. " - I'm a Wuber driver, get the Wuber addon on CurseForge", NETK.ADVERT_MAX)
+	return W.Clean(W.ADVERT_TAG .. " " .. head .. DEFAULT_TAIL, NETK.ADVERT_MAX)
 end
 
 -- "2. Trade - City" / "Trade - City" / "Trade" -> "trade"; "Trade (Services) - City" -> "services".
@@ -174,9 +177,16 @@ function W.AdvertOwnText(text)
 		low = t:lower()
 	end
 	if t == "" then return nil, "text" end
-	-- (SPEC5 advert, review #13: the spam check reads the driver's own words, not what Wuber
+	-- (playtest) Wuber's own default line says "Selling summons ... Pay after you land": the word filter is for the
+	-- driver's own words, so the fixed words of the default pass, and only its place and fare are checked
+	local dest, fare = t:match("^Selling summons to (.-), ([%w ]+)" .. DEFAULT_TAIL_PATTERN .. "$")
+	if not dest then fare = t:match("^Selling summons, ([%w ]+)" .. DEFAULT_TAIL_PATTERN .. "$") end
+	if fare and not (W.SentenceSpam and W.SentenceSpam((dest or "") .. " " .. fare)) then
+		return W.Clean(W.ADVERT_TAG .. " " .. t, NETK.ADVERT_MAX + #W.ADVERT_TAG + 1)
+	end
+	-- (the spam check reads the driver's own words, not what Wuber
 	-- filled in: the guild's name, the service name and the fare never trip it)
-	local why = W.SentenceSpam and W.SentenceSpam(W.AdvertWords(t))
+	local why = W.SentenceSpam and W.SentenceSpam(W.AdvertWords(t), true)
 	if why and why ~= "letters" then return nil, "spam", why end
 	-- the editor's limit counts the driver's own words; the tag and its space go in front on top of it
 	return W.Clean(W.ADVERT_TAG .. " " .. t, NETK.ADVERT_MAX + #W.ADVERT_TAG + 1)

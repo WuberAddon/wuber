@@ -61,7 +61,7 @@ follow-up once the Lab probe has the frame's name and proves the Post still work
 - **Never:** CreateListing, UpdateListing, applicant calls, invites, whispers, chat, hooks on Blizzard frames.
 
 ## Draft words (for the maintainer; none is final)
-Kept in `DRAFT_WORDS` in `Net/GroupFinder.lua`. The note the driver copies: "Wuber summons to <dest>, request in Wuber".
+Kept in `DRAFT_WORDS` in `Net/GroupFinder.lua`. The note the driver types by hand (the game's Note box refuses paste): "Wuber summons to <dest>".
 Buttons: "List me in the Group Finder", "Remove my listing", "Search the Group Finder". Card line: "In the Group Finder,
 <zone>". Count line: "<n> more listings mention Wuber: open the Group Finder". Reminder: "You are offline but still
 listed in the Group Finder". Settings: "Group Finder (preview)" / "Find and be found through the game's Group Finder".

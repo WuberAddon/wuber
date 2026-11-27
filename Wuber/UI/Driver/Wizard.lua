@@ -46,7 +46,7 @@ local CHOICES = {
 		tip = "You multibox. Your other windows summon and click; each says yes once." },
 }
 
--- a runner who isn't a Warlock needs one to cast (SPEC4 1.1): step 1 says so
+-- a runner who isn't a Warlock needs one to cast: step 1 says so
 local CHOICES_OTHER = {
 	{ id = "solo", title = "Just me", glyph = "summon", off = true,
 		tip = "You need a Warlock to cast: pick one in the next step." },
@@ -395,7 +395,7 @@ local function paintTwo(w, c)
 					if dr("AddPlainHelper", r.person.name, (r.person.role or classRole(r.person.class)) == "lock" and "lock" or nil) then
 						toast(short(r.person.name) .. " added as a helper (without Wuber)", "info")
 					else
-						toast("Crew is full (" .. (tonumber(DR.CREW_MAX) or 8) .. ")", "warn")
+						toast("Crew is full (" .. (tonumber(DR.CREW_MAX) or 8) .. " players)", "warn")
 					end
 					D.Refresh(true)
 					w.paint()
@@ -424,7 +424,7 @@ local function paintTwo(w, c)
 	return y + 10
 end
 
--- Step 3, "Who summons?" (SPEC4 4): the crew's Warlocks (and me, if I am one) with a tick
+-- Step 3, "Who summons?": the crew's Warlocks (and me, if I am one) with a tick
 -- each and arrows for the order; the first ticked is the main caster. Then the checks.
 
 -- who can summon: me (a Warlock) and the crew's Warlocks, with or without Wuber

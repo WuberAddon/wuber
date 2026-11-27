@@ -227,7 +227,7 @@ local function Tooltip(pin)
 	local function add(words, colour) lines[#lines + 1] = { words, colour } end
 	if service ~= name then add(name, "muted") end
 	if pin.creator then add("Wuber founder", "gold") end
-	-- (BRIEF15) a Pioneer: the shipped list only (Theme.Widgets' T.PioneerLook; a founder: none)
+	-- a Pioneer: the shipped list only (Theme.Widgets' T.PioneerLook; a founder: none)
 	local look = type(Th.PioneerLook) == "function" and Th.PioneerLook(pin.key) or nil
 	local spec = look and type(Th.PIONEER) == "table" and Th.PIONEER[look] or nil
 	-- the theme's Pioneer colour, as the badge and the app's map panel (UI.Rider.HomeMap)
@@ -319,6 +319,9 @@ local function SetLevels(pin, level)
 	pin.tag:SetFrameLevel(level + 6)
 end
 
+-- (playtest) one soft ring every 3 s, like the Waiting for riders ring
+local PULSE_PERIOD = 3
+
 local function StartPulse(pin)
 	if pin.pulsing then return end
 	pin.pulsing = true
@@ -366,15 +369,15 @@ local function NewPin(parent)
 	ag:SetLooping("REPEAT")
 	local grow = ag:CreateAnimation("Scale")
 	ScaleTo(grow, 0.8, 2.1)
-	grow:SetDuration(1.8)
+	grow:SetDuration(PULSE_PERIOD)
 	grow:SetSmoothing("OUT")
 	local fade = ag:CreateAnimation("Alpha")
-	fade:SetFromAlpha(0.7)
+	fade:SetFromAlpha(0.5)
 	fade:SetToAlpha(0)
-	fade:SetDuration(1.8)
+	fade:SetDuration(PULSE_PERIOD)
 	fade:SetSmoothing("OUT")
 	pulse:Hide()
-	pin.pulse, pin.pulseAnim = pulse, ag
+	pin.pulse, pin.pulseAnim, pin.pulsePeriod = pulse, ag, PULSE_PERIOD
 
 	-- the glow: stronger for cheaper open drivers (W.Prominence); gold and breathing for the creator
 	local aura = NewFrame("Frame", pin)

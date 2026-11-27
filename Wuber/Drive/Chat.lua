@@ -60,7 +60,7 @@ DR.TEMPLATES = {
 	raidclick = "Summoning {name} - click the portal please",
 	-- round 9 (Y1): only when the driver picks "Get Wuber" for a rider who came without the app (Drive.Book)
 	getapp = "Book me in one tap next time: get the Wuber addon on CurseForge (search \"Wuber\").",
-	-- BRIEF18: to a rider we told something, dropped because the driver left the place they asked for
+	-- to a rider we told something, dropped because the driver left the place they asked for
 	-- (not in TEMPLATE_ORDER: not edited in Messages; {from} is the place they asked for)
 	moved = "Sorry {name}, I've moved to {dest} - no summon to {from} right now.",
 	-- decisions round (payment by mail, Drive.Mail): to a rider who left owing; the driver's click sends it.
@@ -338,7 +338,7 @@ function DR.TemplateSpam(text)
 	text = str(text)
 	if not text then return nil end
 	local words = text:gsub("{%a+}", " ")
-	local why = W.SentenceSpam and W.SentenceSpam(words) -- (no "letters" rule; a place nickname like Org passes)
+	local why = W.SentenceSpam and W.SentenceSpam(words, true) -- (no "letters" rule; a place nickname like Org passes)
 	if why == "letters" then why = nil end
 	return why
 end
@@ -449,7 +449,7 @@ function DR.Pending()
 		if c.oops then
 			-- oops step handles this player (whisper + uninvite in Drive.Plan)
 		elseif call("PlaceStale", c) == true then
-			-- (BRIEF18) a rider for a place we left: nothing until DR.PlaceSweep drops them
+			-- a rider for a place we left: nothing until DR.PlaceSweep drops them
 		elseif (c.askWhere or c.noStation or c.elsewhere) and not c.whereTold and not c.elsewhereTold
 			and c.state ~= "paid" and c.state ~= "done"
 			and (c.heardBy == W.myKey or (c.heardBy == nil and isLeader())) then
@@ -476,7 +476,7 @@ function DR.Pending()
 		end
 		if kind then out[#out + 1] = { c = c, kind = kind } end
 	end
-	-- (BRIEF18) riders dropped because we left the place they asked for, who were told something
+	-- riders dropped because we left the place they asked for, who were told something
 	local moved = DR.moved
 	if type(moved) == "table" then
 		local list = {}

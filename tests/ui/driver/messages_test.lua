@@ -1,6 +1,6 @@
 -- Tests of UI.Driver.Messages (round 13, A). Loaded by tests/run.lua with its helper table T.
 --   I6: in the editor every placeholder chip is as wide as its word: none reads '{pric...' or
---   '{guil...' (7 of 13 did in Google's shots), folded and unfolded, and none is shrunk to fit.
+--   '{guil...' (7 of 13 did in a reviewer's shots), folded and unfolded, and none is shrunk to fit.
 local T = ...
 local test, eq, ok, H = T.test, T.eq, T.ok, T.H
 
@@ -142,7 +142,7 @@ test("ui.driver.messages BRIEF20 B6: a placeholder chip's tooltip never covers t
 	T.clean(w)
 end)
 
--- (BRIEF22 L2) the texts of a page the view's bottom edge slices at the top of the page (what the layout
+-- the texts of a page the view's bottom edge slices at the top of the page (what the layout
 -- checker calls "clipped": partly in, partly out)
 local function slicedAtBottom(sc, content)
 	local out, bottom = {}, sc:GetBottom()

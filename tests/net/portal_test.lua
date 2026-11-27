@@ -1,4 +1,4 @@
--- Tests of Net.Portal (SPEC7 5.7, 5.10, 5.13; owner E). Loaded by tests/run.lua with its helper table T.
+-- Tests of Net.Portal. Loaded by tests/run.lua with its helper table T.
 -- Kind G (the live portal tracker's wire), the passphrase, the founder's gold portal check.
 local T = ...
 local test, eq, ok = T.test, T.eq, T.ok

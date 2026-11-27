@@ -1,5 +1,5 @@
--- (BRIEF22 G1) Textures as the game draws them: the client-faithful fake keeps a texture's alpha where the
--- game would (BRIEF19 F5, BRIEF20 B1: a SetVertexColor alpha change on a drawn texture that is hidden, or was
+-- Textures as the game draws them: the client-faithful fake keeps a texture's alpha where the
+-- game would (a SetVertexColor alpha change on a drawn texture that is hidden, or was
 -- just shown again, or under an Alpha animation, is not drawn). Wuber's looks never change a texture's
 -- vertex alpha after it is made: a second texture is shown or hidden, or the region's alpha changes.
 -- Loaded by tests/run.lua with its helper table T. lab_photo's tour checks the same over every screen.

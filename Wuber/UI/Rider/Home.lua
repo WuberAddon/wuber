@@ -18,7 +18,7 @@
 -- Uses: UI.Kit, UI.Rider.HomeMap, UI.Rider.Cards
 -- Later: UI.Fold (Register: the unfolded "ride" page), UI.Rider.WorldMap (Build, Show: its Here/World
 --   control and the world view in the side pane)
--- Unfolded (SPEC7 2.8 "ride"): the drivers' sheet fills the left pane from y 16; Home's map moves
+-- Unfolded: the drivers' sheet fills the left pane from y 16; Home's map moves
 -- into the side pane (HomeMap's Dock: 360 x 512 under the Here/World control, the rider centred).
 -- Events: listens Listen SETTINGS; fires SETTINGS
 -- Standalone: no
@@ -195,7 +195,7 @@ local function buildUsual(content)
 	return u
 end
 
--- "Request a summon": your raid runs raid summons (SPEC4 3.2; learned from the raid's HI,
+-- "Request a summon": your raid runs raid summons (learned from the raid's HI,
 -- W.Drive.RaidHere()). One card at the top of Home; the click asks the raid's runner (an
 -- addon message, nothing in chat). Free, nothing to pay.
 function UI.RaidHere()
@@ -1006,7 +1006,7 @@ local function buildHome(body)
 		local ud, udest = nil, nil
 		if not f then ud, udest = usualRide() end
 		local u = s.usual
-		-- the raid's free summons first (SPEC4 3.2), then "Your usual"
+		-- the raid's free summons first, then "Your usual"
 		local raid = UI.RaidHere()
 		local rc = s.raidCard
 		s.listTop = UI.LIST_PAD
@@ -1388,7 +1388,7 @@ local function buildHome(body)
 		end
 	end
 
-	-- the unfolded page (SPEC7 2.8)
+	-- the unfolded page
 	local F = UI.Fold
 	if type(F) == "table" and type(F.Register) == "function" then
 		F.Register("ride", {

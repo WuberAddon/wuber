@@ -63,7 +63,7 @@ function UI.TipFor(price, pct)
 	return math.ceil(price * pct / 100 / 100 - 1e-9) * 100
 end
 
--- A raincheck on this ride (SPEC7 5.8; Net.Rides keeps W.ride.voucher, .voucherCover,
+-- A raincheck on this ride (Net.Rides keeps W.ride.voucher, .voucherCover,
 -- .voucherTaken / .voucherRefused from the driver's A, and .fare = the full fare while .price is
 -- what is due): cover (copper), taken (true: the driver's book took it; false: it didn't, normal
 -- fare; nil: not answered yet), id. nil when the ride carries none.

@@ -1,4 +1,4 @@
--- Wuber Lab (developer only, never ship): the Pioneer emblem's look (Wuber 2.3.2, BRIEF15). The fake
+-- Wuber Lab (developer only, never ship): the Pioneer emblem's look (Wuber 2.3.2). The fake
 -- game can't draw a 3D model over a head, so the tester judges it: each check shows Wuber's own local
 -- preview ("/wuber emblem preview": only this screen, nothing sent) in one of the three looks and asks
 -- one short Yes/No. The answers (and which model loaded, or the flat ring) go in the report, so the

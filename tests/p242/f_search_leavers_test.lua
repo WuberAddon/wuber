@@ -69,7 +69,7 @@ end
 
 test("p242 F AU24-16: 'Do nothing' says nothing happens, not that the rider is blocked", function()
 	local tips = leaversTip()
-	ok(tips[3] == "Nothing happens: the rider stays unblocked and you only get a note.", "text: " .. tostring(tips[3]))
+	ok(tips[3] == "Nothing happens: the rider stays unblocked and you only get a toast.", "text: " .. tostring(tips[3]))
 end)
 
 -- guard: the two blocking choices keep their own words

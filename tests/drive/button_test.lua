@@ -373,7 +373,7 @@ end)
 
 
 ---------------------------------------------------------------------------
--- (BRIEF20 B5, shots 83 and 88) closed or stopped, the floating button's words point at the Open /
+-- closed or stopped, the floating button's words point at the Open /
 -- Start pill of its console right under it ("tap Open below"), not at Wuber's Drive tab; alone (no
 -- room for its console beside the open phone, B.Solo) they still say where Open is: the Drive tab.
 ---------------------------------------------------------------------------
@@ -508,7 +508,7 @@ test("Drive.Button BRIEF22 L4 L5: at size 2.2 the floating button is on the scre
 end)
 
 -- (the unfolded phone on the square screen leaves no room beside it at any readable size: there the button goes
--- alone above or below it, BRIEF20 B5; so that screen is checked folded)
+-- alone above or below it; so that screen is checked folded)
 test("Drive.Button BRIEF22 L3: at sizes 1.5 and 2.2 the floating button and its console keep off the open phone", function()
 	for _, size in ipairs(L_SIZES) do
 		for _, n in ipairs({ 1.5, 2.2 }) do

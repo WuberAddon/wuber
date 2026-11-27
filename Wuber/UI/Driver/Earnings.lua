@@ -143,7 +143,7 @@ local function buildChart(s, ch, top)
 		b.fill:SetPoint("TOPLEFT", b, "TOPLEFT")
 		b.fill:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT")
 		b.fill:SetVertexColor(T.RampRGB(#T.RAMP))
-		-- (BRIEF22 G1) a bar under the target: its own paler fill, shown or hidden (never an alpha change)
+		-- a bar under the target: its own paler fill, shown or hidden (never an alpha change)
 		b.dim = b:CreateTexture(nil, "ARTWORK")
 		b.dim:SetTexture(T.MEDIA .. "rounded")
 		b.dim:SetTexCoord(0.25, 0.75, 0, 0.5)
@@ -187,7 +187,7 @@ local function buildChart(s, ch, top)
 			end
 			parts[#parts + 1] = plural(N(d.rides) or 0, "ride")
 			parts[#parts + 1] = hoursText(open) .. " open"
-			parts[#parts + 1] = plural(N(d.asks) or 0, "buyer", "buyers") .. " asked"
+			parts[#parts + 1] = plural(N(d.asks) or 0, "rider", "riders") .. " asked"
 			return table.concat(parts, " · ")
 		end)
 		b.hit = hit
@@ -307,7 +307,7 @@ local function since(range)
 end
 
 ---------------------------------------------------------------------------
--- (2.3, SPEC7 5.5) The clicker cut: each crew member's casts and clicks this shift
+-- (2.3) The clicker cut: each crew member's casts and clicks this shift
 -- (Drive.Cut's DR.Cut() -> rows { name, key, casts, clicks, share }, rule), and (5.8) the
 -- rainchecks this crew gave (Drive.Raincheck's DR.Rainchecks())
 ---------------------------------------------------------------------------
@@ -352,7 +352,7 @@ function D.CutWords(casts, clicks)
 	return table.concat(bits, " · ")
 end
 
--- (BRIEF20 B8) one row of the split card: "7 casts · 2 clicks · 1g 82s" (design 1 H: the money in letters, no coin icons);
+-- one row of the split card: "7 casts · 2 clicks · 1g 82s" (design 1 H: the money in letters, no coin icons);
 -- too long for the room, the money alone rather than the row's font shrinking
 local function rowMeasure(text) return T.MeasureText((text:gsub("|T.-|t", "0")), "sub", "regular") end
 function D.CutRowWords(x, share, room)
@@ -428,7 +428,7 @@ local function chip(parent)
 	b.text = T.Text(b, "caption", "muted", "LEFT", "regular")
 	b.text:SetPoint("LEFT", b, "LEFT", 2, 0)
 	b:EnableMouse(true)
-	-- (round 13, I18) the words are never held to a width ('Top window: 17:00-20:...' in Google's
+	-- (round 13, I18) the words are never held to a width ('Top window: 17:00-20:...' in a reviewer's
 	-- shot): the chip is sized to them with room to spare
 	function b.Set(self, text, colour)
 		self.text:SetText(text)
@@ -438,7 +438,7 @@ local function chip(parent)
 	return b
 end
 
--- (2.3, SPEC7 5.5) Earnings' Crew view: "This shift" with each member's casts and clicks
+-- (2.3) Earnings' Crew view: "This shift" with each member's casts and clicks
 -- (made the first time there is something to show); returns the y under it
 -- (unfolded: c is the side pane's content, and the card is s.cutW, 324 wide)
 function D.PaintCut(s, c, y, crewView, shares)
@@ -474,7 +474,7 @@ function D.PaintCut(s, c, y, crewView, shares)
 		local l = card.lines[i]
 		if not l then
 			l = { name = T.Text(card, "sub", "white", "LEFT", "bold"), what = T.Text(card, "sub", "muted", "RIGHT", "regular") }
-			-- (BRIEF20 B8) every row is drawn at sub (12), never shrunk to fit: no size steps in the fit
+			-- every row is drawn at sub (12), never shrunk to fit: no size steps in the fit
 			l.name.wuberMin = T.SIZE.sub
 			l.what.wuberMin = T.SIZE.sub
 			card.lines[i] = l
@@ -505,7 +505,7 @@ function D.PaintCut(s, c, y, crewView, shares)
 	return y + ly + 8 + 12
 end
 
--- (2.3, SPEC7 5.8) "Rainchecks: given 2 · used 1" in the chosen range (only when any were given)
+-- (2.3) "Rainchecks: given 2 · used 1" in the chosen range (only when any were given)
 function D.PaintIou(s, c, y, from)
 	if not adv() then
 		if s.iou then s.iou:Hide() end
@@ -535,7 +535,7 @@ function D.PaintIou(s, c, y, from)
 	return y + 28
 end
 
--- (BRIEF19 F5) Today | 7 days | 30 days and Me | Crew: the chosen part is lit by its own opaque pill,
+-- Today | 7 days | 30 days and Me | Crew: the chosen part is lit by its own opaque pill,
 -- shown or hidden; the parts' own fills stay hidden. In the game (tour #47-#52) a part's fill kept the
 -- alpha it was made with (T.Pill paints a clear part with alpha 0): Today stayed lit and 7 days clear
 -- while the words, and the totals, said 7 days. So nothing lit here changes alpha: it shows or hides.
@@ -565,12 +565,12 @@ local function steady(seg)
 	return seg
 end
 
--- (BRIEF19 F6, tour #47) narrow Earnings is taller than its view: "Scroll for more" over the bottom
+-- narrow Earnings is taller than its view: "Scroll for more" over the bottom
 -- edge until the bottom is in view (the soft fade alone read as a cut-off pill). Never takes the mouse.
 local dataVer = 0 -- bumped when anything the page's words come from changes (the lift's stamp)
 for _, ev in ipairs({ "DRIVE", "DRIVE_CREW", "DRIVE_LOG", "DRIVE_PAID", "DRIVE_RANK", "SETTINGS" }) do W.Listen(ev, function() dataVer = dataVer + 1 end) end
 local CUE_STRIP = 28 -- the cue's height (22) plus a gap, kept free at the view's bottom while it may show
--- (BRIEF22 L1) the view's bottom edge never slices a text at the top of the page (the layout checker's
+-- the view's bottom edge never slices a text at the top of the page (the layout checker's
 -- "clipped"): it ends just above the first text it would cut, so the rest waits whole below it. Positions are
 -- from the content's top, so the scroll offset doesn't matter; shown, not visible: the page may be hidden yet. Returns how far the edge goes up (px).
 local function sliceLift(content, view)
@@ -599,7 +599,7 @@ local function applyStrip(s, c, bottom)
 	local full = (N(s.scroll:GetHeight()) or 0) + (s.strip or 0)
 	local need = full > 0 and bottom > full
 	local strip = need and CUE_STRIP or 0
-	-- (BRIEF22 L1) and a little more when the edge would slice the heatmap's hour labels (or any text)
+	-- and a little more when the edge would slice the heatmap's hour labels (or any text)
 	if need then
 		-- (speed) the lift walks every text on the page asking the layout for its edges; the page only moves when its data, words
 		-- or sizes do, so the answer is kept under a stamp of what they are and asked again only when the stamp changes
@@ -674,7 +674,7 @@ D.screens.earnings = function(parent)
 		local tips = N(tot.tips) or 0
 		local parts = {}
 		if tips > 0 then parts[#parts + 1] = earned(tips) .. " tips" end
-		parts[#parts + 1] = plural(N(tot.asks) or 0, "buyer", "buyers") .. " asked"
+		parts[#parts + 1] = plural(N(tot.asks) or 0, "rider", "riders") .. " asked"
 		return table.concat(parts, " · ")
 	end)
 	dash:EnableMouse(true)
@@ -799,7 +799,7 @@ D.screens.earnings = function(parent)
 	s.update = function()
 		s.side = s.side or eside
 		local isAdv = adv()
-		-- (BRIEF19 F5) the totals' period is s.range; the lit pill follows it in every path (a tap, the
+		-- the totals' period is s.range; the lit pill follows it in every path (a tap, the
 		-- photo tour setting it, a fold, a tab coming back)
 		if not RANGES[s.range] then s.range = "today" end
 		if s.seg.value ~= s.range then s.seg:SetValue(s.range) else s.seg:Paint() end
@@ -829,7 +829,7 @@ D.screens.earnings = function(parent)
 		setShown(dash.chartBox, isAdv)
 		dash:SetHeight(isAdv and s.dashFullH or 144)
 		if isAdv then paintChart(s) end
-		-- (2.3, SPEC7 2.8) unfolded: the numbers stay left, the patterns go right (the heatmap,
+		-- (2.3) unfolded: the numbers stay left, the patterns go right (the heatmap,
 		-- its chips, this shift's fair split, the rainchecks), 324 wide in the side pane
 		local wide = isAdv and D.Wide("earnings") and s.side ~= nil
 		if isAdv then
@@ -879,7 +879,7 @@ D.screens.earnings = function(parent)
 			if type(try) == "table" and N(try.hour) then
 				s.tryText = "Try " .. dayName(try.wday) .. " " .. ("%02d:00"):format(N(try.hour))
 				s.try:Set(s.tryText, "glow")
-				-- (BRIEF18 01:00) both tips never run past the pane: the second goes under the first
+				-- both tips never run past the pane: the second goes under the first
 				local tw = N(s.try:GetWidth()) or 100
 				local edge = PAD + (wide and SIDE_W or INNER)
 				local ty = y
@@ -922,7 +922,7 @@ D.screens.earnings = function(parent)
 				s.reset:SetPoint("TOPRIGHT", c, "TOPRIGHT", -PAD - 2, -y)
 				s.reset:Show()
 				y = y + 40
-				-- (BRIEF19 F6) taller than the view: the view gives up a strip at its bottom for the cue (the cue
+				-- taller than the view: the view gives up a strip at its bottom for the cue (the cue
 				-- lives in it, so nothing is drawn under the pill); it stays while the page is taller than the view
 				applyStrip(s, c, y - 40 + (N(s.reset:GetHeight()) or 30))
 				s.scroll:SetContentHeight(y)
@@ -951,7 +951,7 @@ D.screens.earnings = function(parent)
 	return s
 end
 
--- (2.3, SPEC7 2.8) the earnings page's side pane (made the first time it unfolds)
+-- (2.3) the earnings page's side pane (made the first time it unfolds)
 
 D.FOLD.earnings = {
 	build = function(holder)
@@ -1065,7 +1065,7 @@ function D.BuildHeatmap(parent, w)
 		if not hm.grid then return end -- nothing logged yet: no frame, no pill
 		hm.picked, hm.pickedAt = cell, now()
 		glide(hm, cell)
-		-- (BRIEF19 F6) a two-line pill makes the card taller: what sits under it moves down
+		-- a two-line pill makes the card taller: what sits under it moves down
 		if D.HeatInfo(hm, cell) then
 			if hm.onResize then hm.onResize(hm) elseif D.Refresh then call(D.Refresh, true) end
 		end
@@ -1118,7 +1118,7 @@ function D.BuildHeatmap(parent, w)
 	hm.pill:SetSize(200, 28)
 	hm.pill.x = HM_LEFT + 12 * cw - 6 -- its centre, from the card's left
 	hm.pill:SetPoint("TOP", hm, "TOPLEFT", hm.pill.x, -(gy + 18))
-	hm.pill.fill = T.PillFill(hm.pill, { T.RGB("accent", 0.3) }, 28, "BACKGROUND", 0) -- (BRIEF22 G1) its alpha from the start
+	hm.pill.fill = T.PillFill(hm.pill, { T.RGB("accent", 0.3) }, 28, "BACKGROUND", 0) -- its alpha from the start
 	hm.info = T.Text(hm.pill, "caption", "white", "CENTER", "medium")
 	hm.info:SetPoint("LEFT", hm.pill, "LEFT", PILL_PAD, 0)
 	hm.info:SetPoint("RIGHT", hm.pill, "RIGHT", -PILL_PAD, 0)
@@ -1129,7 +1129,7 @@ function D.BuildHeatmap(parent, w)
 	hm.empty = CreateFrame("Frame", nil, hm)
 	hm.empty:SetSize(gridW - 12, 44)
 	hm.empty:SetPoint("CENTER", hm, "TOPLEFT", HM_LEFT + gridW / 2, -(top + 3.5 * (HM_CELL + HM_GAP) - HM_GAP / 2))
-	hm.empty.fill = T.Rounded(hm.empty, { T.RGB("hover", 0.96) }, 14, "BACKGROUND", 0) -- (BRIEF22 G1) its alpha from the start
+	hm.empty.fill = T.Rounded(hm.empty, { T.RGB("hover", 0.96) }, 14, "BACKGROUND", 0) -- its alpha from the start
 	hm.empty.text = T.Text(hm.empty, "caption", "muted", "CENTER", "regular")
 	hm.empty.text:SetPoint("CENTER", hm.empty, "CENTER", 0, 0)
 	hm.empty.text:SetWidth(gridW - 36) -- its own width: it wraps in two even before its card is placed

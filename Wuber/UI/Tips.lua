@@ -16,7 +16,7 @@
 -- Events: listens On PLAYER_ENTERING_WORLD, On PLAYER_REGEN_DISABLED, Listen PAGE, Listen RIDE, login; fires SETTINGS (tipsOn)
 -- Standalone: no
 -- Test: tests/r25_a_tips.lua
--- From: new in Wuber 2.3.3 (BRIEF25 T1)
+-- From: new in Wuber 2.3.3
 --
 -- When: the first open after a real login (PLAYER_ENTERING_WORLD's isReloadingUi; a client that
 -- does not say is treated as a login, so at most once per session), and only when the first-open
@@ -57,7 +57,7 @@ local L = {
 }
 -- the sheet's height follows its text (a long tip makes it taller; the text is never cut). cardH is the height now.
 local cardH = L.TOP + L.TEXT3 + 12 + L.FOOT
-local OFF_LINE = "Tips are off. Turn them back on in Settings > Riding > Tips, or type /wuber tips."
+local OFF_LINE = "Tips are off. Turn Login tips back on in Settings > Riding, or type /wuber tips."
 local DONE_LINE = "That was the last tip. Type /wuber tips to see them again."
 Mod.OFF_LINE = OFF_LINE
 Mod.DONE_LINE = DONE_LINE

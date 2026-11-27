@@ -102,8 +102,6 @@ G.rider3 = {
 	{ id = "Raid summons stopped <Frame> @Build.lua", skip = "a sheet or dialog is drawn above it in this state: the real click goes to that sheet (the layout checker's covered kind watches it)" },
 	{ id = "List me in the Group Finder <Frame> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "changed" },
 	{ id = "[circle] <Button> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "changed" },
-	{ id = "(long text) <Frame> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "same", why = "the sheet text: a click on it is taken and nothing changes" },
-	{ id = "(long text) <EditBox> @Sheets.lua", action = "click", on = "sheet_gf_list", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
 }
 G.rider4 = {
 	{ id = "(no label) Secure.lua <Button> @Secure.lua", skip = "protected (secure) button: a click runs a secure action or macro in the game, so it is never clicked here" },
@@ -128,6 +126,7 @@ G.rider4 = {
 	{ id = "Raid summons <Button> @Build.lua", skip = "a sheet or dialog is drawn above it in this state: the real click goes to that sheet (the layout checker's covered kind watches it)" },
 	{ id = "Crew <Button> @Build.lua", action = "click", on = "rank_own", expect = "changed" },
 	{ id = "Messages <Button> @Build.lua", action = "click", on = "rank_own", expect = "changed" },
+	{ id = "My advert line <Button> @Build.lua", action = "click", on = "rank_card", expect = "changed" },
 	{ id = "[circle] <Button> @Screens.lua", action = "click", on = "tip_chip", expect = "changed" },
 	{ id = "(long text) <Frame> @Messages.lua", action = "click", on = "tip_chip", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
 	{ id = "(long text) <EditBox> @Messages.lua", action = "click", on = "tip_chip", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
@@ -444,7 +443,7 @@ G.settings3 = {
 	{ id = "Trips <Button> @Window.lua", elsewhere = "rider1", why = "the same header, tab bar or minimap control on every screen: clicked on rider1's home" },
 	{ id = "Drive <Button> @Window.lua", elsewhere = "rider1", why = "the same header, tab bar or minimap control on every screen: clicked on rider1's home" },
 	{ id = "[circle] <Button> @Panel.lua", action = "click", on = "settings_invite_warning", expect = "changed" },
-	{ id = "[pill] <Button> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "Invite public chat buyers stays off until the confirmation dialog is accepted" },
+	{ id = "[pill] <Button> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "Invite public chat riders stays off until the confirmation dialog is accepted" },
 	{ id = "[circle] <Slider> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "fake game clickOn only fires OnMouseDown/OnMouseUp (enabling wheelOn) and does not move a Slider's value (wheel + db checked in google_b2_probes_test.lua)" },
 	{ id = "(long text) <Frame> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
 	{ id = "(long text) <EditBox> @Rows.lua", action = "click", on = "settings_invite_warning", expect = "same", why = "edit field: a click only gives it the cursor, nothing else shows" },
@@ -501,6 +500,7 @@ G.simple = {
 	{ id = "Pause <Button> @Build.lua", skip = "a sheet or dialog is drawn above it in this state: the real click goes to that sheet (the layout checker's covered kind watches it)" },
 	{ id = "Advertise <Button> @Build.lua", skip = "a sheet or dialog is drawn above it in this state: the real click goes to that sheet (the layout checker's covered kind watches it)" },
 	{ id = "Earnings <Button> @Build.lua", action = "click", on = "simple_console_open", expect = "changed" },
+	{ id = "My advert line <Button> @Build.lua", action = "click", on = "simple_console_open", expect = "changed" },
 	{ id = "Closed <Button> @Button.lua", skip = "protected (secure) button: a click runs a secure action or macro in the game, so it is never clicked here" },
 	{ id = "Closed <Frame> @Build.lua", skip = "a sheet or dialog is drawn above it in this state: the real click goes to that sheet (the layout checker's covered kind watches it)" },
 	{ id = "Rider <Frame> @Sheets.lua", action = "click", on = "simple_menu", expect = "changed" },

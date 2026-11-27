@@ -41,7 +41,7 @@ local D = W.Driver
 local ui -- the built tab (D.ui for tests)
 local refreshNow -- (below)
 
--- (2.3, SPEC7 2.1) the Drive tab's page may have changed: UI.Fold works it out
+-- (2.3) the Drive tab's page may have changed: UI.Fold works it out
 local function pageChanged() W.Fire("PAGE") end
 
 ---------------------------------------------------------------------------
@@ -263,7 +263,7 @@ function D.SyncDock(force)
 end
 
 ---------------------------------------------------------------------------
--- (2.3, SPEC7 2.8) The unfolded console: the left keeps the folded console (its slot and the
+-- (2.3) The unfolded console: the left keeps the folded console (its slot and the
 -- secure GO / ADVERT pills never move); r18: the riders are listed once, on the left right under the buttons,
 -- and the side pane has the crew panel (one chip per member: role, name, shards, this shift's casts and
 -- clicks), today's takings and the best hours (Earnings' heatmap). "Wanted nearby" is a card on the left
