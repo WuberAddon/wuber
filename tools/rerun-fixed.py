@@ -6,7 +6,11 @@
 A bug line is "ID | severity | file:line | what | proof | minutes | status". Lines whose status starts with "fixed" are
 re-run. The test is the "test tests/..." in the status, else the proof field when it is a tests/ path inside the repo.
 A tests/ file x/y_test.lua runs as: lua tests/run.lua --files=x/y_test (the repo's way to run one test part); a tests/
-folder runs every .lua part in it. A proof outside the repo (audit folders, pictures) or a missing file is "not re-runnable".
+folder runs every .lua part in it. A hunt repro (a .lua under a repro/ folder, in the repo or outside it, an absolute path
+is fine; tests/hunt/README.md) is a one-file proof that tests/run.lua never runs: it runs as
+lua <repro> --addon <repo>/Wuber with cwd = the repo (the file hard-codes the tree it was found in), exit 0 = PASS,
+exit 1 = STILL FAILS, any other exit (2: it cannot tell) = not re-runnable. Any other proof outside the repo (audit
+folders, pictures) or a missing file is "not re-runnable".
 --dry prints what would run (as "would run") and runs nothing.
 Output: one line per fixed bug "<id>: PASS | STILL FAILS | not re-runnable", last line
 "fixed repros: N re-run, F still fail, U not re-runnable". Exit 0, or 1 when any still fails.
@@ -34,6 +38,23 @@ def find_test(proof, status):
         return m.group(1).rstrip(".")
     m = TESTS_PATH.match(proof.strip().replace("\\", "/"))
     return m.group(1) if m else None
+
+
+def find_repro(proof, status, repo):
+    """the hunt repro named by the status test or the proof field -> absolute path of an existing file, or None"""
+    cands = []
+    m = TEST_IN_STATUS.search(status)
+    if m:
+        cands.append(m.group(1).rstrip("."))
+    cands.append(proof.strip())
+    for c in cands:
+        c = c.replace("\\", "/")
+        if not c.endswith(".lua") or not re.search(r"(^|/)repro[\w-]*/[^/]+$", c):
+            continue
+        full = c if os.path.isabs(c) or re.match(r"^[A-Za-z]:/", c) else os.path.join(repo, *c.lstrip("./").split("/"))
+        if os.path.isfile(full):
+            return os.path.abspath(full)
+    return None
 
 
 def parts_for(repo, rel):
@@ -65,6 +86,30 @@ def main(argv=None):
     ran = failed = unrun = 0
     cache = {}
     for bid, proof, status in bugs:
+        repro = find_repro(proof, status, repo)
+        if repro:
+            cmd = [a.lua, repro, "--addon", os.path.join(repo, "Wuber")]
+            if a.dry:
+                ran += 1
+                print("%s: would run %s" % (bid, " ".join(cmd)))
+                continue
+            if repro not in cache:
+                try:
+                    cache[repro] = subprocess.run(cmd, cwd=repo, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                                  timeout=a.timeout).returncode
+                except subprocess.TimeoutExpired:
+                    cache[repro] = 1
+            if cache[repro] not in (0, 1):
+                unrun += 1
+                print("%s: not re-runnable (%s: cannot tell, exit %d)" % (bid, repro, cache[repro]))
+                continue
+            ran += 1
+            if cache[repro] == 0:
+                print("%s: PASS" % bid)
+            else:
+                failed += 1
+                print("%s: STILL FAILS (%s)" % (bid, repro))
+            continue
         rel = find_test(proof, status)
         parts = parts_for(repo, rel) if rel else None
         if not parts:
