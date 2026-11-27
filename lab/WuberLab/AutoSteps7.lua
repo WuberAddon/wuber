@@ -1045,6 +1045,104 @@ end)
 
 
 ---------------------------------------------------------------------------
+-- a_paused_clicks (T243-2, passive): the big button left in a fight
+---------------------------------------------------------------------------
+-- In a fight the big Drive button cannot be moved, hidden or made mouse-free, and "Paused during combat" must never be drawn off
+-- its place or take the clicks of what lies under it. This check NEVER enters combat and changes nothing (getters only): it takes a
+-- reading 1.5 and 6 seconds into any fight the player is in anyway (PLAYER_REGEN_DISABLED), keeps the worst, and the Auto check row
+-- reports the last one. With no fight read since the Lab loaded, the row says "needs combat: skipped".
+--   1. a label that is drawn (alpha above 0, its words "Paused during combat") lies inside the button's box, and the button lies on
+--      the Drive slot it belongs to;
+--   2. otherwise (the look is off: the slot was left), no shown Wuber control whose centre lies under the button has the button as
+--      the top mouse-enabled Wuber frame at that centre (a click on it reaches the window, not the button).
+local PAUSED = "Paused during combat"
+local PAUSED_STEP = "T243-2"
+local function inBox(r, box, slack)
+	return r.l >= box.l - slack and r.r <= box.r + slack and r.b >= box.b - slack and r.t <= box.t + slack
+end
+function L.PausedRead()
+	local W = L.W and L.W()
+	local b = rawget(_G, "WuberDriveButton")
+	if type(W) ~= "table" or type(b) ~= "table" then return "skip", "this Wuber has no big Drive button" end
+	if not shown(b) then return "skip", "the big button is not shown" end
+	local upf = rawget(_G, "UIParent")
+	local up = num(callm(upf, "GetEffectiveScale")) or 1
+	local br = rectOf(b, up)
+	if not br then return "skip", "the big button has no place yet" end
+	local title = rawget(b, "title")
+	local alpha = num(callm(b, "GetAlpha")) or 1
+	if alpha > 0 and textOf(title) == PAUSED then
+		local tr = rectOf(title, up)
+		if not tr then return "skip", "the label has no place yet" end
+		if not inBox(tr, br, 1) then return "look", "the label is drawn off the button's box" end
+		local D = W.Driver
+		local slot = type(D) == "table" and type(D.ui) == "table" and type(D.ui.console) == "table" and D.ui.console.slot
+		local sr = type(slot) == "table" and rectOf(slot, up)
+		if sr and not (math.abs(sr.l - br.l) <= 2 and math.abs(sr.b - br.b) <= 2) then
+			return "look", "the label is drawn but the button is not on the Drive slot (the window was moved)"
+		end
+		return "pass", "the label lies on the button, and the button on the Drive slot"
+	end
+	local st = uiState(W)
+	local win = st and st.win
+	if not (win and shown(win)) then return "pass", "the look is off and Wuber's window is shut: nothing of Wuber lies under the button" end
+	local w = gather(W)
+	local n, bad = 0, nil
+	for _, f in ipairs(w.list) do
+		if n >= 60 or bad then break end
+		if f ~= b and not within(w, f, b) and within(w, f, win) and isTrue(f, "IsMouseEnabled") and isTrue(f, "IsVisible") then
+			local r = rectOf(f, w.up)
+			if r then
+				local cx, cy = (r.l + r.r) / 2, (r.b + r.t) / 2
+				if cx >= br.l and cx <= br.r and cy >= br.b and cy <= br.t then
+					n = n + 1
+					local top = framesAt(w, cx, cy)[1]
+					if top and within(w, top, b) then bad = ("the top Wuber frame at the centre of %s is the big button"):format(nameOfFrame(f)) end
+				end
+			end
+		end
+	end
+	if bad then return "look", "the big button, left behind in the fight, takes the click meant for a Wuber control: " .. bad end
+	return "pass", ("the look is off and %d Wuber control(s) lie under the button's place, none with the button on top"):format(n)
+end
+
+local function pausedKeep(status, detail)
+	local db = L.db
+	if type(db) ~= "table" then return end
+	local was = db.pausedClicks
+	if type(was) == "table" and was.status == "look" and was.fight == L.pausedFight and status ~= "look" then return end -- the worst of this fight stays
+	db.pausedClicks = { status = status, detail = tostring(detail):sub(1, 600), at = L.Epoch and L.Epoch() or 0, fight = L.pausedFight }
+end
+function L.PausedSample()
+	local ok, status, detail = pcall(L.PausedRead)
+	if not ok then status, detail = "look", "the check itself broke: " .. tostring(status):sub(1, 200) end
+	if status == "skip" then return status, detail end
+	pausedKeep(status, detail)
+	return status, detail
+end
+L.On("PLAYER_REGEN_DISABLED", function()
+	L.pausedFight = (L.pausedFight or 0) + 1
+	local mine = L.pausedFight
+	local function again() if mine == L.pausedFight then pcall(L.PausedSample) end end
+	L.After(1.5, again)
+	L.After(6, again)
+end)
+
+screen({ id = "a_paused_clicks", side = "driver", noWin = true, maxWait = 3,
+	title = "Big button in a fight: the paused label stays on its button and no click on a Wuber control is lost to it (read, never made)",
+	covers = { any = { verify = { PAUSED_STEP } } },
+	run = function(W)
+		local db = L.db
+		if not (type(db) == "table" and type(db.pausedClicks) == "table") then return "needs combat: skipped" end
+		return true
+	end,
+	verify = function()
+		local s = L.db and L.db.pausedClicks
+		if type(s) ~= "table" or not s.status then return "skip", "needs combat: skipped" end
+		return { result("paused button in a fight", s.status, s.detail .. " (read in a fight on this login; nothing was pressed)", PAUSED_STEP) }
+	end })
+
+---------------------------------------------------------------------------
 -- (job 2904) What the 2.4.4 round changed, walked by the Auto check: screens the tour did not reach, and the WATCH list
 ---------------------------------------------------------------------------
 -- a_bird_card: Wuber's own "Skip the bird" card (its "Don't show again" link, #258) beside a stand-in for the flight map. The tour keeps

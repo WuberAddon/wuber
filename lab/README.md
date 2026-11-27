@@ -14,7 +14,7 @@ Six buttons and a words box instead of fifteen buttons, about 1.3 times bigger, 
 "potato start" mark and screenshot, recorder on, then a Reload 2 s later), **End test** ("potato end" mark, trail off, recorder off, then a Reload 2 s later so the logs save),
 **Auto check**, **Steps**, **Huh** (left click: mark + screenshot; right click: just a screenshot, was Snap; Shift + click: the sync mark, was Potato sync) with its words box, and
 **More** (Game facts, Slide check, Portal turn, Send matrix, Trail, Taint log, Chat log, Reload). Report: **REPORT-lab-cleanup.md**. New files (restart the game fully once):
-CensusCore.lua, AutoSteps4.lua, AutoSteps5.lua, AutoSteps6.lua (the Auto check's a_anim, a_census, a_ruler), AutoSteps7.lua (a_settings_asks, a_driver_hits, a_pill_hit, a_rider_checks and the saved-data check PR-76), AutoSpeed.lua (its timing pass a_speed: Lua ms, worst frame, memory per screen change; labreport prints the Speed section), GameFacts3.lua, GameFacts4.lua, GameFacts5.lua (passive secrets census,
+CensusCore.lua, AutoSteps4.lua, AutoSteps5.lua, AutoSteps6.lua (the Auto check's a_anim, a_census, a_ruler), AutoSteps7.lua (a_paused_clicks: read from a fight the player is in anyway, "needs combat: skipped" otherwise; a_settings_asks, a_driver_hits, a_pill_hit, a_rider_checks and the saved-data check PR-76), AutoSpeed.lua (its timing pass a_speed: Lua ms, worst frame, memory per screen change; labreport prints the Speed section), GameFacts3.lua, GameFacts4.lua, GameFacts5.lua (passive secrets census,
 combat edge, Send matrix), Focus.lua (passive focus recorder). Their answers go to WuberLabDB.facts (ids RULER, CENSUS, ANIM, SECRETS, REGEN, TRADEBTN, SENDM, SENDM.heard) and WuberLabDB.focus.
 
 ## The flight recorder switches itself

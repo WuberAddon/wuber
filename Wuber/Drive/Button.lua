@@ -616,6 +616,9 @@ end
 -- 0.25 s ticker stays the fallback and re-places it once the fight is over).
 local function windowDrag(on)
 	local b = DR.button
+	-- (T243-2) in a fight the window moves away from the button, which cannot follow: its look is taken off at once (alpha and its
+	-- own words only), and the 1 s dock check brings it back should the window be put back where it was
+	if on and b and W.InCombat() then B.CombatView(false) return end
 	if on then
 		if not b or W.InCombat() or not state.dockedNow or not state.docked then return end
 		local slot = state.docked
@@ -759,6 +762,13 @@ end
 W.On("PLAYER_REGEN_DISABLED", function()
 	local b = DR.button
 	if not b or W.InCombat() then return end
+	-- (T243-2) a fight begins in the middle of a window drag: the button is anchored to its slot for the drag, which would make the slot
+	-- (and the window) protected: it goes back to its place on the screen now, while that is still allowed
+	if state.following then
+		state.following = false
+		state.sig = nil
+		B.Place()
+	end
 	local paused = { marks = {}, paused = true, color = "off", title = "Paused during combat", sub = "the button works again after the fight" }
 	apply(b, paused)
 	paint(b, paused, true)
@@ -779,8 +789,12 @@ function B.CombatView(on)
 		b:SetAlpha(0)
 		if b.title then b.title:SetText("") end
 		if b.sub then b.sub:SetText("") end
+		-- (T243-2) the button itself cannot be moved, hidden or made mouse-free now, and it still takes the clicks over the
+		-- place it was left: the window (a plain frame) lifts itself above it, so its controls are on top there
+		W.Fire("DRIVE_BUTTON_STALE", true)
 	elseif state.combatHidden then
 		state.combatHidden = nil
+		W.Fire("DRIVE_BUTTON_STALE", false)
 		b:SetAlpha(1)
 		local plan = b.plan
 		if type(plan) ~= "table" then plan = { marks = {}, paused = true, color = "off", title = "Paused during combat", sub = "the button works again after the fight" } end
@@ -791,6 +805,7 @@ end
 W.On("PLAYER_REGEN_ENABLED", function()
 	if state.combatHidden then
 		state.combatHidden = nil
+		W.Fire("DRIVE_BUTTON_STALE", false)
 		local b = DR.button
 		if b then b:SetAlpha(1) end
 	end
