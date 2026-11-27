@@ -255,13 +255,13 @@ function DR.CanReply(sender)
 	end
 	local opts = DR.opts and DR.opts() or {}
 	if opts.autoInvite ~= true then
-		return false, "auto mode is off"
+		return false, "Inviting riders who whisper you or ask in the app is off"
 	end
 	if opts.watchPublic ~= true then
-		return false, "public chat is off"
+		return false, "Listing people who ask for a summon in public chat is off"
 	end
 	if opts.autoReply == false then
-		return false, "switched off"
+		return false, "Whisper back to public requests is off"
 	end
 	-- "How whispers leave": only the mode that whispers (macro, which "auto" is) replies by itself. Off sends
 	-- nothing; Chat box needs the player's own Enter, so an auto-reply sends nothing there.

@@ -69,7 +69,7 @@ test("ui.settings.panel: BRIEF22 T3 Driving opens with its always rows (whisper 
 	local d = T.driver(w, T.BOB)
 	T.settle(w)
 	local st = open(d, w, "driving")
-	local names = { "Invite riders who whisper me", "Invite public chat buyers", "Post an advert when I go online" }
+	local names = { "Invite riders who whisper me", "Invite public chat riders", "Post an advert when I go online" }
 	local rows = {}
 	for _, r in ipairs(st.rows) do if r.label then rows[r.label:GetText()] = r end end
 	-- the always-shown rows come first; every row of the Advanced frame is below all of them
@@ -84,7 +84,7 @@ test("ui.settings.panel: BRIEF22 T3 Driving opens with its always rows (whisper 
 			ok(rowTop(st, r) > lastAlways, "below the always rows: " .. tostring(r.label and r.label:GetText()))
 		end
 	end
-	ok((rows["Invite public chat buyers"].group:GetParent()) == st.driveAdv, "the public chat invite is an Advanced row")
+	ok((rows["Invite public chat riders"].group:GetParent()) == st.driveAdv, "the public chat invite is an Advanced row")
 	for _, n in ipairs(names) do
 		ok(rows[n], n .. ": still a row")
 		ok(rows[n].wuberTip, n .. ": has a tooltip")
@@ -98,7 +98,7 @@ test("ui.settings.panel: BRIEF22 T3 Driving opens with its always rows (whisper 
 	local found = d.W.Mod("UI.Settings.Find").match("auto invite")
 	local labels = {}
 	for _, m in ipairs(found or {}) do labels[(m.label or (m.entry and m.entry.label) or "")] = true end
-	ok(labels["Invite riders who whisper me"] and labels["Invite public chat buyers"], "Search 'auto invite' finds both")
+	ok(labels["Invite riders who whisper me"] and labels["Invite public chat riders"], "Search 'auto invite' finds both")
 	T.clean(w)
 end)
 
@@ -143,7 +143,7 @@ test("ui.settings.panel: G1 - the most used rows first: Riding starts with Tips,
 		if y >= rid.top and y < rid.bottom and (not firstRiding or y < rowTop(st, firstRiding)) then firstRiding = row end
 		if y >= snd.top and y < snd.bottom and (not firstSound or y < rowTop(st, firstSound)) then firstSound = row end
 	end
-	eq(firstRiding.label:GetText(), "Tips", "Riding's first row (the always-shown rows come before the Advanced ones)")
+	eq(firstRiding.label:GetText(), "Login tips", "Riding's first row (the always-shown rows come before the Advanced ones)")
 	eq(firstSound.label:GetText(), "Sounds", "Sound and effects' first row")
 	T.clean(w)
 end)

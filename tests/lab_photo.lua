@@ -111,13 +111,13 @@ local EXPECT = {
 	done_unpaid = "Not paid", raincheck = "offers a raincheck", trips = "Your trips", wrapped = "Azeroth", wrapped_summary = "That's a wrap",
 	console_open = "Summon Dan", button_summoning = "Summoning Dan", button_portal = "CLICK THE PORTAL",
 	button_waiting = "Waiting for Eve", console_closed = "Closed", menu_chat = "Get Wuber", note = "Never the rider",
-	row_marks = "Dan Rider", customers = "Fay Storm", crew = "my account", demand = "want Gadgetzan", pvp = "PvP nearby",
+	row_marks = "Dan Rider", customers = "Fay Storm", crew = "my window", demand = "want Gadgetzan", pvp = "PvP nearby",
 	raid = "Gus", earnings = "Earnings", earnings_heatmap = "Earnings", earnings_empty = "Earnings", shift = "Fair split",
 	messages = "Messages", messages_edit = "Tap to add", settings = "Settings", settings_driving = "Driving",
 	settings_search = "price", settings_nomatch = "No settings match", settings_opened = "passphrase",
 	help = "How Wuber finds drivers",
 	-- the bug report, the Driving switch that asks first, wide Customers with a queued rider
-	settings_bug = "Report a bug", settings_invite = "Invite public chat buyers", settings_invite_warning = "Invite public chat buyers",
+	settings_bug = "Report a bug", settings_invite = "Invite public chat riders", settings_invite_warning = "Invite public chat riders",
 	help_bug = "Something not working?", bug_window = "Select all", customers_queued = "Fay Storm",
 }
 -- (round 18, 3c) the floating button + console in every plan state: its title is on screen at the shot
@@ -847,7 +847,7 @@ test("lab photo: B9 - empty Earnings is empty, the tips shot has sparse hours, a
 		ok(by["settings_invite_warning/" .. view].popup, "the public-chat warning is on screen (" .. view .. ")")
 		ok(not by["settings_invite/" .. view].popup, "not in the shot before it")
 		ok(not by["help_bug/" .. view].popup, "nor elsewhere")
-		ok(by["settings_invite/" .. view].texts and text("settings_invite", view):find("Invite public chat buyers", 1, true), "the row is on screen")
+		ok(by["settings_invite/" .. view].texts and text("settings_invite", view):find("Invite public chat riders", 1, true), "the row is on screen")
 		ok(text("help_bug", view):find("Something not working?", 1, true), "Something not working? on screen in Help (" .. view .. ")")
 		ok(by["help_bug/" .. view].helpShown, "Help is open (" .. view .. ")")
 		ok((by["help_bug/" .. view].helpMax or 0) > 0 and by["help_bug/" .. view].helpScroll >= by["help_bug/" .. view].helpMax - 1,
@@ -856,7 +856,7 @@ test("lab photo: B9 - empty Earnings is empty, the tips shot has sparse hours, a
 	ok(by["bug_window/folded"].bug and not by["settings/folded"].bug, "the bug window is in its own shot only")
 	ok(text("bug_window", "folded"):find("Select all", 1, true), "its Select all and report")
 	-- Settings folded: the scrolled shots are scrolled (the row isn't at the top of the page)
-	ok((by["settings_invite/folded"].scroll or 0) > 100, "Invite public chat buyers scrolled to: " .. tostring(by["settings_invite/folded"].scroll))
+	ok((by["settings_invite/folded"].scroll or 0) > 100, "Invite public chat riders scrolled to: " .. tostring(by["settings_invite/folded"].scroll))
 	-- the home has a visible Report a bug card
 	ok(text("settings", "folded"):find("Report a bug", 1, true), "Settings home offers Report a bug")
 	-- wide Customers with a queued rider picked: one more Invite to Wuber (the right pane's), only in that shot

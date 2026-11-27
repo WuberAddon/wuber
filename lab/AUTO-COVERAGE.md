@@ -125,6 +125,7 @@ To run only the ported rows: `/lab auto <id> <id> ...` (an id or its start), or 
 | float_summon_held | AutoLayout.lua | folded |
 | done_unpaid_mail | AutoLayout.lua | folded |
 | customers_mail | AutoLayout.lua | folded+unfolded |
+| done_removed | AutoLayout.lua | folded |
 | note_serve | AutoLayout.lua | folded |
 | customers_serve | AutoLayout.lua | folded+unfolded |
 | d4c_ride_stranger | AutoLayout.lua | folded |

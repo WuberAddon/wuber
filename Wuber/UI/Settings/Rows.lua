@@ -88,7 +88,7 @@ local KEYWORDS = {
 	["Post an advert when I go online"] = "advert advertise chat trade services online",
 	["List me in Wuber's starter list"] = "new riders starter list find",
 	["Invite riders who whisper me"] = "auto invite group party whisper app requests",
-	["Invite public chat buyers"] = "auto invite trade lfg lookingforgroup public chat buyers",
+	["Invite public chat riders"] = "auto invite trade lfg lookingforgroup public chat riders buyers",
 	["Group size"] = "largest group one rider at a time raid group size party",
 	["Chat channels"] = "channels to watch advert channels advertise chat channels trade lfg lookingforgroup services general",
 	["Request words"] = "keywords whisper words",
@@ -112,7 +112,7 @@ local KEYWORDS = {
 	["Window size"] = "scale size bigger smaller zoom position move reset middle centre center",
 	["Wide pages"] = "fold unfold wide narrow two pane reset per page",
 	["What Wuber sends"] = "privacy limits limit hidden messages message whispers sending sent spam rate how many often chat addon", -- decisions N
-	["Tips"] = "login tips hints help tip advice learn how tutorial coach replay",
+	["Login tips"] = "login tips hints help tip advice learn how tutorial coach replay",
 	["Check my game"] = "test diagnose problems broken",
 }
 
@@ -370,6 +370,21 @@ local function friendlyPlatesOn()
 		end
 	end
 	return false
+end
+
+-- true only when the game's Sound in Background setting is known to be off ("0"); read each time, never cached
+local function soundInBgOff()
+	local cc = rawget(_G, "C_CVar")
+	local g1 = type(cc) == "table" and type(cc.GetCVar) == "function" and cc.GetCVar or nil
+	local g2 = rawget(_G, "GetCVar")
+	local raw
+	for _, g in ipairs({ g1 or false, g2 or false }) do
+		if raw == nil and type(g) == "function" then
+			local ok, r = pcall(g, "Sound_EnableSoundWhenGameIsInBG")
+			if ok and r ~= nil then raw = r end
+		end
+	end
+	return raw ~= nil and S(raw) == "0"
 end
 
 local function turnOnPlates()
@@ -744,8 +759,8 @@ local function buildDriving(drive, dy)
 	dy = section(drive, dy, "Driving: inviting")
 	-- (2.3.2) off by default; turning it on asks first (DR.SetAutoPublic's warning),
 	-- so the switch stays off until Yes, and Cancel leaves it off
-	dy = toggleRow(drive, dy, "drive.autoPublic", "Invite public chat buyers", "Public chat channels you read, not whispers.",
-		"On: invites buyers in the public chat channels you read (see Chat channels) who name your place. Wuber can misread chat, so it asks first. Off: click a name to invite.",
+	dy = toggleRow(drive, dy, "drive.autoPublic", "Invite public chat riders", "Public chat channels you read, not whispers.",
+		"On: invites riders in the public chat channels you read (see Chat channels) who name your place. Wuber can misread chat, so it asks you once when you switch this on. Off: click a name to invite.",
 		function() return dopts().autoPublic == true end,
 		function(on, t)
 			local d = DR()
@@ -772,7 +787,7 @@ local function buildDriving(drive, dy)
 			local res = call(d.SetAutoPublic, true, settle)
 			if res == "asked" then watch(0) end
 			-- (review #6) no popup to ask with: say so, as /wuber drive market does
-			if res == nil then UI.Toast("Invite public chat buyers: off (the warning can't be shown right now).", "warn") end
+			if res == nil then UI.Toast("Invite public chat riders: off (the warning can't be shown right now).", "warn") end
 		end)
 	dy = toggleRow(drive, dy, "starter", "List me in Wuber's starter list", "So new riders can find you.",
 		"New Wuber users start with a short list of drivers to ask. On: you can be on it (only your name; riders still see you "
@@ -899,7 +914,7 @@ local function buildDriving(drive, dy)
 	local lseg = T.Segmented(lr, {
 		{ value = "tell", label = "Block and tell them", tip = blkTip .. " " .. tellTip },
 		{ value = "quiet", label = "Block quietly", tip = blkTip },
-		{ value = "off", label = "Do nothing", tip = "Nothing happens: the rider stays unblocked and you only get a note." },
+		{ value = "off", label = "Do nothing", tip = "Nothing happens: the rider stays unblocked and you only get a toast." },
 	}, lv0, function(v)
 		if v == "tell" then
 			setOpt("autoBlock", true)
@@ -999,8 +1014,9 @@ local function buildDriving2(drive, dy)
 	dy = section(drive, dy + 4, "Driving: more")
 	local bellY = dy
 	local bellField, bellRow
+	local BELL_TIP = "A character you have logged in on another account: it flashes, beeps and shows a banner when one of your windows needs a click. Empty: off."
 	dy, bellField, bellRow = fieldRow(drive, dy, "drive.bell", "Alert character", "A character on another account.",
-		"A character you have logged in on another account: it flashes, beeps and shows a banner when one of your windows needs a click. Empty: off.",
+		BELL_TIP,
 		function()
 			local db = W.db and W.db.drive
 			return type(db) == "table" and type(db.bell) == "table" and S(db.bell.name) or ""
@@ -1013,6 +1029,12 @@ local function buildDriving2(drive, dy)
 			UI.UpdateSettings()
 		end, { placeholder = "Name-Realm (empty: off)", max = 40 })
 	st.bellY = bellY
+	T.Tip(bellField.edit, "Alert character", function()
+		if soundInBgOff() then
+			return BELL_TIP .. "\nSound in Background is off in the game's sound settings, so the bell is silent while another window is in front"
+		end
+		return BELL_TIP
+	end)
 	dy = dy + grow(bellRow, 36)
 	bellField:ClearAllPoints()
 	bellField:SetPoint("BOTTOMLEFT", bellRow, "BOTTOMLEFT", 8, 48)
@@ -1081,7 +1103,7 @@ end
 
 local function buildRiding8(c, y)
 	local tipsRow
-	y, tipsRow = toggleRow(c, y, "tips", "Tips", "A short tip inside Wuber the next time you open it.",
+	y, tipsRow = toggleRow(c, y, "tips", "Login tips", "A short tip inside Wuber the next time you open it.",
 		"On: a small tip card shows when you open Wuber after login, each tip once. Off: none. Type /wuber tips for one now.",
 		tipsOn, setTips)
 	attachSwitchButton(tipsRow, "coach", "Replay", 64, "Replay",

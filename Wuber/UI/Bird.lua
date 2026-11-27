@@ -345,7 +345,7 @@ function Mod.Why()
 	if card and card:IsShown() then return nil end
 	if shownThisOpen then return "Skip the bird: already shown for this flight map." end
 	if not W.db then return nil end
-	if W.db.birdTip == false then return "Skip the bird: off in Settings (Riding, Flight offers)." end
+	if W.db.birdTip == false then return "Skip the bird: off. Turn Flight offers on in Settings, Riding." end
 	local _, gate = UI.MayOpen("bird")
 	if gate == "combat" then return "Skip the bird: not in combat." end
 	if gate == "cinematic" then return "Skip the bird: not during a cinematic." end

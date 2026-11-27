@@ -69,7 +69,7 @@ end
 		return rides, copper
 	end
 
-	-- the Earnings screen's totals line: "1 ride . 50s . 0 min open . 0 buyers asked" -> rides, copper (first amount)
+	-- the Earnings screen's totals line: "1 ride . 50s . 0 min open . 0 riders asked" -> rides, copper (first amount)
 	local function shown(ctx)
 		local p, raw = find(ctx, "^%d+ rides? ")
 		if not p then return nil end

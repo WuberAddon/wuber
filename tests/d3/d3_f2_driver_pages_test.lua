@@ -50,14 +50,14 @@ test("d3 f2: a Demand row keeps its detail line the row's full width, under the 
 	ok(by - row.serve:GetHeight() >= sy, "the button ends (" .. by - row.serve:GetHeight() .. ") above where the detail line starts (" .. sy .. ")")
 end)
 
-test("d3 f2: the Crew 'my account' words have room for their 65 px", function()
+test("d3 f2: the Crew 'my window' words have room for their 72 px", function()
 	local _, a, _, D, Th = world()
 	local r = a.env.CreateFrame("Frame", nil, a.env.UIParent)
 	r.name, r.sub = Th.Text(r, "body", "white", "LEFT", "bold"), Th.Text(r, "caption", "muted", "LEFT", "regular")
 	a.W.Drive.BookShareOn = function() return true end
 	D.CrewOwnMark(r, { key = "Bob-Realm", name = "Bob", app = true })
 	ok(r.ownLabel, "the label is there")
-	ok(r.ownLabel:GetWidth() >= Th.MeasureText("my account", "caption", "medium"), "it is " .. r.ownLabel:GetWidth() .. " wide")
+	ok(r.ownLabel:GetWidth() >= Th.MeasureText("my window", "caption", "medium"), "it is " .. r.ownLabel:GetWidth() .. " wide")
 end)
 
 test("d3 f2: the Shift complete tiles keep their small label clear of the number, normal and squeezed", function()

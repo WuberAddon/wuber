@@ -395,7 +395,7 @@ local function paintTwo(w, c)
 					if dr("AddPlainHelper", r.person.name, (r.person.role or classRole(r.person.class)) == "lock" and "lock" or nil) then
 						toast(short(r.person.name) .. " added as a helper (without Wuber)", "info")
 					else
-						toast("Crew is full (" .. (tonumber(DR.CREW_MAX) or 8) .. ")", "warn")
+						toast("Crew is full (" .. (tonumber(DR.CREW_MAX) or 8) .. " players)", "warn")
 					end
 					D.Refresh(true)
 					w.paint()

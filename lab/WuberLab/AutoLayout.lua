@@ -937,6 +937,30 @@ do
 end
 
 ---------------------------------------------------------------------------
+-- tests/layout/extra_screens.lua (words244 C): the ended page of a rider removed from the group (done_removed)
+---------------------------------------------------------------------------
+
+do
+	local done = tourScreen("done_unpaid")
+	screen({ id = "done_removed", side = "rider", unfold = done and done.unfold, only = done and done.only,
+		title = "Ride ended: removed from the group while the summon box was up",
+		need = gate("the tour's done_unpaid", function() return haveTour("done_unpaid") end),
+		run = function(w)
+			local r = runOf("done_unpaid")(w)
+			if r ~= true then return r end
+			if type(w.ride) ~= "table" then return "no demo ride" end
+			w.ride.removed = true
+			w.Fire("RIDE")
+			w.UI.Show("done")
+			local scr = type(w.UI.state) == "table" and type(w.UI.state.screens) == "table" and w.UI.state.screens.done
+			if type(scr) == "table" and type(scr.update) == "function" then scr.update() end
+			local text = type(scr) == "table" and scr.unpaidText and scr.unpaidText:GetText() or ""
+			if not tostring(text):find("Removed from the group", 1, true) then return "the card does not show the line" end
+			return true
+		end })
+end
+
+---------------------------------------------------------------------------
 -- tests/layout/d4_h_screens.lua: "Don't serve again until" (note_serve, customers_serve)
 ---------------------------------------------------------------------------
 

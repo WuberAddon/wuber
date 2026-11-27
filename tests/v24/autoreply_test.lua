@@ -197,7 +197,7 @@ test("v24 autoreply: never to a seller, a price question, another place, no plac
 	T.clean(w)
 end)
 
-test("v24 autoreply: Invite public chat buyers on: invited as today, no whisper", function()
+test("v24 autoreply: Invite public chat riders on: invited as today, no whisper", function()
 	local w, a, DR, faction = openOrgDriver()
 	DR.opts().autoPublic = true
 	sayInTrade(w, faction, "Zoe Hart", "WTB summon to Orgrimmar")

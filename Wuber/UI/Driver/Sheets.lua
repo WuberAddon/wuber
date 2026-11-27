@@ -393,7 +393,7 @@ D.screens.raidpick = function(parent)
 	local function crewFull()
 		local max = tonumber(DR.CREW_MAX) or 8
 		local c = dr("char")
-		if type(c) ~= "table" or type(c.crew) ~= "table" or #c.crew >= max then toast("Crew is full (" .. max .. ")", "warn") end
+		if type(c) ~= "table" or type(c.crew) ~= "table" or #c.crew >= max then toast("Crew is full (" .. max .. " players)", "warn") end
 	end
 	local function onTick(r, on)
 		local p = r.p

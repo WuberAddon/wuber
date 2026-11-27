@@ -52,7 +52,7 @@ return function(Hunt)
 		Hunt.dial{ name = PREFIX[kind] .. key, about = about, phase = 20, default = "default", values = list }
 	end
 	local ONOFF = { { "on", true }, { "off", false } }
-	-- "Invite public chat buyers" turned on only through the warning: 2.3.2 clears a saved true unless the
+	-- "Invite public chat riders" turned on only through the warning: 2.3.2 clears a saved true unless the
 	-- player chose it (db.drive.publicChosen); publicV marks the migration done
 	local function public(ctx, id)
 		local d = sub(wdb(ctx), "drive")
@@ -82,7 +82,7 @@ return function(Hunt)
 
 	-- Driving options (WuberDB.drive.opts)
 	dial("opt", "autoInvite", "Invite riders who whisper me", ONOFF)
-	dial("opt", "autoPublic", "Invite public chat buyers (off unless chosen through the warning)", ONOFF, public)
+	dial("opt", "autoPublic", "Invite public chat riders (off unless chosen through the warning)", ONOFF, public)
 	dial("opt", "watchPublic", "Watch public chat for buyers", ONOFF)
 	dial("opt", "oneAtATime", "One rider at a time", ONOFF)
 	dial("opt", "autoAccept", "the driver's auto-accept option (Drive/Core.lua opts.autoAccept)", ONOFF)
