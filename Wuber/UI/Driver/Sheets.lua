@@ -310,7 +310,11 @@ D.screens.gflist = function(parent)
 	s.steps:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -8)
 	-- the note to type: big letters, never edited here (a label, not a box)
 	s.note = T.Para(b, "title", "white", 320, "bold")
-	T.Tip(s.note, WD.listButton, WD.steps)
+	-- a label takes no mouse, so the steps' tip sits on a frame laid over it
+	local hit = CreateFrame("Frame", nil, b)
+	hit:SetAllPoints(s.note)
+	hit:EnableMouse(true)
+	T.Tip(hit, WD.listButton, WD.steps)
 	s.enter = function()
 		local dest = K.Dest and K.Dest() or WD.here
 		s.text = string.format(WD.note, dest)
