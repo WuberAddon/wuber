@@ -329,8 +329,8 @@ return function(Hunt)
 	Hunt.promise{
 		id = "b4booking.driver_goes_offline_on_confirm",
 		area = "Booking",
-		text = "If the driver you are viewing on the booking screen goes offline, the screen says the driver went offline and disables Request.",
-		source = "Wuber/UI/Rider/Confirm.lua:455-466 (not d -> 'This driver went offline', request:SetActive(false))",
+		text = "If the driver you are viewing on the booking screen goes offline, the Request button says that driver has gone offline and is disabled.",
+		source = "Wuber/UI/Rider/Confirm.lua:588,623-625 (not UI.Driver(ui.confirmKey) -> why='gone', BLOCK_TEXT['gone']='That driver has gone offline', request:SetActive(false))",
 		kind = "scenario",
 		when = function(sit) return riderOnly(sit) and is(sit, "net", { one = true, many = true }) end,
 		check = function(ctx)
@@ -344,13 +344,12 @@ return function(Hunt)
 			peer.W.Driver.SetOnline(false)
 			ctx:note(d.name .. " goes offline")
 			ctx:advance(5)
-			-- Clear driver cache if needed by advancing past beacon drop or checking if offline notice arrived
 			if ctx.W.drivers and ctx.W.drivers[key(d.name)] then
 				ctx:advance(185)
 			end
 			if kit(ctx).screen ~= "confirm" then ctx:na("screen left confirm (" .. tostring(kit(ctx).screen) .. ")") end
-			if not has(ctx, "This driver went offline") then
-				ctx:fail("The driver went offline while you were on the booking screen, and it does not say 'This driver went offline'.", joined(ctx))
+			if not has(ctx, "That driver has gone offline") then
+				ctx:fail("The driver went offline while you were on the booking screen, and it does not say 'That driver has gone offline'.", joined(ctx))
 			end
 			if not (s.request and s.request.inactive) then
 				ctx:fail("The driver went offline on the booking screen, and Request is still active.", joined(ctx))
