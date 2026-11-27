@@ -69,8 +69,8 @@ listed in the Group Finder". Settings: "Group Finder (preview)" / "Find and be f
 ## In-game proof (the Lab step list, for the maintainer; none of this is automatable, it needs clicks and two characters)
 1. Lab probe: `/dump C_LFGList.GetAvailableActivities()` and each activity's `categoryID`; note which category a solo
    Warlock can list in. Put that id into `CATEGORY`.
-2. On the driver: turn the setting on, open Blizzard's Group Finder by its key, Create Listing, paste the draft note,
-   press Post. Wuber's driver tab says Listed. No "blocked" message, and Blizzard's own follow-up search shows the listing.
+2. On the driver: turn the setting on, open Blizzard's Group Finder by its key, go to List yourself, choose the Custom category, type the draft note by hand,
+   press List me. Wuber's driver tab says Listed. No "blocked" message, and Blizzard's own follow-up search shows the listing.
 3. On a second character with Wuber: press "Search the Group Finder". The driver's card shows the Group Finder line with
    the driver's zone. Blizzard's own browse panel still works after it.
 4. Driver presses Go offline: the listing disappears (Blizzard's eye stops). Repeat with "Remove my listing".
