@@ -1,4 +1,0 @@
-## Interface: 16001
-## Title: WuberFxOld (surface guard fixtures, tests only)
-
-Old.lua

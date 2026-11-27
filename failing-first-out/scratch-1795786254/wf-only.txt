@@ -1,4 +1,0 @@
-#80 Simple, folded: Save on the advert line leaves the screen and lists no other message
-#80 guard: Simple on a wide screen stays folded: no side pane, no message rows
-#80 guard: Advanced, folded: Save shows the list of messages
-#80 guard: Advanced, unfolded: the list stays beside the editor

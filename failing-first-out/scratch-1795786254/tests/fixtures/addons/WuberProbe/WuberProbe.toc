@@ -1,6 +1,0 @@
-## Interface: 16001
-## Title: WuberProbe
-## Notes: Test fixture (never shipped): declares a module whose dependency is missing, so the registry's login check has something to report.
-## Dependencies: Wuber
-
-Probe.lua

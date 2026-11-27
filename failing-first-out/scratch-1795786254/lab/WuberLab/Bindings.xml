@@ -1,8 +1,0 @@
-<Bindings>
-	<!-- Wuber Lab (developer only, never ship). Esc > Options > Keybindings > WuberLab.
-	     Huh: one "huh" line in the lab's log (the clock time, the last 30 s of the usage trail),
-	     then one screenshot. Trail.lua has the code (L.HuhKey). -->
-	<Binding name="WUBERLAB_HUH" header="WUBERLAB" runOnUp="false">
-		if WuberLab and WuberLab.HuhKey then WuberLab.HuhKey() end
-	</Binding>
-</Bindings>
