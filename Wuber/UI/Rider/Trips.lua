@@ -833,6 +833,9 @@ function Mod.trimCells()
 		if tr.gridTop then mCut = tr.gridTop - 32 < hi and tr.gridTop - 6 > lo end
 		hCut = tr.histTop < hi and tr.histTop + 26 > lo
 	end
+	-- folded: no medal shown means no title and no card (never a heading over an empty card)
+	local emptyCard = not tr.wide and tr.gridTop and not anyCell
+	if emptyCard then mCut = true end
 	tr.mHead:SetShown(adv and not mCut)
 	tr.mCount:SetShown(adv and not mCut)
 	tr.hHead:SetShown(not hCut)
@@ -845,6 +848,8 @@ function Mod.trimCells()
 	-- (r50 H24-01 with r3e) the first medal row can be out whole at the top of the page: the cue then sits
 	-- under the Medals heading, not under a blank band where the row was
 	if not tr.wide and tr.gridTop and adv and not mCut then seen(tr.gridTop - 6 - y) end
+	-- the card left out whole: the cue sits under what lies above it (chips, Rainchecks), not over a blank band
+	if emptyCard and adv then seen(tr.gridTop - 50 - y) end
 	if not tr.wide and tr.wrapTop and tr.wrapCard and tr.wrapCard:IsShown() then seen(tr.wrapTop + 104 - y) end
 	-- the cue sits right under the last whole thing shown, never over a blank band the rows left out (the
 	-- cue's band is the view's bottom 30; a row too tall for the room is out whole, so blank can lie above it)
