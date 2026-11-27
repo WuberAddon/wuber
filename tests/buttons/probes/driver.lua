@@ -204,7 +204,7 @@ return {
 			local scr = ctx.W.UI.drive and ctx.W.UI.drive.screens and ctx.W.UI.drive.screens.customers
 			return scr and scr.search and scr.search.edit:HasFocus() == true, "expected Customers search EditBox to have focus"
 		end },
-	{ id = "(no label) Customers.lua <EditBox> @Customers.lua", srcMatch = "Customers%.lua:832", on = "customers",
+	{ id = "(no label) Customers.lua <EditBox> @Customers.lua", srcMatch = "Customers%.lua:833", on = "customers",
 		does = "Focuses the Customers search EditBox directly.",
 		check = function(ctx)
 			local scr = ctx.W.UI.drive and ctx.W.UI.drive.screens and ctx.W.UI.drive.screens.customers
