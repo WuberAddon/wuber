@@ -504,7 +504,8 @@ D.screens.note = function(parent)
 	local b = sh.body
 	s.facts = T.Text(b, "caption", "glow", "LEFT", "medium")
 	s.facts:SetPoint("TOPLEFT", b, "TOPLEFT", 20, -2)
-	s.facts:SetWidth(320) T.Lines(s.facts, 2) -- (#81) a second line for the tip words (kept on one line: a click test names Customers.lua:508)
+	s.facts:SetWidth(320)
+	T.Lines(s.facts, 2) -- (#81) the tip words may take a second line; the note box sits one line lower
 	s.field = T.Field(b, 320, 92, { multi = true, max = 200, size = "sub",
 		placeholder = "Anything you want to remember (200 letters)", onChange = function(t) s.cap(t) end })
 	s.cap = capNote(s.field)

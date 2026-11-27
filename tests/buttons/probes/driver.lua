@@ -164,7 +164,7 @@ return {
 			local sh = ctx.W.Driver.ui and ctx.W.Driver.ui.sheets and ctx.W.Driver.ui.sheets.note
 			return sh and sh.field and sh.field.edit:HasFocus() == true, "expected Note EditBox to have focus"
 		end },
-	{ id = "(no label) Customers.lua <EditBox> @Customers.lua", srcMatch = "Customers%.lua:508", on = "note",
+	{ id = "(no label) Customers.lua <EditBox> @Customers.lua", srcMatch = "Customers%.lua:509", on = "note",
 		does = "Focuses the Note EditBox directly.",
 		check = function(ctx)
 			local sh = ctx.W.Driver.ui and ctx.W.Driver.ui.sheets and ctx.W.Driver.ui.sheets.note
