@@ -269,7 +269,7 @@ local GATE_WHY = {
 -- holds it back; else one line naming the first of maybeCoach's rules that does. Read-only.
 function Mod.Why()
 	if ui.coaching or not W.db or W.db.coach == true then return nil end
-	if ui.coachTried then return "First-open guide: stopped for this session. The Replay button on the Tips row of Settings, Riding, starts it again." end
+	if ui.coachTried then return "First-open guide: stopped for this session. The Replay button on the Login tips row of Settings, Riding, starts it again." end
 	local win = ui.win
 	if not (win and win:IsShown()) then return "First-open guide: it shows when you open Wuber." end
 	if ui.splashing or ui.settingsOpen or ui.tab ~= "Ride" or ui.screen ~= "home" then

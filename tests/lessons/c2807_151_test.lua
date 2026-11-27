@@ -148,14 +148,14 @@ test("c2807 #151 6 the block reason box says what Block and tell them does", fun
 	T.clean(w)
 end)
 
-test("c2807 #151 7 /wuber why names where Replay is: the Tips row of Settings, Riding", function()
+test("c2807 #151 7 /wuber why names where Replay is: the Login tips row of Settings, Riding", function()
 	local w, r = homeWorld()
 	local Coach = r.W.Mod("UI.Coach")
 	r.W.db.coach = false
 	r.W.UI.state.coaching = nil
 	r.W.UI.state.coachTried = true
 	local line = Coach.Why()
-	ok(line and line:find("The Replay button on the Tips row of Settings, Riding, starts it again.", 1, true), "why line: " .. tostring(line))
+	ok(line and line:find("The Replay button on the Login tips row of Settings, Riding, starts it again.", 1, true), "why line: " .. tostring(line))
 	T.clean(w)
 end)
 

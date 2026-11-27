@@ -34,7 +34,7 @@ return function(Hunt)
 	Hunt.promise{
 		id = "leads.c052_violet_only_when_closed",
 		area = "Earnings",
-		text = "On the Earnings heatmap a violet square means buyers asked while you were closed; an hour you were open is never violet.",
+		text = "On the Earnings heatmap a violet square means riders asked while you were closed; an hour you were open is never violet.",
 		source = "Google lead C052: UI/Driver/Earnings.lua:946-947 (tooltip) vs 1011-1013 (heatColour)",
 		kind = "scenario",
 		needs = { phone = "drive_earnings" },
@@ -54,7 +54,7 @@ return function(Hunt)
 			local c = colourOf(ctx, b)
 			local r, g, bl = ctx.W.Theme.RGB("accent")
 			if c and math.abs(c[1] - r) < 0.01 and math.abs(c[2] - g) < 0.01 and math.abs(c[3] - bl) < 0.01 then
-				ctx:fail("You were open this whole hour, a buyer asked and you earned nothing: the heatmap paints the hour violet, which its tooltip says means buyers asked while you were closed.")
+				ctx:fail("You were open this whole hour, a buyer asked and you earned nothing: the heatmap paints the hour violet, which its tooltip says means riders asked while you were closed.")
 			end
 		end,
 	}

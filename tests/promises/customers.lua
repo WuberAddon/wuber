@@ -1,6 +1,6 @@
 -- Promises about the driver's CUSTOMER BOOK: one note per rider, the Gifted stamp, the rides the list shows and who
 -- may see a note. (owner crewearn). Written from what the screens tell the driver: the Note box ("One note per rider,
--- 200 letters at most ... Only you and the crew windows you marked as your own accounts see it; the rider never does."),
+-- 200 letters at most ... Only you and your own windows see it; the rider never does."),
 -- Save ("To remove one, empty the box and click Save twice"), Gifted ("it stamps today's date, so you never gift the
 -- same person twice"), the Customers page ("Riders who pay you show here, the latest first").
 return function(Hunt)
@@ -238,7 +238,7 @@ end
 		id = "customers.notes_stay_private",
 		area = "Customers",
 		text = "A note is only yours: a crew window you have not marked as your own account never gets it, and no rider hears it.",
-		source = "tooltip (Note: Only you and the crew windows you marked as your own accounts see it; the rider never does)",
+		source = "tooltip (Note: Only you and your own windows see it; the rider never does)",
 		kind = "scenario",
 		when = function(sit) return sit.role == "friend" or sit.role == "crew" end,
 		check = function(ctx)

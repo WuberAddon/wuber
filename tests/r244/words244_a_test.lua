@@ -42,6 +42,6 @@ test("words244 A8: Do nothing tip says toast", function()
 	ok(has("Wuber/UI/Settings/Rows.lua", "the rider stays unblocked and you only get a toast."), "tip")
 end)
 
-test("words244 A9: raid alert says the raid leader left", function()
-	ok(has("Wuber/Drive/Raid.lua", "Raid summons stopped: the raid leader left the group."), "alert")
+test("words244 A9: raid alert says the crew captain left", function()
+	ok(has("Wuber/Drive/Raid.lua", "Raid summons stopped: the crew captain left the group."), "alert")
 end)

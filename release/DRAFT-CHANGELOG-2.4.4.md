@@ -6,9 +6,11 @@ No entry below adds a new addon file, so no **[FULL RESTART]** mark applies this
 
 ## Words that changed
 The maintainer answered a words page, and these lines now say what they mean:
-- Settings, Driving: "Invite public chat buyers" is now "Invite public chat riders". Its tooltip now says Wuber "asks you once when you switch this on" (it used to say it "asks first", which sounded like before every invite). The `/wuber drive` line, the Advert button tooltip, Earnings ("n riders asked") and the `/wuber stats` line say "riders" too.
+- Settings, Driving: "Invite public chat buyers" is now "Invite public chat riders". Its tooltip now says Wuber "asks you once when you switch this on" (it used to say it "asks first", which sounded like before every invite). The `/wuber drive` line, the Advert button tooltip, Earnings ("n riders asked") and the `/wuber stats` line say "riders" too. So do the rest of Earnings (the heat-map square line, its help line, the "Try this hour" tooltip and the stats line) and the tooltip of the public channels Wuber reads. The older 2.4.3 What's new card is unchanged.
+- The `/wuber why` line names "the Login tips row of Settings, Riding" (it said "the Tips row").
+- The note tooltip, the note privacy line and the nearby tooltips say "your own windows" (they said "the crew windows you marked as your own accounts").
 - The "Do nothing" choice for riders who don't pay says "you only get a toast" instead of "a note".
-- The raid alert says "Raid summons stopped: the raid leader left the group." (it said "the runner").
+- The raid alert says "Raid summons stopped: the crew captain left the group." (it said "the runner", then "the raid leader").
 - The Settings row "Tips" is now "Login tips", and the line shown when tips are off says "Tips are off. Turn Login tips back on in Settings > Riding, or type /wuber tips."
 - The Skip the bird line says "Skip the bird: off. Turn Flight offers on in Settings, Riding."
 - The "Crew is full" message says "Crew is full (8 players)".

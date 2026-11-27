@@ -841,7 +841,7 @@ local function buildDriving(drive, dy)
 	st.notes = st.notes or {}
 	dy, st.notes.autoReply = noteUnder(st.controls["drive.autoReply"], dy, NOTES.replyNote) -- (quick wins)
 	local cr
-	local watchTip = "The public channels Wuber reads for buyers. Usually: services, trade, lookingforgroup, world, general."
+	local watchTip = "The public channels Wuber reads for riders. Usually: services, trade, lookingforgroup, world, general."
 	local adTip = "Where your adverts go, in turn: the one posted to longest ago first. Usually services, trade, lookingforgroup."
 	cr, dy = row(drive, dy, "Chat channels", "", watchTip .. " " .. adTip, 164)
 	local lbl1 = T.Text(cr, "caption", "muted", "LEFT", "medium")

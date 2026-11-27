@@ -681,7 +681,7 @@ D.screens.earnings = function(parent)
 	T.Tip(dash, "Gold per open hour", function()
 		local tot = s.tot or {}
 		return "Gold earned divided by the hours you were open (not paused): the number to beat.\n\n"
-			.. ("Buyers seen asking: %d for your place, %d in all. Wuber requests: %d (%d declined). Most rival drivers online: %d.")
+			.. ("Riders seen asking: %d for your place, %d in all. Wuber requests: %d (%d declined). Most rival drivers online: %d.")
 			:format(N(tot.match) or 0, N(tot.asks) or 0, N(tot.wreq) or 0, N(tot.wdec) or 0, N(tot.rivals) or 0)
 	end)
 	local h = buildChart(s, dash, 146)
@@ -713,7 +713,7 @@ D.screens.earnings = function(parent)
 	s.top = chip(c)
 	T.Tip(s.top, "Top window", "Your best three hours in a row, by gold per open hour. Open then.")
 	s.try = chip(c)
-	T.Tip(s.try, "Try this hour", "Buyers asked for summons at this hour while you were closed.")
+	T.Tip(s.try, "Try this hour", "Riders asked for summons at this hour while you were closed.")
 	s.reset = CreateFrame("Button", nil, c)
 	s.reset:SetSize(84, 30)
 	s.reset:RegisterForClicks("LeftButtonUp")
@@ -985,7 +985,7 @@ end)
 local HM_LEFT, HM_CELL, HM_GAP = 36, 15, 1
 -- the heatmap's tip: the original sentence with only the colour words changed (one local so it can be swapped)
 local HEAT_TIP = "Each square is one hour of one weekday: the stronger the violet, the more you earned per hour open. "
-	.. "Outlined squares: buyers asked while you were closed. Tap a square for its numbers."
+	.. "Outlined squares: riders asked while you were closed. Tap a square for its numbers."
 local PILL_PAD = 14 -- the tapped hour's words to its pill's ends
 local HM_ORDER = { 1, 2, 3, 4, 5, 6, 0 } -- Mon .. Sun (wday 0 = Sunday, as DR.WDAYS)
 local HM_DAYS = { [0] = "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
@@ -1164,7 +1164,7 @@ function D.HeatInfo(hm, cell)
 			if e.open >= HEAT_ENOUGH then bits[#bits + 1] = gph(e.copper / (e.open / 60)) .. "/h" end -- (round 13) as the chart's "g/h"
 			bits[#bits + 1] = plural(e.rides, "ride")
 			bits[#bits + 1] = "open " .. hoursText(e.open)
-			if e.asks > 0 then bits[#bits + 1] = plural(e.asks, "buyer") .. " asked" end
+			if e.asks > 0 then bits[#bits + 1] = plural(e.asks, "rider") .. " asked" end
 			text = table.concat(bits, " · ")
 		end
 	end
