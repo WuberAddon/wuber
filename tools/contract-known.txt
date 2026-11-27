@@ -34,3 +34,12 @@ ZONE_CHANGED_INDOORS	sub-zone and zone changes; the recordings hold none of thes
 ZONE_CHANGED_NEW_AREA	sub-zone and zone changes; the recordings hold none of these specific events; handlers only refresh the place; not yet recorded
 MAIL_INBOX_UPDATE	mailbox events (Drive/Mail.lua:269); the handler only reads the inbox (DR.MailScan, read-only mail since the Decisions round) and sends nothing; no mailbox was opened while WuberRec recorded; not yet recorded (r51 gate edit)
 MAIL_SHOW	mailbox events (Drive/Mail.lua:268); the handler only reads the inbox (DR.MailScan) and sends nothing; no mailbox was opened while WuberRec recorded; not yet recorded (r51 gate edit)
+CANCEL_SUMMON	Net/Rides.lua summon-cancel handler; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+CHAT_MSG_SAY	Drive/Queue.lua and Net/Outreach.lua listen for say chat; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+CONFIRM_SUMMON	Core/FlightTimes.lua and Net/Rides.lua summon confirm; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+GLOBAL_MOUSE_UP	UI/Map/Base.lua map drag end; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+GROUP_LEFT	Drive/Queue.lua and Drive/Raid.lua leave-group handlers; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+LFG_LIST_ACTIVE_ENTRY_UPDATE	Net/GroupFinder.lua group-finder listing; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+LFG_LIST_SEARCH_FAILED	Net/GroupFinder.lua group-finder search; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+LFG_LIST_SEARCH_RESULTS_RECEIVED	Net/GroupFinder.lua group-finder search; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
+TRADE_REQUEST_CANCEL	Net/Rides.lua trade request handler; listed as known 27 Nov 2026 (gauntlet slimming decision); no recording yet: it leaves this list once a WuberRec recording shows it
