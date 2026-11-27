@@ -14,7 +14,9 @@ local function sh(cmd)
 end
 local function native(path) return windows and path:gsub("/", "\\") or path end
 local guard = T.dir .. "/../tools/arch-guard.lua"
-local repo = T.dir .. "/out/arch-guard-selftest/repo"
+local repoBase = T.dir .. "/out/arch-guard-selftest"
+local repo = repoBase .. "/repo"
+local runNo = 0
 local function git(args)
 	return sh('git -C "' .. native(repo) .. '" -c core.hooksPath=none-here -c user.name="Anita Lift" -c user.email=anita-lift' .. string.char(64) .. 'users.noreply.github.com ' .. args)
 end
@@ -30,6 +32,11 @@ local function runGuard(env)
 end
 
 local function fresh()
+	-- A new folder per call (never reused, nothing deleted): a leftover branch or file from an earlier run or another shard
+	-- cannot change what the guard sees.
+	runNo = runNo + 1
+	repo = repoBase .. "/r" .. tostring(os.time()) .. "-" .. tostring(math.floor(os.clock() * 1000000)) .. "-" .. runNo
+	sh(windows and ('mkdir "' .. native(repoBase) .. '" 2>nul') or ('mkdir -p "' .. repoBase .. '"'))
 	sh(windows and ('mkdir "' .. native(repo) .. '"') or ('mkdir -p "' .. repo .. '"'))
 	git("init -q")
 	local stamp = tostring(os.time()) .. tostring(math.floor(os.clock() * 1000))
@@ -71,6 +78,33 @@ test("arch-guard: an uncommitted edit of ARCHITECTURE.md fails too; the maintain
 	ok(not good and out:find("FAIL", 1, true), "working-tree edit fails: " .. out)
 	local out2, good2 = runGuard("WUBER_ARCH_REGEN=1")
 	ok(good2 and out2:find("WUBER_ARCH_REGEN=1", 1, true), "regeneration passes and says so: " .. out2)
+end)
+
+local function fakeMap()
+	-- map.lua is found by --root; its --check reads ARCHITECTURE.md relative to the working folder, so the guard's cwd matters:
+	-- the fake reads the path next to itself instead.
+	sh(windows and ('mkdir "' .. native(repo .. "/tools") .. '"') or ('mkdir -p "' .. repo .. '/tools"'))
+	put("tools/map.lua", 'local d = (arg[0]:gsub("\\\\", "/"):match("^(.*)/tools/[^/]*$")) or "."\nlocal f = io.open(d .. "/ARCHITECTURE.md", "rb")\nlocal s = f and f:read("*a")\nif f then f:close() end\nif s ~= "MAP\\n" then os.exit(1) end\n')
+end
+
+test("arch-guard: a commit whose only change to ARCHITECTURE.md is what map.lua --check accepts passes", function()
+	fresh()
+	fakeMap()
+	put("ARCHITECTURE.md", "MAP\n")
+	git("add -A")
+	git("commit -q -m regen")
+	local out, good = runGuard()
+	ok(good and out:find("arch-guard: PASS", 1, true) and out:find("map.lua --write produces", 1, true), "regeneration passes: " .. out)
+end)
+
+test("arch-guard: with map.lua present, a hand-edited ARCHITECTURE.md still fails", function()
+	fresh()
+	fakeMap()
+	put("ARCHITECTURE.md", "hand edited\n")
+	git("add -A")
+	git("commit -q -m hand")
+	local out, good = runGuard()
+	ok(not good and out:find("arch-guard: FAIL", 1, true), "stale/hand edit fails: " .. out)
 end)
 
 test("arch-guard: quick-check.sh runs it", function()
