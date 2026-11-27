@@ -1,0 +1,12 @@
+# The world-map taint cases Wuber has today (tests/lib/maptaint.lua, rules a and b; decisions round, group J).
+# One case a line: kind | file under Wuber/ | the source line, trimmed. "frame": a frame created with a parent under
+# WorldMapFrame. "click": an OnClick / OnMouseDown / OnMouseUp script set or hooked on a frame under the map.
+# The fake game fails any test in which Wuber does one of these from a line NOT listed here. Do not add a line to make
+# a test pass: make the new frame with no parent and SetParent it afterwards, and take clicks without a click script
+# (BUGS-NEXT PST-01). Remove a line when its case is gone (tests/dec/dec_j_maptaint_test.lua fails on a stale line).
+# WUBER_MAPTAINT_LOG=<file> on a test run writes every case seen.
+click | UI/Map/Map.lua | b:SetScript("OnClick", function()
+click | UI/Map/Map.lua | b:SetScript("OnClick", function(self)
+click | UI/Map/Map.lua | pcall(sc.HookScript, sc, "OnMouseDown", function(...) W.Safe("map click", MouseDown, ...) end)
+click | UI/Map/Map.lua | pcall(sc.HookScript, sc, "OnMouseUp", function(...) W.Safe("map click", MouseUp, ...) end)
+click | UI/Map/Pins.lua | pin:SetScript("OnClick", function(self)

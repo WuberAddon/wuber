@@ -1,0 +1,17 @@
+## Interface: 16001
+## Title: Wuber
+## Notes: Call a summon like a ride: see which Warlocks are online, where they are and their price, and request one with a click. Warlocks can drive too.
+## Author: Wuber
+## Version: 1.0.0
+## IconTexture: Interface\AddOns\Wuber\Media\icon
+## SavedVariables: WuberDB
+## OptionalDeps: OpenMap
+
+Core.lua
+Places.lua
+Net.lua
+Theme.lua
+UI.lua
+Map.lua
+Driver.lua
+Commands.lua

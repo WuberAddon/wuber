@@ -1,0 +1,20 @@
+# Lines that really fooled Wuber, one per row, with the answer it must give now.
+# Row: expect<TAB>line<TAB>why (the why is for people, the test ignores it). Lines starting with # are skipped.
+# expect is what DR.Careful(line, "public") answers for a driver open in Orgrimmar with watch public chat on:
+#   ignore = not a buyer (nothing logged or listed, no reply)   lead = waits as a clickable lead   invite = a clear request
+# To add a row: when a real line fooled Wuber and you have fixed it, add it here with the answer it should give.
+# Use the neutral names the tests use (Orgrimmar, Undercity), never a real player or character name.
+# Not the chat gauntlet (tests/fixtures/gauntlet): that is a big generated sample; this is the short kept list.
+ignore	Port Orgrimmar	the bare place name in Trade (an example the author gave)
+ignore	WTS Port Orgrimmar 2g, WTB mage portal to SW	a seller's advert that also says WTB
+lead	LF sleeping bag summons	real line: a summon of a thing, not a ride; wait as a lead, never invite
+ignore	WTS summons to Orgrimmar 1g, whisper me inv	a seller's advert taken for a buyer
+ignore	WTS summons to Orgrimmar 1g, w me	a seller's advert, short form
+ignore	[Wuber] Summons to Orgrimmar, whisper me	another driver's tagged advert is never a buyer
+ignore	wtb support org	AUD-61: support holds the letters of port, it is not a topic word
+ignore	lf important org	AUD-61: a plain word that holds sum or port
+ignore	WTB summon to Undercity	a buyer for a place this driver does not serve: logged as demand, never listed
+ignore	|cff9d9d9d|Hitem:12345::::::::60:::::|h[Portal Scroll: Orgrimmar]|h|r wtb summon to Orgrimmar pls	LRN-06: a linked item in public chat
+ignore	WTB summon to Orgrimmar |cff71d5ff|Hspell:23161|h[Summon Dreadsteed]|h|r	LRN-06: a linked spell
+invite	WTB summon to Orgrimmar	control: a plain buyer is still read
+lead	Any summons to org?	control: a question with no clear ask waits as a lead

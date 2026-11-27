@@ -1,0 +1,14 @@
+# scrub-patterns.public.txt: generic patterns only. Safe to publish (no personal words). Used by CI.
+email-address	[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+
+drive-path	(?<![A-Za-z0-9])[A-Za-z]:[\\/]
+windows-user-path	[Uu]sers[\\/][A-Za-z0-9_.-]+[\\/]
+wtf-account-folder	WTF[\\/]Account[\\/][A-Za-z0-9_#-]+
+game-account-id	[0-9]{6,12}#[0-9]
+player-guid	Player-[0-9]+-[0-9A-F]{6,}
+github-token	gh[opsu]_[A-Za-z0-9]{20,}
+generic-key	(AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|Bearer [A-Za-z0-9._-]{20,})
+ALLOW	noreply@users[.]noreply[.]github[.]com
+# added by make-clean-copy.py: exempt exactly this text
+ALLOW	C:[\\/]+Program Files \(x86\)[\\/]+World of Warcraft
+ALLOW	[A-Za-z0-9._%+-]+@example\.(com|org|net)
+ALLOW	[0-9]{3,5}x[0-9]{3,5}@[0-9]+\.[0-9]+

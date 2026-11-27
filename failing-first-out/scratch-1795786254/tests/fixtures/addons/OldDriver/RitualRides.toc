@@ -1,0 +1,7 @@
+## Interface: 16001
+## Title: Old driver stand-in (tests only)
+## Notes: A small stand-in for an old driver addon, written for the Wuber tests.
+## Version: 1.4.1
+## SavedVariables: RitualRidesDB
+
+StandIn.lua
