@@ -471,6 +471,7 @@ return function(Hunt)
 			ctx:mod("UI.Rider.Cards").fillCard(c, d, 0, false)
 			local shownSafe = c.shield and ctx:visible(c.shield)
 			target.danger, target.dangerSecs, target.dangerAt = oldD, oldS, oldA
+			ctx:mod("UI.Rider.Cards").fillCard(c, d, 0, false)
 			if not shownHot then
 				ctx:fail("A driver card with PvP danger level 2 did not show its shield icon.", c.key)
 			end
@@ -530,20 +531,36 @@ return function(Hunt)
 			local y, m = t.year, t.month - 1
 			if m < 1 then y, m = y - 1, 12 end
 			local ts = env.time({ year = y, month = m, day = 15, hour = 12, min = 0, sec = 0 })
+			local oldRides = ctx.W.db.rides
+			local oldDrive = ctx.W.db.drive
+			local oldLog = oldDrive and oldDrive.log
 			ctx.W.db.rides = {}
 			ctx.W.db.drive = ctx.W.db.drive or {}
 			ctx.W.db.drive.log = {
 				string.format("%d,5000,Bob,Orgrimmar,direct,5000", ts),
 			}
-			if not WM.Open(y, m) then ctx:cannot("could not open driver-only Wrapped") end
-			local st = WM.Story()
-			if not st or not st.slides then ctx:cannot("Wrapped story has no slides") end
-			for _ = 1, #st.slides do WM.Next() end
-			ctx:advance(0.5)
-			if st.share and ctx:visible(st.share) then
-				ctx:fail("On a driver-only Wrapped month (0 rider summons), the Share button still appeared on the summary slide.", seen(ctx))
+			local okOpen = WM.Open(y, m)
+			local st = okOpen and WM.Story()
+			local shareShown = false
+			if st and st.slides then
+				for _ = 1, #st.slides do WM.Next() end
+				ctx:advance(0.5)
+				shareShown = st.share and ctx:visible(st.share)
 			end
 			WM.Close()
+			ctx.W.db.rides = oldRides
+			if oldDrive then
+				oldDrive.log = oldLog
+			else
+				ctx.W.db.drive = nil
+			end
+			if ctx.W.UI.UpdateTrips then ctx.W.UI.UpdateTrips() end
+			ctx:advance(0.3)
+			if not okOpen then ctx:cannot("could not open driver-only Wrapped") end
+			if not st or not st.slides then ctx:cannot("Wrapped story has no slides") end
+			if shareShown then
+				ctx:fail("On a driver-only Wrapped month (0 rider summons), the Share button still appeared on the summary slide.", seen(ctx))
+			end
 		end,
 	}
 
@@ -597,6 +614,7 @@ return function(Hunt)
 				local vis = ctx:visible(pill)
 				currentLine = nil
 				Share.Sync()
+				pill:Hide()
 				if vis then
 					ctx:fail("While solo, a party Share pill was still visible.", tostring(Share.State(pill)))
 				end
@@ -605,6 +623,7 @@ return function(Hunt)
 			if not ctx:visible(pill) or Share.State(pill) ~= "ok" then
 				currentLine = nil
 				Share.Sync()
+				pill:Hide()
 				ctx:fail("While in a group out of combat, the Share pill was not ready.", tostring(Share.State(pill)))
 			end
 			ctx.w:enterCombat(ctx.me)
@@ -617,6 +636,7 @@ return function(Hunt)
 			local outCbtOk = Share.State(pill) == "ok" and pill.label and pill.label:GetText() == "Share"
 			currentLine = nil
 			Share.Sync()
+			pill:Hide()
 			if not inCbtOk then
 				ctx:fail("In combat, the Share pill did not switch to 'Share after combat'.", tostring(Share.State(pill)))
 			end
@@ -651,6 +671,7 @@ return function(Hunt)
 			local m3 = Share.Macro(pill)
 			line = nil
 			Share.Sync()
+			pill:Hide()
 			if m1 ~= nil then
 				ctx:fail("Share allowed a line containing the standalone word 'gold'.", tostring(m1))
 			end
