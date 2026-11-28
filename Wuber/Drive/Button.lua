@@ -209,6 +209,10 @@ local function placeDocked(b, slot)
 	-- slot. Frame levels stop at 10000.
 	local strata = "FULLSCREEN_DIALOG"
 	local level = math.min(10000, ((win and N(win:GetFrameLevel())) or 0) + 100)
+	-- the open world map too: it is raised to the top of its layer when the game opens it, which may be after the
+	-- button was placed (the Drive tab up, then the map): the button goes above it, and back when the map shuts
+	local kit = W.Mod("UI.Kit")
+	if kit and kit.OverMap then strata, level = kit.OverMap(strata, level) end
 	local sig = ("D%.1f:%.1f:%.1f:%.1f:%.4f:%s:%d"):format(l, bt, w, h, s, tostring(strata), level)
 	if state.sig ~= sig then
 		b:SetFrameStrata(strata)
@@ -527,7 +531,9 @@ local function placeFloating(b)
 	local free = not (type(pos) == "table" and type(pos[1]) == "string")
 	local key = type(pos) == "table" and table.concat({ tostring(pos[1]), tostring(pos[2]), tostring(pos[3]), tostring(pos[4]) }, ":") or "centre"
 	settleWindow(true)
-	local sig = ("F%s:%.3f:%s"):format(key, s, tostring(state.winKey))
+	local kit = W.Mod("UI.Kit")
+	local _, _, mapKey = kit and kit.OverMap and kit.OverMap("MEDIUM", 0)
+	local sig = ("F%s:%.3f:%s:%s"):format(key, s, tostring(state.winKey), tostring(mapKey or ""))
 	if state.sig == sig then return end
 	b:SetFrameStrata("MEDIUM")
 	-- (S1) only when the scale really changes: this re-places while the window folds
@@ -562,8 +568,11 @@ local function placeFloating(b)
 	-- window at the bottom right), and the header buttons lifted over a sheet's dim (UI.Window, 700) would too
 	if over then
 		local win = WuberFrame
-		b:SetFrameStrata("FULLSCREEN_DIALOG")
-		b:SetFrameLevel(math.min(10000, math.max(OVER_LEVEL, ((win and N(win:GetFrameLevel())) or 0) + 100)))
+		local strata, level = "FULLSCREEN_DIALOG", math.min(10000, math.max(OVER_LEVEL, ((win and N(win:GetFrameLevel())) or 0) + 100))
+		local kit = W.Mod("UI.Kit")
+		if kit and kit.OverMap then strata, level = kit.OverMap(strata, level) end
+		b:SetFrameStrata(strata)
+		b:SetFrameLevel(level)
 	end
 	state.sig = sig
 	refit(b)
