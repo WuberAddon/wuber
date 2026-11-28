@@ -1,0 +1,6 @@
+# tests/fixtures/client/guess-ratchet.txt: count of evidence = "guess" rows per family in tests/fixtures/client/api/.
+# Lower these numbers as guesses are proved; never raise them.
+chat = 7
+frames = 31
+units = 15
+world = 38
