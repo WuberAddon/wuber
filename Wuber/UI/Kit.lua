@@ -543,6 +543,28 @@ Mod.ISLAND_W = ISLAND_W
 Mod.LIST_TOP = LIST_TOP
 Mod.MAP_H = MAP_H
 Mod.N = N
+
+-- (the map in front) A frame that has to be drawn over the game's open world map: given the strata and level it wants, the
+-- strata and level that also beat the map where the map is shown (a map raised to the top of FULLSCREEN_DIALOG, say, by the
+-- game opening it after the frame was placed), plus a key for the layout signature so a place is redone when the map's layer
+-- changes. Levels stop at 10000. Layer changes of a secure frame are the caller's, out of combat only.
+local STRATA_RANK = { BACKGROUND = 1, LOW = 2, MEDIUM = 3, HIGH = 4, DIALOG = 5, FULLSCREEN = 6, FULLSCREEN_DIALOG = 7, TOOLTIP = 8 }
+function Mod.OverMap(strata, level)
+	local map = type(WorldMapFrame) == "table" and WorldMapFrame or nil
+	if not (map and type(map.IsShown) == "function" and type(map.GetFrameStrata) == "function" and type(map.GetFrameLevel) == "function") then
+		return strata, level, ""
+	end
+	local okS, shown = pcall(map.IsShown, map)
+	if not okS or W.Plain(shown) ~= true then return strata, level, "" end
+	local okA, ms = pcall(map.GetFrameStrata, map)
+	local okL, ml = pcall(map.GetFrameLevel, map)
+	ms, ml = okA and W.Plain(ms) or nil, okL and N(ml) or nil
+	local mr, sr = STRATA_RANK[ms or ""], STRATA_RANK[strata] or 0
+	if not (mr and ml) then return strata, level, "" end
+	if mr > sr then strata, sr = ms, mr end
+	if mr == sr and level <= ml then level = math.min(10000, ml + 100) end
+	return strata, level, ("M%s:%d"):format(tostring(ms), ml)
+end
 Mod.PAD = PAD
 Mod.PHONE_H = PHONE_H
 Mod.PHONE_W = PHONE_W

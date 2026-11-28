@@ -193,9 +193,13 @@ local function placeOverlay(b, pill)
 	local sig = ("%.1f:%.1f:%.1f:%.1f:%.4f"):format(l, bt, w, h, s)
 	local base = math.max(N(ui.win and ui.win:GetFrameLevel()) or 0, N(pill.GetFrameLevel and pill:GetFrameLevel()) or 0)
 	local level = math.min(10000, base + 100) -- (levels stop at 10000)
-	if b.level ~= level then
-		b:SetFrameLevel(level)
-		b.level = level
+	-- over the open world map too (the game raises a map that opens after the overlay was placed)
+	local strata, mapLevel = "FULLSCREEN_DIALOG", level
+	strata, mapLevel = KitMod.OverMap(strata, level)
+	if b.level ~= mapLevel or b.strata ~= strata then
+		if b.strata ~= strata then b:SetFrameStrata(strata) end
+		b:SetFrameLevel(mapLevel)
+		b.level, b.strata = mapLevel, strata
 	end
 	if b.sig ~= sig then
 		b:SetScale(s)
