@@ -537,6 +537,21 @@ local function place(f)
 	holder:SetPoint("BOTTOMRIGHT", win, "BOTTOMRIGHT", 0, f.foot)
 end
 
+-- (run 2) the sheet is drawn over the window's own page, and over the game's world map too: the window rides at
+-- FULLSCREEN_DIALOG while the map is open (UI.Raise), so a sheet left at DIALOG sat under the window's page and the map
+local function sheetStrata(win)
+	local s = win and type(win.GetFrameStrata) == "function" and win:GetFrameStrata() or nil
+	if s == "FULLSCREEN_DIALOG" or s == "TOOLTIP" then return "FULLSCREEN_DIALOG" end
+	return "DIALOG"
+end
+local function followWindow(f)
+	local want = sheetStrata(f.win)
+	if f.holder:GetFrameStrata() ~= want then
+		f.holder:SetFrameStrata(want)
+		f.holder:SetFrameLevel(400)
+	end
+end
+
 local function frame()
 	local win = KitMod.ui.win
 	if not win then return nil end
@@ -544,7 +559,7 @@ local function frame()
 	local holder = CreateFrame("Frame", "WuberBug", win)
 	-- (design 2) the tabs stay free below it; (E3b-01) the header buttons stay free through the dim's top strip
 	-- (R49-7) DIALOG: the lifted big Drive button (FULLSCREEN_DIALOG) stays over the dim; the header buttons are lifted over it
-	holder:SetFrameStrata("DIALOG")
+	holder:SetFrameStrata(sheetStrata(win))
 	holder:SetFrameLevel(400)
 	holder:Hide()
 	local f = T.Sheet(holder, SIZE.h, "Report a bug", { head = UI.HEAD_H or 56 })
@@ -556,6 +571,7 @@ local function frame()
 	holder:SetScript("OnUpdate", function()
 		if not f.open then tab = nil return end
 		if f.foot ~= sheetFoot() then place(f) layout(f) end
+		followWindow(f) -- the map opened or shut while the report is up: the window moved a layer
 		if tab == nil then tab = KitMod.ui.tab or false end
 		if (KitMod.ui.tab or false) ~= tab then tab = nil Bug.Close() end
 	end)
@@ -607,6 +623,7 @@ function Bug.Open()
 	f.note:SetText("")
 	f.hasOops = nil
 	place(f)
+	followWindow(f)
 	layout(f)
 	refresh(f)
 	f:Open()
