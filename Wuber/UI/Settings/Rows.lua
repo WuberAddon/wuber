@@ -109,6 +109,7 @@ local KEYWORDS = {
 	["Reduce motion"] = "animations slide sliding still calm fade accessibility", -- design 2
 	["Sounds"] = "sound volume audio noise chime ping alert mute quiet",
 	["Advanced mode"] = "simple advanced extra tools all settings",
+	["Theme"] = "theme colour color dark light daylight night classic fel look appearance skin",
 	["Window size"] = "scale size bigger smaller zoom position move reset middle centre center",
 	["Wide pages"] = "fold unfold wide narrow two pane reset per page",
 	["What Wuber sends"] = "privacy limits limit hidden messages message whispers sending sent spam rate how many often chat addon", -- decisions N

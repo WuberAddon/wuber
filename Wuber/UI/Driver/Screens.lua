@@ -113,6 +113,15 @@ local function Screen(parent, title, bottom, opts)
 	-- window's left cap and its stretched middle, as UI.Kit's 3-slice draws them (s.Wide)
 	f.bgMid = T.Tex(f, "winbg", "BACKGROUND")
 	f.bgMid:Hide()
+	if type(T.RegisterBackdrop) == "function" then
+		T.RegisterBackdrop(f, {
+			showArt = function(on)
+				f.bg:SetShown(on)
+				f.bgMid:SetShown(on and s.bgWide == true)
+			end,
+			layer = "BACKGROUND", sub = 0,
+		})
+	end
 	function s.Wide(on)
 		on = on == true
 		if s.bgWide == on then return end
@@ -128,7 +137,7 @@ local function Screen(parent, title, bottom, opts)
 			f.bgMid:SetPoint("TOPLEFT", f.bg, "TOPRIGHT", 0, 0)
 			f.bgMid:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
 			f.bgMid:SetTexCoord(SLICE_CAP * k, (WIDTH - SLICE_CAP) * k, v0, v1)
-			f.bgMid:Show()
+			f.bgMid:SetShown(T.activeTheme == T.DEFAULT_THEME)
 		else
 			f.bg:SetAllPoints(f)
 			f.bg:SetTexCoord(0, 504 / 512, v0, v1)

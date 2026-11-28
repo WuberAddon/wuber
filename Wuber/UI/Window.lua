@@ -1208,6 +1208,9 @@ W.Listen("SETTINGS", function(key)
 		if type(db) == "table" and db.simpleNote == true and call(W.Advanced) ~= false then
 			db.simpleNote = nil
 		end
+	elseif key == "theme" then
+		pcall(paintTabs)
+		if UI.PaintGear and ui.gear then pcall(UI.PaintGear, ui.gear.chosen) end
 	end
 	UI.Refresh(true)
 	if ui.minimap and W.db then

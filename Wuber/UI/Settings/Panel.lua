@@ -108,6 +108,9 @@ local function build(win)
 	p.bg:SetTexCoord(0, 504 / 512, 0, (1 - TOP_H / 600) * (840 / 1024))
 	-- 3-slice: unfolded the panel is 720 wide; folded it draws exactly as before
 	p.slices = KitMod.threeSlice(p.bg, p, T.MEDIA .. "winbg", "BACKGROUND", 0, 504 / 512, 0, (1 - TOP_H / 600) * (840 / 1024), 0, 0)
+	if type(T.RegisterBackdrop) == "function" then
+		T.RegisterBackdrop(p, { art = { p.slices.left, p.slices.mid, p.slices.right }, layer = "BACKGROUND", sub = 0 })
+	end
 	p:Hide()
 	st.panel = p
 	st.builtKey = W.myKey -- the name the name-based rows (founder crown, Pioneer switch) were built for
@@ -494,6 +497,80 @@ local function build(win)
 	end)
 	T.Tip(resetBtn, "Reset", "Puts the window back at its usual place and size: the middle of the screen, or beside the chat box when the middle would cover it.")
 	st.controls.resetPos = resetBtn
+	local tr
+	tr, y = row(winSec, y, "Theme", "Look of the Wuber window.",
+		"Changes the colours of the Wuber window at once without /reload. Pre-baked bezel art, badges and the floating driver button keep their own look.", 108)
+	local themeCtl = { buttons = {}, byId = {}, value = T.ThemeId and T.ThemeId() or "classic" }
+	local order = type(T.THEME_ORDER) == "table" and T.THEME_ORDER or { "classic" }
+	local gapT = 6
+	local btnW = math.floor((INNER - 28 - gapT * math.max(0, #order - 1)) / math.max(1, #order))
+	local btnH = 48
+	local function paintThemes()
+		local cur = type(T.ThemeId) == "function" and T.ThemeId() or "classic"
+		themeCtl.value = cur
+		for _, tb in ipairs(themeCtl.buttons) do
+			local on = tb.themeId == cur
+			tb.chosen = on
+			tb.ring:SetShown(on)
+			tb.bg:SetColor((on or tb.hover) and "hover" or "raised")
+		end
+	end
+	themeCtl.Paint = paintThemes
+	function themeCtl.SetValue(self, id)
+		if type(T.SetTheme) == "function" then T.SetTheme(id) end
+		paintThemes()
+	end
+	for i, tid in ipairs(order) do
+		local th = type(T.THEMES) == "table" and T.THEMES[tid]
+		if type(th) == "table" and type(th.c) == "table" then
+			local tb = CreateFrame("Button", nil, tr.below)
+			tb:SetSize(btnW, btnH)
+			tb:SetPoint("TOPLEFT", tr.below, "TOPLEFT", (i - 1) * (btnW + gapT), -2)
+			tb:RegisterForClicks("LeftButtonUp")
+			tb.themeId = tid
+			tb.bg = T.Rounded(tb, "raised", 10, "BACKGROUND", 0)
+			tb.ring = T.Outline(tb, "accent", 2)
+			tb.ring:SetShown(false)
+			-- Live preview swatch showing this theme's fixed surface, card, accent and gold colours.
+			local sw = CreateFrame("Frame", nil, tb)
+			sw:SetSize(btnW - 14, 18)
+			sw:SetPoint("TOP", tb, "TOP", 0, -6)
+			sw.bg = T.Line(sw, { th.c.black[1], th.c.black[2], th.c.black[3], 1 }, 1, "ARTWORK")
+			sw.bg:SetAllPoints(sw)
+			sw.card = T.Line(sw, { th.c.card[1], th.c.card[2], th.c.card[3], 1 }, 1, "OVERLAY")
+			sw.card:SetSize(math.floor((btnW - 14) * 0.48), 10)
+			sw.card:SetPoint("LEFT", sw, "LEFT", 4, 0)
+			sw.accent = T.Circle(sw, 8, { th.c.accent[1], th.c.accent[2], th.c.accent[3], 1 }, "OVERLAY")
+			sw.accent:SetPoint("RIGHT", sw, "RIGHT", -13, 0)
+			sw.gold = T.Circle(sw, 8, { th.c.gold[1], th.c.gold[2], th.c.gold[3], 1 }, "OVERLAY")
+			sw.gold:SetPoint("RIGHT", sw, "RIGHT", -3, 0)
+			tb.swatch = sw
+			tb.label = T.Text(tb, "caption", "white", "CENTER", "medium")
+			tb.label:SetPoint("BOTTOM", tb, "BOTTOM", 0, 5)
+			tb.label:SetWidth(btnW - 8)
+			tb.label:SetText(th.name or tid)
+			safeScript(tb, "OnEnter", function(self)
+				self.hover = true
+				self.bg:SetColor("hover")
+			end)
+			safeScript(tb, "OnLeave", function(self)
+				self.hover = nil
+				self.bg:SetColor(self.chosen and "hover" or "raised")
+			end)
+			T.Press(tb, { fill = tb.bg })
+			safeScript(tb, "OnClick", function(self)
+				if type(T.SetTheme) == "function" then T.SetTheme(self.themeId) end
+				paintThemes()
+				UI.UpdateSettings()
+			end)
+			T.Tip(tb, th.name or tid, (th.desc or "") .. " Applies at once without /reload. Pre-baked bezel art, badges and the floating driver button keep their own look.")
+			themeCtl.buttons[#themeCtl.buttons + 1] = tb
+			themeCtl.byId[tid] = tb
+		end
+	end
+	paintThemes()
+	st.controls.theme = themeCtl
+	st.themeRow = tr
 	winSec.baseH = y + 6
 
 	-- This window: Advanced (Wide pages), then Check my game and its results card in a frame of their own,
@@ -645,6 +722,7 @@ function UI.UpdateSettings()
 		local v = scaleNow()
 		if math.abs((c.scale.value or 0) - v) > 0.001 then c.scale:Set(v) end
 	end
+	if c.theme and type(c.theme.Paint) == "function" then c.theme.Paint() end
 	local n = hiddenCount()
 	if st.hiddenRow then
 		st.hiddenRow:SetActive(n > 0)
@@ -860,6 +938,9 @@ local function buildHelp(win)
 	p.bg:SetAllPoints(p)
 	p.bg:SetTexCoord(0, 504 / 512, 0, (1 - TOP_H / 600) * (840 / 1024))
 	p.slices = KitMod.threeSlice(p.bg, p, T.MEDIA .. "winbg", "BACKGROUND", 0, 504 / 512, 0, (1 - TOP_H / 600) * (840 / 1024), 0, 0)
+	if type(T.RegisterBackdrop) == "function" then
+		T.RegisterBackdrop(p, { art = { p.slices.left, p.slices.mid, p.slices.right }, layer = "BACKGROUND", sub = 0 })
+	end
 	p:Hide()
 	help.panel = p
 
