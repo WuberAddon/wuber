@@ -196,5 +196,75 @@ class FreshAndNested(Base):
         self.assertEqual(len(self.calls()), 6)
 
 
+GUARD = os.path.join(HERE, "suite-guard.sh").replace("\\", "/")
+
+
+class SlotsFile(Base):
+    """suite_slots(): slots.txt in the lock folder (1-8) wins, then WUBER_SUITE_SLOTS, then 3."""
+
+    def slots(self, text=None, **env):
+        lk = p(os.path.join(self.root, "locks"))
+        os.makedirs(lk, exist_ok=True)
+        sf = os.path.join(lk, "slots.txt")
+        if text is not None:
+            with open(sf, "w", newline="") as f:
+                f.write(text)
+        e = self.env(WUBER_SUITE_LOCK=lk)
+        e.pop("WUBER_SUITE_SLOTS", None)
+        e.update(env)
+        r = subprocess.run(["bash", "-c", 'source "$G"; suite_slots'], env=dict(e, G=GUARD),
+                           capture_output=True, text=True, timeout=30)
+        return r.stdout.strip()
+
+    def test_default_is_three(self):
+        self.assertEqual(self.slots(), "3")
+
+    def test_env_without_file(self):
+        self.assertEqual(self.slots(WUBER_SUITE_SLOTS="5"), "5")
+
+    def test_file_wins_over_env(self):
+        self.assertEqual(self.slots("2\n", WUBER_SUITE_SLOTS="5"), "2")
+
+    def test_file_edges_and_crlf(self):
+        self.assertEqual(self.slots("1\r\n"), "1")
+        self.assertEqual(self.slots("8\n"), "8")
+
+    def test_bad_file_falls_back_to_env_then_three(self):
+        for bad in ("0\n", "9\n", "abc\n", "", "-1\n", "100\n"):
+            self.assertEqual(self.slots(bad, WUBER_SUITE_SLOTS="4"), "4", repr(bad))
+            self.assertEqual(self.slots(bad), "3", repr(bad))
+
+    def test_no_lock_folder_ignores_file(self):
+        e = self.env()
+        e.pop("WUBER_SUITE_LOCK", None)
+        r = subprocess.run(["bash", "-c", 'source "$G"; suite_slots'], env=dict(e, G=GUARD, WUBER_SUITE_SLOTS="4"),
+                           capture_output=True, text=True, timeout=30)
+        self.assertEqual(r.stdout.strip(), "4")
+
+    def test_a_waiting_suite_picks_up_a_changed_file(self):
+        t = self.tree()
+        lk = p(os.path.join(self.root, "locks"))
+        os.makedirs(lk)
+        # a live bash-side pid (as in the lua lock tests) takes the only slot
+        hp = subprocess.run(["bash", "-c", "sleep 120 >/dev/null 2>&1 & echo $!"], capture_output=True, text=True).stdout.strip()
+        try:
+            with open(os.path.join(lk, "held." + hp), "w") as f:
+                f.write("%s %d\n" % (hp, int(time.time())))
+            with open(os.path.join(lk, "slots.txt"), "w") as f:
+                f.write("1\n")
+            out = {}
+            th = threading.Thread(target=lambda: out.update(r=self.run_suite(t, WUBER_SUITE_LOCK=lk, WUBER_SUITE_CACHE=self.cache)))
+            th.start()
+            time.sleep(3)
+            self.assertTrue(th.is_alive(), "waits while the one slot is taken")
+            with open(os.path.join(lk, "slots.txt"), "w") as f:
+                f.write("2\n")
+            th.join(60)
+            self.assertFalse(th.is_alive(), "runs once the file allows a second slot")
+            self.assertEqual(out["r"].returncode, 0, out["r"].stdout + out["r"].stderr)
+        finally:
+            subprocess.run(["bash", "-c", "kill %s 2>/dev/null" % hp])
+
+
 if __name__ == "__main__":
     unittest.main()

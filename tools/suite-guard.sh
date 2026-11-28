@@ -5,6 +5,7 @@
 #                      Holds "held.<pid>" (one file per running suite: "<pid> <start epoch>"; the old single "held" counts as
 #                      one taken slot) and "wait.<pid>" (queued suites). Up to WUBER_SUITE_SLOTS (default 3) run at once.
 #                      Stale = dead pid (kill -0, works from PowerShell and Git Bash) or older than 60 minutes.
+#   slots.txt          optional file in the lock folder holding a number 1-8: it wins over WUBER_SUITE_SLOTS and is re-read at every wait poll.
 #   WUBER_SUITE_SLOTS  how many full suites may run at once (default 3; 8 shards each fit this PC's 90% CPU cap).
 #   WUBER_SUITE_WAIT_MAX  seconds to wait in line before running anyway (default 2700 = 45 min).
 #   WUBER_SUITE_POLL   seconds between lock checks (default 5).
@@ -47,7 +48,19 @@ suite_default_shards() {
 # --- slot lock: up to WUBER_SUITE_SLOTS (default 3) full suites at once ---
 # Each holder owns a file held.<pid> ("<pid> <start epoch>") in the lock folder. The old single file "held" (older
 # copies of this script) counts as one taken slot. The count-and-take step runs under a short mutex file, slots.mutex.
-suite_slots() { local s="${WUBER_SUITE_SLOTS:-3}"; { [[ "$s" =~ ^[0-9]+$ ]] && [ "$s" -ge 1 ]; } || s=3; echo "$s"; }
+# Order: "$WUBER_SUITE_LOCK/slots.txt" (a number 1-8; re-read at every wait poll, so a running queue picks up a change) wins,
+# then WUBER_SUITE_SLOTS, then 3. A value outside 1-8 or not a number in the file is ignored.
+suite_slots() {
+  local s="" v=""
+  if [ -n "$WUBER_SUITE_LOCK" ] && [ -f "$WUBER_SUITE_LOCK/slots.txt" ]; then
+    read -r v _ < "$WUBER_SUITE_LOCK/slots.txt" 2>/dev/null
+    v="${v//$'\r'/}"
+    if [[ "$v" =~ ^[0-9]+$ ]] && [ "${#v}" -le 2 ] && [ "$((10#$v))" -ge 1 ] && [ "$((10#$v))" -le 8 ]; then echo "$((10#$v))"; return; fi
+  fi
+  s="${WUBER_SUITE_SLOTS:-3}"
+  { [[ "$s" =~ ^[0-9]+$ ]] && [ "$s" -ge 1 ]; } || s=3
+  echo "$s"
+}
 
 # 0 when a holder file is stale: dead pid, older than 60 minutes, or unreadable and the file itself older than that
 suite_holder_stale() {
@@ -79,11 +92,11 @@ SUITE_HELD=0
 suite_lock_acquire() {
   [ -n "$WUBER_SUITE_LOCK" ] || return 0
   mkdir -p "$WUBER_SUITE_LOCK" 2>/dev/null && [ -d "$WUBER_SUITE_LOCK" ] && [ -w "$WUBER_SUITE_LOCK" ] || { echo "suite-par: ERROR: cannot use WUBER_SUITE_LOCK=$WUBER_SUITE_LOCK (not a writable folder); refusing to run without the lock" >&2; return 2; }
-  local mine="$WUBER_SUITE_LOCK/held.$$" waitf="$WUBER_SUITE_LOCK/wait.$$" slots; slots=$(suite_slots)
+  local mine="$WUBER_SUITE_LOCK/held.$$" waitf="$WUBER_SUITE_LOCK/wait.$$" slots
   local start=$SECONDS max="${WUBER_SUITE_WAIT_MAX:-2700}" poll="${WUBER_SUITE_POLL:-5}" said=-9999 live lpid lstart first f moved mp
   echo "$$ $(date +%s)" > "$waitf"
   while :; do
-    first=""
+    first=""; slots=$(suite_slots)   # re-read every poll: slots.txt may change while queued
     if suite_mutex_take; then
       live=0
       for f in "$WUBER_SUITE_LOCK"/held "$WUBER_SUITE_LOCK"/held.[0-9]*; do
