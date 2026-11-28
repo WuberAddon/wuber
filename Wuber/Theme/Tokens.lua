@@ -1,8 +1,7 @@
 -- Module: Theme.Tokens
 -- Purpose: media paths, fonts, sizes, palette (T.C, T.Hex, T.RGB), T.Try, text and fonts (T.SetFont, T.Text,
 --   T.Fit, T.MeasureText), textures, nine-slices, pill fills, T.Card.
--- API: W.Theme, T.MEDIA, T.FONTS, T.FONT, T.SIZE, T.WEIGHT, T.SCALE, T.Snap, T.READABLE, T.DrawnSize, T.Hex, T.C, T.C.open, T.C.green, T.RGB, T.RAMP, T.RampRGB, T.Code,
---   T.THEMES, T.THEME_ORDER, T.DEFAULT_THEME, T.ThemeId, T.ThemeInfo, T.ApplyTheme, T.SetTheme, T.OnTheme, T.RegisterBackdrop,
+-- API: W.Theme, T.MEDIA, T.FONTS, T.FONT, T.SIZE, T.WEIGHT, T.SCALE, T.Snap, T.READABLE, T.DrawnSize, T.Hex, T.C, T.C.open, T.C.green, T.RGB, T.RAMP, T.RampRGB, T.Code, T.THEMES, T.THEME_ORDER, T.DEFAULT_THEME, T.ThemeId, T.ThemeInfo, T.ApplyTheme, T.SetTheme, T.OnTheme, T.RegisterBackdrop,
 --   T.Try, T.allText, T.RefreshTextUnder, T.RefreshOne, T.RefreshText, T.RefreshShown, T.layoutHold, T.HoldLayout,
 --   T.LayoutsHeld (speed: the refreshes lay each list card out once), T.textEpoch, T.FONT_WAIT, T.WatchFont,
 --   T.SetFont, T.LEADING, T.Spacing, T.WorldText, T.OwnFont, T.MeasureText, T.TextWidth,
@@ -11,7 +10,7 @@
 -- Internals: hex, MISSING, method, drawn, Mod.FONT_W (the width table), Mod.ACCENT_W
 -- Uses: (none)
 -- Later: (none)
--- Events: listens login; fires FONT_READY, THEME
+-- Events: listens login; fires FONT_READY
 -- Standalone: no
 -- Test: tests/theme/tokens_test.lua
 -- From: Theme.lua 1-504 (Wuber 2.2.1)
@@ -80,7 +79,6 @@ T.C = {
 	hover = hex("2A2748"),       -- card2: a card under the mouse or pressed (the same colour as raised)
 	line = hex("333154"),        -- lines and dividers
 	raised = hex("2A2748"),      -- card2: a switch that is off, step dots, the second button
-	well = hex("090913"),        -- inset input field well
 	white = hex("F2EEFF"),       -- main text
 	ink = hex("1D1B31"),         -- text on gold and on violet (never white on violet: 2.8 to 1)
 	muted = hex("ABA5C9"),       -- secondary text: lavender grey (S12: a touch brighter than 9A93B8)
@@ -101,90 +99,11 @@ T.C = {
 T.C.open = T.C.glow
 T.C.green = T.C.glow -- "open" was green once: it is violet now
 
--- Themes: every colour the window uses comes from the active theme. Classic is the default and
--- matches the original palette identically. Swatch colours are used in the Settings picker.
-T.DEFAULT_THEME = "classic"
-T.THEME_ORDER = { "classic", "daylight", "night", "fel" }
-T.THEMES = {
-	classic = {
-		id = "classic", name = "Classic", desc = "Night-sky violet and gold.",
-		c = {
-			black = hex("0B0B16"), nightTop = hex("141228"), panel = hex("181630"), card = hex("211E3B"),
-			hover = hex("2A2748"), line = hex("333154"), raised = hex("2A2748"), well = hex("090913"),
-			white = hex("F2EEFF"), ink = hex("1D1B31"), muted = hex("ABA5C9"),
-			accent = hex("A974F5"), glow = hex("A974F5"), magenta = hex("A974F5"),
-			teal = hex("33E0CC"), gold = hex("F9C53E"), goldLight = hex("FFD866"),
-			goldPress = hex("E0AE2E"), goldDeep = hex("B1873F"), amber = hex("F9A23E"),
-			off = hex("8B83AC"), offText = hex("8F89AD"), red = hex("FF5C7A"),
-			shadow = hex("000000", 0.6),
-		},
-	},
-	daylight = {
-		id = "daylight", name = "Daylight", desc = "Bright paper cards with dark ink.",
-		c = {
-			black = hex("EEF0F6"), nightTop = hex("F7F8FC"), panel = hex("E4E7F0"), card = hex("FFFFFF"),
-			hover = hex("E9ECF5"), line = hex("C5CADB"), raised = hex("DDE1EE"), well = hex("F2F4FA"),
-			white = hex("181A24"), ink = hex("FFFFFF"), muted = hex("4E5368"),
-			accent = hex("6D3FD6"), glow = hex("6D3FD6"), magenta = hex("6D3FD6"),
-			teal = hex("0B7A70"), gold = hex("8E5C00"), goldLight = hex("A66C00"),
-			goldPress = hex("734900"), goldDeep = hex("704800"), amber = hex("A65900"),
-			off = hex("585D72"), offText = hex("5E6378"), red = hex("C41E3A"),
-			shadow = hex("000000", 0.25),
-		},
-	},
-	night = {
-		id = "night", name = "Night", desc = "Deep charcoal with cool ice-blue highlights.",
-		c = {
-			black = hex("07080C"), nightTop = hex("0E1118"), panel = hex("11141D"), card = hex("181C28"),
-			hover = hex("222838"), line = hex("2C3347"), raised = hex("222838"), well = hex("0A0C12"),
-			white = hex("EEF2FA"), ink = hex("0D1018"), muted = hex("9FAAC2"),
-			accent = hex("66B2FF"), glow = hex("66B2FF"), magenta = hex("66B2FF"),
-			teal = hex("33E0CC"), gold = hex("F5C242"), goldLight = hex("FFD66B"),
-			goldPress = hex("D9A626"), goldDeep = hex("A8802C"), amber = hex("F59E3D"),
-			off = hex("8591AA"), offText = hex("8C97B0"), red = hex("FF637D"),
-			shadow = hex("000000", 0.7),
-		},
-	},
-	fel = {
-		id = "fel", name = "Fel", desc = "Dark obsidian with Warlock fel-green highlights.",
-		c = {
-			black = hex("08110E"), nightTop = hex("0F1D17"), panel = hex("11201A"), card = hex("182B23"),
-			hover = hex("21392F"), line = hex("2D4A3E"), raised = hex("21392F"), well = hex("09130F"),
-			white = hex("EBF7F1"), ink = hex("0B1712"), muted = hex("9BC2B1"),
-			accent = hex("3CE08E"), glow = hex("3CE08E"), magenta = hex("3CE08E"),
-			teal = hex("45E6D8"), gold = hex("F9C53E"), goldLight = hex("FFD866"),
-			goldPress = hex("E0AE2E"), goldDeep = hex("B1873F"), amber = hex("F9A23E"),
-			off = hex("82A898"), offText = hex("89B0A0"), red = hex("FF6B7E"),
-			shadow = hex("000000", 0.65),
-		},
-	},
-}
-T.activeTheme = T.DEFAULT_THEME
-
--- Last token resolved by T.RGB, so wrapped SetTextColor / SetVertexColor can remember which token
--- a region uses and recolour it live without overwriting custom literal colours (such as class colours).
-local rgbLast = { token = nil, alpha = nil, r = nil, g = nil, b = nil, a = nil }
-local function rgbMatches(r, g, b, a)
-	if not rgbLast.token then return false end
-	if math.abs((r or 0) - rgbLast.r) > 0.001 or math.abs((g or 0) - rgbLast.g) > 0.001 or math.abs((b or 0) - rgbLast.b) > 0.001 then
-		return false
-	end
-	if a ~= nil and math.abs(a - rgbLast.a) > 0.001 then return false end
-	return true
-end
-
 -- A colour by name or table -> r, g, b, a. Unknown: white.
 function T.RGB(c, alpha)
-	local tok = type(c) == "string" and T.C[c] and c or nil
 	if type(c) == "string" then c = T.C[c] end
 	if type(c) ~= "table" then c = T.C.white end
-	local r, g, b, a = c[1] or 1, c[2] or 1, c[3] or 1, alpha or c[4] or 1
-	if tok then
-		rgbLast.token, rgbLast.alpha, rgbLast.r, rgbLast.g, rgbLast.b, rgbLast.a = tok, alpha, r, g, b, a
-	else
-		rgbLast.token = nil
-	end
-	return r, g, b, a
+	return c[1] or 1, c[2] or 1, c[3] or 1, alpha or c[4] or 1
 end
 
 -- (design round 4, F) the chart ramp: ONE violet from faint to strong for every bar and square (an amount is
@@ -404,10 +323,7 @@ function T.WatchFont()
 	W.After(wt.every, tick)
 	return false
 end
-W.OnLogin(function()
-	T.ApplyTheme(T.ThemeId())
-	T.WatchFont()
-end)
+W.OnLogin(function() T.WatchFont() end)
 
 -- Arial Narrow first (always there), then Inter on top. This client's SetFont returns false
 -- for addon fonts even when they load (other addons' .ttf fonts show fine in game), so its
@@ -673,21 +589,7 @@ end
 function T.Text(parent, size, colour, justify, weight, layer)
 	local fs = parent:CreateFontString(nil, layer or "OVERLAY")
 	T.SetFont(fs, size, weight)
-	local col = colour or "white"
-	fs:SetTextColor(T.RGB(col))
-	if type(col) == "string" and T.C[col] then fs.wuberColor = col end
-	local rawSetColor = fs.SetTextColor
-	if type(rawSetColor) == "function" then
-		fs.wuberRawSetColor = rawSetColor
-		fs.SetTextColor = function(self, r, g, b, a)
-			if rgbMatches(r, g, b, a) then
-				self.wuberColor, self.wuberAlpha = rgbLast.token, rgbLast.alpha
-			else
-				self.wuberColor, self.wuberAlpha = nil, nil
-			end
-			return rawSetColor(self, r, g, b, a)
-		end
-	end
+	fs:SetTextColor(T.RGB(colour or "white"))
 	fs:SetJustifyH(justify or "LEFT")
 	Try(fs, "SetJustifyV", "MIDDLE")
 	Try(fs, "SetWordWrap", false)
@@ -736,46 +638,18 @@ function T.Tex(parent, name, layer, sub)
 	return t
 end
 
-local allIcons = setmetatable({}, { __mode = "k" })
-local allSlices = setmetatable({}, { __mode = "k" })
-local allPills = setmetatable({}, { __mode = "k" })
-local allRepaint = setmetatable({}, { __mode = "k" })
-local allBackdrops = setmetatable({}, { __mode = "k" })
-
-local function trackVertex(t, col)
-	if type(t) ~= "table" then return end
-	if type(col) == "string" and T.C[col] then t.wuberColor = col end
-	local rawSet = t.SetVertexColor
-	if type(rawSet) == "function" then
-		t.wuberRawSetVertex = rawSet
-		t.SetVertexColor = function(self, r, g, b, a)
-			if rgbMatches(r, g, b, a) then
-				self.wuberColor, self.wuberAlpha = rgbLast.token, rgbLast.alpha
-			else
-				self.wuberColor, self.wuberAlpha = nil, nil
-			end
-			return rawSet(self, r, g, b, a)
-		end
-	end
-	allIcons[t] = true
-end
-
 -- A white glyph from Media (summon, ride, check, star, close, back, search, ...), tinted.
 function T.Icon(parent, name, size, colour, layer)
 	local t = T.Tex(parent, name, layer or "OVERLAY")
 	t:SetSize(size or 16, size or 16)
-	local col = colour or "white"
-	t:SetVertexColor(T.RGB(col))
-	trackVertex(t, col)
+	t:SetVertexColor(T.RGB(colour or "white"))
 	return t
 end
 
 function T.Circle(parent, size, colour, layer, sub)
 	local t = T.Tex(parent, "circle", layer or "ARTWORK", sub)
 	t:SetSize(size or 16, size or 16)
-	local col = colour or "white"
-	t:SetVertexColor(T.RGB(col))
-	trackVertex(t, col)
+	t:SetVertexColor(T.RGB(colour or "white"))
 	return t
 end
 
@@ -839,7 +713,6 @@ function T.NineSlice(frame, name, px, c, layer, sub, out, anchor)
 	p.R:SetPoint("BOTTOMRIGHT", p.BR, "TOPRIGHT")
 	p.M:SetPoint("TOPLEFT", p.TL, "BOTTOMRIGHT")
 	p.M:SetPoint("BOTTOMRIGHT", p.BR, "TOPLEFT")
-	allSlices[s] = true
 	return s
 end
 
@@ -931,7 +804,6 @@ function T.PillFill(frame, colour, h, layer, sub)
 	m:SetPoint("BOTTOMRIGHT", r, "BOTTOMLEFT")
 	s:SetColor(colour or "card")
 	s:SetHeight(h or 32)
-	allPills[s] = true
 	return s
 end
 
@@ -953,9 +825,165 @@ function T.Card(parent, w, h, opts)
 	return f
 end
 
+-- exports (REFACTOR-MAP section 2)
+Mod.hex, Mod.MISSING, Mod.method = hex, MISSING, method
+
 ---------------------------------------------------------------------------
--- Live theme switching
+-- Themes and live recolouring (appended here so earlier line numbers stay fixed)
 ---------------------------------------------------------------------------
+
+T.C.well = hex("090913")
+T.DEFAULT_THEME = "classic"
+T.THEME_ORDER = { "classic", "daylight", "night", "fel" }
+T.THEMES = {
+	classic = {
+		id = "classic", name = "Classic", desc = "Night-sky violet and gold.",
+		c = {
+			black = hex("0B0B16"), nightTop = hex("141228"), panel = hex("181630"), card = hex("211E3B"),
+			hover = hex("2A2748"), line = hex("333154"), raised = hex("2A2748"), well = hex("090913"),
+			white = hex("F2EEFF"), ink = hex("1D1B31"), muted = hex("ABA5C9"),
+			accent = hex("A974F5"), glow = hex("A974F5"), magenta = hex("A974F5"),
+			teal = hex("33E0CC"), gold = hex("F9C53E"), goldLight = hex("FFD866"),
+			goldPress = hex("E0AE2E"), goldDeep = hex("B1873F"), amber = hex("F9A23E"),
+			off = hex("8B83AC"), offText = hex("8F89AD"), red = hex("FF5C7A"),
+			shadow = hex("000000", 0.6),
+		},
+	},
+	daylight = {
+		id = "daylight", name = "Daylight", desc = "Bright paper cards with dark ink.",
+		c = {
+			black = hex("EEF0F6"), nightTop = hex("F7F8FC"), panel = hex("E4E7F0"), card = hex("FFFFFF"),
+			hover = hex("E9ECF5"), line = hex("C5CADB"), raised = hex("DDE1EE"), well = hex("F2F4FA"),
+			white = hex("181A24"), ink = hex("FFFFFF"), muted = hex("4E5368"),
+			accent = hex("6D3FD6"), glow = hex("6D3FD6"), magenta = hex("6D3FD6"),
+			teal = hex("0B7A70"), gold = hex("8E5C00"), goldLight = hex("A66C00"),
+			goldPress = hex("734900"), goldDeep = hex("704800"), amber = hex("A65900"),
+			off = hex("585D72"), offText = hex("5E6378"), red = hex("C41E3A"),
+			shadow = hex("000000", 0.25),
+		},
+	},
+	night = {
+		id = "night", name = "Night", desc = "Deep charcoal with cool ice-blue highlights.",
+		c = {
+			black = hex("07080C"), nightTop = hex("0E1118"), panel = hex("11141D"), card = hex("181C28"),
+			hover = hex("222838"), line = hex("2C3347"), raised = hex("222838"), well = hex("0A0C12"),
+			white = hex("EEF2FA"), ink = hex("0D1018"), muted = hex("9FAAC2"),
+			accent = hex("66B2FF"), glow = hex("66B2FF"), magenta = hex("66B2FF"),
+			teal = hex("33E0CC"), gold = hex("F5C242"), goldLight = hex("FFD66B"),
+			goldPress = hex("D9A626"), goldDeep = hex("A8802C"), amber = hex("F59E3D"),
+			off = hex("8591AA"), offText = hex("8C97B0"), red = hex("FF637D"),
+			shadow = hex("000000", 0.7),
+		},
+	},
+	fel = {
+		id = "fel", name = "Fel", desc = "Dark obsidian with Warlock fel-green highlights.",
+		c = {
+			black = hex("08110E"), nightTop = hex("0F1D17"), panel = hex("11201A"), card = hex("182B23"),
+			hover = hex("21392F"), line = hex("2D4A3E"), raised = hex("21392F"), well = hex("09130F"),
+			white = hex("EBF7F1"), ink = hex("0B1712"), muted = hex("9BC2B1"),
+			accent = hex("3CE08E"), glow = hex("3CE08E"), magenta = hex("3CE08E"),
+			teal = hex("45E6D8"), gold = hex("F9C53E"), goldLight = hex("FFD866"),
+			goldPress = hex("E0AE2E"), goldDeep = hex("B1873F"), amber = hex("F9A23E"),
+			off = hex("82A898"), offText = hex("89B0A0"), red = hex("FF6B7E"),
+			shadow = hex("000000", 0.65),
+		},
+	},
+}
+T.activeTheme = T.DEFAULT_THEME
+
+local rgbLast = { token = nil, alpha = nil, r = nil, g = nil, b = nil, a = nil }
+local function rgbMatches(r, g, b, a)
+	if not rgbLast.token then return false end
+	if math.abs((r or 0) - rgbLast.r) > 0.001 or math.abs((g or 0) - rgbLast.g) > 0.001 or math.abs((b or 0) - rgbLast.b) > 0.001 then
+		return false
+	end
+	if a ~= nil and math.abs(a - rgbLast.a) > 0.001 then return false end
+	return true
+end
+
+local origRGB = T.RGB
+function T.RGB(c, alpha)
+	local tok = type(c) == "string" and T.C[c] and c or nil
+	local r, g, b, a = origRGB(c, alpha)
+	if tok then
+		rgbLast.token, rgbLast.alpha, rgbLast.r, rgbLast.g, rgbLast.b, rgbLast.a = tok, alpha, r, g, b, a
+	else
+		rgbLast.token = nil
+	end
+	return r, g, b, a
+end
+
+local allIcons = setmetatable({}, { __mode = "k" })
+local allSlices = setmetatable({}, { __mode = "k" })
+local allPills = setmetatable({}, { __mode = "k" })
+local allRepaint = setmetatable({}, { __mode = "k" })
+local allBackdrops = setmetatable({}, { __mode = "k" })
+
+local origText = T.Text
+function T.Text(parent, size, colour, justify, weight, layer)
+	local fs = origText(parent, size, colour, justify, weight, layer)
+	local col = colour or "white"
+	if type(col) == "string" and T.C[col] then fs.wuberColor = col end
+	local rawSetColor = fs.SetTextColor
+	if type(rawSetColor) == "function" then
+		fs.wuberRawSetColor = rawSetColor
+		fs.SetTextColor = function(self, r, g, b, a)
+			if rgbMatches(r, g, b, a) then
+				self.wuberColor, self.wuberAlpha = rgbLast.token, rgbLast.alpha
+			else
+				self.wuberColor, self.wuberAlpha = nil, nil
+			end
+			return rawSetColor(self, r, g, b, a)
+		end
+	end
+	return fs
+end
+
+local function trackVertex(t, col)
+	if type(t) ~= "table" then return end
+	if type(col) == "string" and T.C[col] then t.wuberColor = col end
+	local rawSet = t.SetVertexColor
+	if type(rawSet) == "function" then
+		t.wuberRawSetVertex = rawSet
+		t.SetVertexColor = function(self, r, g, b, a)
+			if rgbMatches(r, g, b, a) then
+				self.wuberColor, self.wuberAlpha = rgbLast.token, rgbLast.alpha
+			else
+				self.wuberColor, self.wuberAlpha = nil, nil
+			end
+			return rawSet(self, r, g, b, a)
+		end
+	end
+	allIcons[t] = true
+end
+
+local origIcon = T.Icon
+function T.Icon(parent, name, size, colour, layer)
+	local t = origIcon(parent, name, size, colour, layer)
+	trackVertex(t, colour or "white")
+	return t
+end
+
+local origCircle = T.Circle
+function T.Circle(parent, size, colour, layer, sub)
+	local t = origCircle(parent, size, colour, layer, sub)
+	trackVertex(t, colour or "white")
+	return t
+end
+
+local origNineSlice = T.NineSlice
+function T.NineSlice(frame, name, px, c, layer, sub, out, anchor)
+	local s = origNineSlice(frame, name, px, c, layer, sub, out, anchor)
+	allSlices[s] = true
+	return s
+end
+
+local origPillFill = T.PillFill
+function T.PillFill(frame, colour, h, layer, sub)
+	local s = origPillFill(frame, colour, h, layer, sub)
+	allPills[s] = true
+	return s
+end
 
 local function paintBackdrop(bd)
 	local classic = T.activeTheme == T.DEFAULT_THEME
@@ -1031,7 +1059,6 @@ function T.ApplyTheme(id, force)
 	if id == T.activeTheme and not force then return id end
 	local th = T.THEMES[id]
 	T.activeTheme = id
-	-- Mutate T.C entries in place so cached token tables and aliases (open, green) stay in sync.
 	for k, col in pairs(th.c) do
 		local dst = T.C[k]
 		if type(dst) == "table" then
@@ -1077,5 +1104,4 @@ function T.SetTheme(id)
 	return id
 end
 
--- exports (REFACTOR-MAP section 2)
-Mod.hex, Mod.MISSING, Mod.method = hex, MISSING, method
+W.OnLogin(function() T.ApplyTheme(T.ThemeId()) end)

@@ -149,6 +149,8 @@ local PROBES = {
 		label = function(ctl) return ctl.label:GetText() end },
 	{ key = "resetPos", sec = "window", adv = false,
 		skip = "action button: resets window position and size" },
+	{ key = "theme", sec = "window", adv = false, kind = "segmented", alt = "daylight",
+		get = function(W) return W.db.theme or "classic" end },
 	{ key = "check", sec = "window", adv = false,
 		skip = "action button: runs Check my game diagnostics, no saved setting" },
 

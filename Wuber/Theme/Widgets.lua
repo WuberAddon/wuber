@@ -1044,6 +1044,7 @@ function T.Segmented(parent, choices, value, onChange, width, height, opts)
 	local s = CreateFrame("Frame", nil, parent)
 	s:SetSize(width, height)
 	s.bg = T.PillFill(s, "line", height, "BACKGROUND", 0)
+	if type(T.OnTheme) == "function" then T.OnTheme(s, segPaint) end
 	s.buttons = {}
 	local n = #choices
 	local bw = (width - 4) / math.max(1, n)
@@ -1100,7 +1101,6 @@ function T.Segmented(parent, choices, value, onChange, width, height, opts)
 		segPaint(self)
 	end
 	s:SetValue(value)
-	if type(T.OnTheme) == "function" then T.OnTheme(s, segPaint) end
 	return s
 end
 

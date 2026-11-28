@@ -55,10 +55,7 @@ local function buildSplash(win)
 	sp:EnableMouse(false) -- click-through: any click ends it (GLOBAL_MOUSE_DOWN)
 	sp.bg = T.Tex(sp, "winbg", "BACKGROUND")
 	sp.bg:SetAllPoints(sp)
-	sp.bg:SetTexCoord(0, 504 / 512, 0, 840 / 1024)
-	if type(T.RegisterBackdrop) == "function" then
-		T.RegisterBackdrop(sp, { art = { sp.bg }, layer = "BACKGROUND", sub = 0 })
-	end
+	sp.bg:SetTexCoord(0, 504 / 512, 0, 840 / 1024) if type(T.RegisterBackdrop) == "function" then T.RegisterBackdrop(sp, { art = { sp.bg }, layer = "BACKGROUND", sub = 0 }) end
 	sp.art = CreateFrame("Frame", nil, sp)
 	sp.art:SetSize(250, 250)
 	sp.art:SetPoint("CENTER", sp, "CENTER", 0, 30)
@@ -254,12 +251,6 @@ local function buildPhone(win)
 	-- (three slices: a left cap, a middle that stretches and a right cap, so the window can
 	-- unfold to WIDE_W without stretching the corners; folded it draws as the one texture did)
 	win.slices = threeSlice(win.bg, win, T.MEDIA .. "screen", "BACKGROUND", -4, 504 / 512, 0, 898 / 1024, STATUS_H, -HOME_H)
-	if type(T.RegisterBackdrop) == "function" then
-		T.RegisterBackdrop(win, {
-			art = { win.slices.left, win.slices.mid, win.slices.right },
-			top = STATUS_H, bottom = -HOME_H, layer = "BACKGROUND", sub = -4,
-		})
-	end
 	-- Home's bottom sheet carries on under the home indicator (shown with Home)
 	local sheetEnd = CreateFrame("Frame", nil, win)
 	sheetEnd:SetPoint("TOPLEFT", win, "BOTTOMLEFT", 0, 90)

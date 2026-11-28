@@ -126,7 +126,7 @@ test("themeswitcher: clicking each theme choice in Settings via Client:clickOn s
 		eq(c.W.db.theme, id, id .. ": saved to WuberDB.theme after clickOn")
 		eq(c.W.Theme.activeTheme, id, id .. ": activeTheme updated after clickOn")
 		eq(ctl.value, id, id .. ": control value updated")
-		ok(btn.chosen == true, id .. ": clicked button marked chosen")
+		ok(btn.selected == true and btn.ring.parts[1]:IsShown(), id .. ": clicked button marked chosen")
 		-- No text cut on any theme button
 		for _, other in ipairs(ctl.buttons) do
 			ok(other.label:IsTruncated() ~= true, id .. ": button label not truncated: " .. tostring(other.label:GetText()))
