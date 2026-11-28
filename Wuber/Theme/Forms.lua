@@ -27,10 +27,20 @@ local A = T.Animate
 -- T.Line(parent, colour, alpha, layer): a 1 px texture (place it with SetPoint).
 function T.Line(parent, colour, alpha, layer)
 	local t = parent:CreateTexture(nil, layer or "ARTWORK")
-	local r, g, b, a = T.RGB(colour or "line", alpha)
+	local col = colour or "line"
+	local r, g, b, a = T.RGB(col, alpha)
 	if not pcall(t.SetColorTexture, t, r, g, b, a) then
 		t:SetTexture(T.MEDIA .. "circle")
 		t:SetVertexColor(r, g, b, a)
+	end
+	if type(col) == "string" and T.C[col] and type(T.OnTheme) == "function" then
+		t.wuberColor, t.wuberAlpha = col, alpha
+		T.OnTheme(t, function(self)
+			local cr, cg, cb, ca = T.RGB(self.wuberColor, self.wuberAlpha)
+			if not pcall(self.SetColorTexture, self, cr, cg, cb, ca) then
+				self:SetVertexColor(cr, cg, cb, ca)
+			end
+		end)
 	end
 	return t
 end
@@ -72,6 +82,11 @@ function T.Outline(frame, colour, thick)
 	right:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, thick)
 	right:SetWidth(thick)
 	o.colour = colour or "accent"
+	if type(T.OnTheme) == "function" then
+		T.OnTheme(o, function(self)
+			if type(self.colour) == "string" and T.C[self.colour] then self:SetColor(self.colour) end
+		end)
+	end
 	return o
 end
 
@@ -89,7 +104,7 @@ function T.Field(parent, w, h, opts)
 	local f = CreateFrame("Frame", nil, parent)
 	f:SetSize(w, h)
 	-- an inset well: darker than any card it sits on, with a thin edge (violet while typing)
-	local well = opts.colour or { 0.035, 0.035, 0.075, 1 }
+	local well = opts.colour or "well"
 	-- the edge on the field, the well on a child just inside it (so the edge shows round it)
 	local inner = CreateFrame("Frame", nil, f)
 	inner:SetPoint("TOPLEFT", f, "TOPLEFT", 1, -1)
@@ -111,6 +126,9 @@ function T.Field(parent, w, h, opts)
 	T.OwnFont(eb)
 	T.SetFont(eb, opts.size or "body", "medium")
 	eb:SetTextColor(T.RGB("white"))
+	if type(T.OnTheme) == "function" then
+		T.OnTheme(eb, function(self) self:SetTextColor(T.RGB("white")) end)
+	end
 	Try(eb, "SetJustifyH", opts.justify or "LEFT")
 	if opts.multi then Try(eb, "SetJustifyV", "TOP") end
 	Try(eb, "SetMaxLetters", opts.max or 32)
@@ -358,6 +376,9 @@ function T.EdgeFade(view, opts)
 		self.bottom:SetShown(below > 1)
 	end
 	fd:SetColour(fd.colour)
+	if type(T.OnTheme) == "function" then
+		T.OnTheme(fd, function(self) self:SetColour(self.colour) end)
+	end
 	holder:SetScript("OnUpdate", function(_, elapsed)
 		fd.wait = fd.wait - (tonumber(elapsed) or 0)
 		if fd.wait > 0 then

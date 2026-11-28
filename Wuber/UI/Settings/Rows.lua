@@ -109,6 +109,7 @@ local KEYWORDS = {
 	["Reduce motion"] = "animations slide sliding still calm fade accessibility", -- design 2
 	["Sounds"] = "sound volume audio noise chime ping alert mute quiet",
 	["Advanced mode"] = "simple advanced extra tools all settings",
+	["Theme"] = "theme colour color dark light daylight night classic fel look appearance skin",
 	["Window size"] = "scale size bigger smaller zoom position move reset middle centre center",
 	["Wide pages"] = "fold unfold wide narrow two pane reset per page",
 	["What Wuber sends"] = "privacy limits limit hidden messages message whispers sending sent spam rate how many often chat addon", -- decisions N
@@ -1284,5 +1285,85 @@ Mod.set = set
 Mod.st = st
 Mod.tipsOn = tipsOn
 Mod.toggleRow = toggleRow
+local function themeRow(parent, y)
+	local tr
+	tr, y = row(parent, y, "Theme", "Look of the Wuber window.",
+		"Changes the colours of the Wuber window at once without /reload. Pre-baked bezel art, badges and the floating driver button keep their own look.", 108)
+	local themeCtl = { buttons = {}, byId = {}, value = T.ThemeId and T.ThemeId() or "classic" }
+	local order = type(T.THEME_ORDER) == "table" and T.THEME_ORDER or { "classic" }
+	local gapT = 6
+	local btnW = math.floor((INNER - 28 - gapT * math.max(0, #order - 1)) / math.max(1, #order))
+	local btnH = 48
+	local function paintThemes()
+		local cur = type(T.ThemeId) == "function" and T.ThemeId() or "classic"
+		themeCtl.value = cur
+		for _, tb in ipairs(themeCtl.buttons) do
+			local on = tb.themeId == cur
+			tb.selected = on
+			tb.ring:SetShown(on)
+			tb.bg:SetColor((on or tb.hover) and "hover" or "raised")
+		end
+	end
+	themeCtl.Paint = paintThemes
+	function themeCtl.SetValue(self, id)
+		if type(T.SetTheme) == "function" then T.SetTheme(id) end
+		paintThemes()
+	end
+	for i, tid in ipairs(order) do
+		local th = type(T.THEMES) == "table" and T.THEMES[tid]
+		if type(th) == "table" and type(th.c) == "table" then
+			local tb = CreateFrame("Button", nil, tr.below)
+			tb:SetSize(btnW, btnH)
+			tb:SetPoint("TOPLEFT", tr.below, "TOPLEFT", (i - 1) * (btnW + gapT), -2)
+			tb:RegisterForClicks("LeftButtonUp")
+			tb.themeId, tb.value = tid, tid
+			tb.bg = T.Rounded(tb, "raised", 10, "BACKGROUND", 0)
+			tb.ring = T.Outline(tb, "accent", 2)
+			tb.ring:SetShown(false)
+			tb.chosen = tb.ring
+			-- Live preview swatch showing this theme's fixed surface, card, accent and gold colours.
+			local sw = CreateFrame("Frame", nil, tb)
+			sw:SetSize(btnW - 14, 18)
+			sw:SetPoint("TOP", tb, "TOP", 0, -6)
+			sw.bg = T.Line(sw, { th.c.black[1], th.c.black[2], th.c.black[3], 1 }, 1, "ARTWORK")
+			sw.bg:SetAllPoints(sw)
+			sw.card = T.Line(sw, { th.c.card[1], th.c.card[2], th.c.card[3], 1 }, 1, "OVERLAY")
+			sw.card:SetSize(math.floor((btnW - 14) * 0.48), 10)
+			sw.card:SetPoint("LEFT", sw, "LEFT", 4, 0)
+			sw.accent = T.Circle(sw, 8, { th.c.accent[1], th.c.accent[2], th.c.accent[3], 1 }, "OVERLAY")
+			sw.accent:SetPoint("RIGHT", sw, "RIGHT", -13, 0)
+			sw.gold = T.Circle(sw, 8, { th.c.gold[1], th.c.gold[2], th.c.gold[3], 1 }, "OVERLAY")
+			sw.gold:SetPoint("RIGHT", sw, "RIGHT", -3, 0)
+			tb.swatch = sw
+			tb.label = T.Text(tb, "caption", "white", "CENTER", "medium")
+			tb.label:SetPoint("BOTTOM", tb, "BOTTOM", 0, 5)
+			tb.label:SetWidth(btnW - 8)
+			tb.label:SetText(th.name or tid)
+			safeScript(tb, "OnEnter", function(self)
+				self.hover = true
+				self.bg:SetColor("hover")
+			end)
+			safeScript(tb, "OnLeave", function(self)
+				self.hover = nil
+				self.bg:SetColor(self.selected and "hover" or "raised")
+			end)
+			T.Press(tb, { fill = tb.bg })
+			safeScript(tb, "OnClick", function(self)
+				if type(T.SetTheme) == "function" then T.SetTheme(self.themeId) end
+				paintThemes()
+				if type(UI.UpdateSettings) == "function" then UI.UpdateSettings() end
+			end)
+			T.Tip(tb, th.name or tid, (th.desc or "") .. " Applies at once without /reload. Pre-baked bezel art, badges and the floating driver button keep their own look.")
+			themeCtl.buttons[#themeCtl.buttons + 1] = tb
+			themeCtl.byId[tid] = tb
+		end
+	end
+	paintThemes()
+	st.controls.theme = themeCtl
+	st.themeRow = tr
+	return y
+end
+
+Mod.themeRow = themeRow
 Mod.friendlyPlatesOn = friendlyPlatesOn
 Mod.turnOnPlates = turnOnPlates

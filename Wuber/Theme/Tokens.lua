@@ -1,7 +1,7 @@
 -- Module: Theme.Tokens
 -- Purpose: media paths, fonts, sizes, palette (T.C, T.Hex, T.RGB), T.Try, text and fonts (T.SetFont, T.Text,
 --   T.Fit, T.MeasureText), textures, nine-slices, pill fills, T.Card.
--- API: W.Theme, T.MEDIA, T.FONTS, T.FONT, T.SIZE, T.WEIGHT, T.SCALE, T.Snap, T.READABLE, T.DrawnSize, T.Hex, T.C, T.C.open, T.C.green, T.RGB, T.RAMP, T.RampRGB, T.Code,
+-- API: W.Theme, T.MEDIA, T.FONTS, T.FONT, T.SIZE, T.WEIGHT, T.SCALE, T.Snap, T.READABLE, T.DrawnSize, T.Hex, T.C, T.C.open, T.C.green, T.RGB, T.RAMP, T.RampRGB, T.Code, T.THEMES, T.THEME_ORDER, T.DEFAULT_THEME, T.ThemeId, T.ThemeInfo, T.ApplyTheme, T.SetTheme, T.OnTheme, T.RegisterBackdrop,
 --   T.Try, T.allText, T.RefreshTextUnder, T.RefreshOne, T.RefreshText, T.RefreshShown, T.layoutHold, T.HoldLayout,
 --   T.LayoutsHeld (speed: the refreshes lay each list card out once), T.textEpoch, T.FONT_WAIT, T.WatchFont,
 --   T.SetFont, T.LEADING, T.Spacing, T.WorldText, T.OwnFont, T.MeasureText, T.TextWidth,
@@ -667,7 +667,7 @@ Slice.__index = Slice
 function Slice:SetColor(c, alpha)
 	local r, g, b, a = T.RGB(c, alpha)
 	for _, t in pairs(self.parts) do t:SetVertexColor(r, g, b, a) end
-	self.colour = c
+	self.colour, self.alpha = c, alpha
 end
 function Slice:SetShown(shown)
 	for _, t in pairs(self.parts) do
@@ -827,3 +827,281 @@ end
 
 -- exports (REFACTOR-MAP section 2)
 Mod.hex, Mod.MISSING, Mod.method = hex, MISSING, method
+
+---------------------------------------------------------------------------
+-- Themes and live recolouring (appended here so earlier line numbers stay fixed)
+---------------------------------------------------------------------------
+
+T.C.well = hex("090913")
+T.DEFAULT_THEME = "classic"
+T.THEME_ORDER = { "classic", "daylight", "night", "fel" }
+T.THEMES = {
+	classic = {
+		id = "classic", name = "Classic", desc = "Night-sky violet and gold.",
+		c = {
+			black = hex("0B0B16"), nightTop = hex("141228"), panel = hex("181630"), card = hex("211E3B"),
+			hover = hex("2A2748"), line = hex("333154"), raised = hex("2A2748"), well = hex("090913"),
+			white = hex("F2EEFF"), ink = hex("1D1B31"), muted = hex("ABA5C9"),
+			accent = hex("A974F5"), glow = hex("A974F5"), magenta = hex("A974F5"),
+			teal = hex("33E0CC"), gold = hex("F9C53E"), goldLight = hex("FFD866"),
+			goldPress = hex("E0AE2E"), goldDeep = hex("B1873F"), amber = hex("F9A23E"),
+			off = hex("8B83AC"), offText = hex("8F89AD"), red = hex("FF5C7A"),
+			shadow = hex("000000", 0.6),
+		},
+	},
+	daylight = {
+		id = "daylight", name = "Daylight", desc = "Bright paper cards with dark ink.",
+		c = {
+			black = hex("EEF0F6"), nightTop = hex("F7F8FC"), panel = hex("E4E7F0"), card = hex("FFFFFF"),
+			hover = hex("E9ECF5"), line = hex("C5CADB"), raised = hex("DDE1EE"), well = hex("F2F4FA"),
+			white = hex("181A24"), ink = hex("FFFFFF"), muted = hex("4E5368"),
+			accent = hex("6D3FD6"), glow = hex("6D3FD6"), magenta = hex("6D3FD6"),
+			teal = hex("0B7A70"), gold = hex("8E5C00"), goldLight = hex("A66C00"),
+			goldPress = hex("734900"), goldDeep = hex("704800"), amber = hex("A65900"),
+			off = hex("585D72"), offText = hex("5E6378"), red = hex("C41E3A"),
+			shadow = hex("000000", 0.25),
+		},
+	},
+	night = {
+		id = "night", name = "Night", desc = "Deep charcoal with cool ice-blue highlights.",
+		c = {
+			black = hex("07080C"), nightTop = hex("0E1118"), panel = hex("11141D"), card = hex("181C28"),
+			hover = hex("222838"), line = hex("2C3347"), raised = hex("222838"), well = hex("0A0C12"),
+			white = hex("EEF2FA"), ink = hex("0D1018"), muted = hex("9FAAC2"),
+			accent = hex("66B2FF"), glow = hex("66B2FF"), magenta = hex("66B2FF"),
+			teal = hex("33E0CC"), gold = hex("F5C242"), goldLight = hex("FFD66B"),
+			goldPress = hex("D9A626"), goldDeep = hex("A8802C"), amber = hex("F59E3D"),
+			off = hex("8591AA"), offText = hex("8C97B0"), red = hex("FF637D"),
+			shadow = hex("000000", 0.7),
+		},
+	},
+	fel = {
+		id = "fel", name = "Fel", desc = "Dark obsidian with Warlock fel-green highlights.",
+		c = {
+			black = hex("08110E"), nightTop = hex("0F1D17"), panel = hex("11201A"), card = hex("182B23"),
+			hover = hex("21392F"), line = hex("2D4A3E"), raised = hex("21392F"), well = hex("09130F"),
+			white = hex("EBF7F1"), ink = hex("0B1712"), muted = hex("9BC2B1"),
+			accent = hex("3CE08E"), glow = hex("3CE08E"), magenta = hex("3CE08E"),
+			teal = hex("45E6D8"), gold = hex("F9C53E"), goldLight = hex("FFD866"),
+			goldPress = hex("E0AE2E"), goldDeep = hex("B1873F"), amber = hex("F9A23E"),
+			off = hex("82A898"), offText = hex("89B0A0"), red = hex("FF6B7E"),
+			shadow = hex("000000", 0.65),
+		},
+	},
+}
+T.activeTheme = T.DEFAULT_THEME
+
+local rgbLast = { token = nil, alpha = nil, r = nil, g = nil, b = nil, a = nil }
+local function rgbMatches(r, g, b, a)
+	if not rgbLast.token then return false end
+	if math.abs((r or 0) - rgbLast.r) > 0.001 or math.abs((g or 0) - rgbLast.g) > 0.001 or math.abs((b or 0) - rgbLast.b) > 0.001 then
+		return false
+	end
+	if a ~= nil and math.abs(a - rgbLast.a) > 0.001 then return false end
+	return true
+end
+
+local origRGB = T.RGB
+function T.RGB(c, alpha)
+	local tok = type(c) == "string" and T.C[c] and c or nil
+	local r, g, b, a = origRGB(c, alpha)
+	if tok then
+		rgbLast.token, rgbLast.alpha, rgbLast.r, rgbLast.g, rgbLast.b, rgbLast.a = tok, alpha, r, g, b, a
+	else
+		rgbLast.token = nil
+	end
+	return r, g, b, a
+end
+
+local allIcons = setmetatable({}, { __mode = "k" })
+local allSlices = setmetatable({}, { __mode = "k" })
+local allPills = setmetatable({}, { __mode = "k" })
+local allRepaint = setmetatable({}, { __mode = "k" })
+local allBackdrops = setmetatable({}, { __mode = "k" })
+
+local origText = T.Text
+function T.Text(parent, size, colour, justify, weight, layer)
+	local fs = origText(parent, size, colour, justify, weight, layer)
+	local col = colour or "white"
+	if type(col) == "string" and T.C[col] then fs.wuberColor = col end
+	local rawSetColor = fs.SetTextColor
+	if type(rawSetColor) == "function" then
+		fs.wuberRawSetColor = rawSetColor
+		fs.SetTextColor = function(self, r, g, b, a)
+			if rgbMatches(r, g, b, a) then
+				self.wuberColor, self.wuberAlpha = rgbLast.token, rgbLast.alpha
+			else
+				self.wuberColor, self.wuberAlpha = nil, nil
+			end
+			return rawSetColor(self, r, g, b, a)
+		end
+	end
+	return fs
+end
+
+local function trackVertex(t, col)
+	if type(t) ~= "table" then return end
+	if type(col) == "string" and T.C[col] then t.wuberColor = col end
+	local rawSet = t.SetVertexColor
+	if type(rawSet) == "function" then
+		t.wuberRawSetVertex = rawSet
+		t.SetVertexColor = function(self, r, g, b, a)
+			if rgbMatches(r, g, b, a) then
+				self.wuberColor, self.wuberAlpha = rgbLast.token, rgbLast.alpha
+			else
+				self.wuberColor, self.wuberAlpha = nil, nil
+			end
+			return rawSet(self, r, g, b, a)
+		end
+	end
+	allIcons[t] = true
+end
+
+local origIcon = T.Icon
+function T.Icon(parent, name, size, colour, layer)
+	local t = origIcon(parent, name, size, colour, layer)
+	trackVertex(t, colour or "white")
+	return t
+end
+
+local origCircle = T.Circle
+function T.Circle(parent, size, colour, layer, sub)
+	local t = origCircle(parent, size, colour, layer, sub)
+	trackVertex(t, colour or "white")
+	return t
+end
+
+local origNineSlice = T.NineSlice
+function T.NineSlice(frame, name, px, c, layer, sub, out, anchor)
+	local s = origNineSlice(frame, name, px, c, layer, sub, out, anchor)
+	allSlices[s] = true
+	return s
+end
+
+local origPillFill = T.PillFill
+function T.PillFill(frame, colour, h, layer, sub)
+	local s = origPillFill(frame, colour, h, layer, sub)
+	allPills[s] = true
+	return s
+end
+
+local function paintBackdrop(bd)
+	local classic = T.activeTheme == T.DEFAULT_THEME
+	if type(bd.showArt) == "function" then
+		pcall(bd.showArt, classic)
+	elseif type(bd.art) == "table" then
+		for _, t in ipairs(bd.art) do
+			if t and t.SetShown then pcall(t.SetShown, t, classic) end
+		end
+	end
+	if classic then
+		if bd.fill then pcall(bd.fill.Hide, bd.fill) end
+		return
+	end
+	local f = bd.fill
+	if not f then
+		f = bd.frame:CreateTexture(nil, bd.layer or "BACKGROUND", nil, bd.sub or -4)
+		f:SetPoint("TOPLEFT", bd.frame, "TOPLEFT", 0, bd.top or 0)
+		f:SetPoint("BOTTOMRIGHT", bd.frame, "BOTTOMRIGHT", 0, bd.bottom or 0)
+		bd.fill = f
+	end
+	local br, bg, bb = T.RGB("black")
+	local tr, tg, tb = T.RGB("nightTop")
+	Try(f, "SetColorTexture", 1, 1, 1, 1)
+	local ok = false
+	if type(CreateColor) == "function" and f.SetGradient then
+		Try(f, "SetVertexColor", 1, 1, 1, 1)
+		ok = pcall(f.SetGradient, f, "VERTICAL", CreateColor(br, bg, bb, 1), CreateColor(tr, tg, tb, 1))
+	end
+	if not ok and f.SetGradientAlpha then
+		ok = pcall(f.SetGradientAlpha, f, "VERTICAL", br, bg, bb, 1, tr, tg, tb, 1)
+	end
+	if not ok then
+		if not pcall(f.SetColorTexture, f, br, bg, bb, 1) then
+			Try(f, "SetVertexColor", br, bg, bb, 1)
+		end
+	end
+	f:Show()
+end
+
+function T.OnTheme(obj, fn)
+	if obj ~= nil and type(fn) == "function" then allRepaint[obj] = fn end
+end
+
+function T.RegisterBackdrop(frame, opts)
+	if not frame then return nil end
+	opts = opts or {}
+	local bd = {
+		frame = frame, art = opts.art, showArt = opts.showArt,
+		top = opts.top or 0, bottom = opts.bottom or 0,
+		layer = opts.layer or "BACKGROUND", sub = opts.sub or -4,
+	}
+	allBackdrops[frame] = bd
+	if T.activeTheme ~= T.DEFAULT_THEME then paintBackdrop(bd) end
+	return bd
+end
+
+function T.ThemeId(id)
+	if id == nil then
+		local db = W.db
+		id = type(db) == "table" and db.theme or nil
+	end
+	if type(id) == "string" and T.THEMES[id] then return id end
+	return T.DEFAULT_THEME
+end
+
+function T.ThemeInfo(id)
+	return T.THEMES[T.ThemeId(id)]
+end
+
+function T.ApplyTheme(id, force)
+	id = T.ThemeId(id)
+	if id == T.activeTheme and not force then return id end
+	local th = T.THEMES[id]
+	T.activeTheme = id
+	for k, col in pairs(th.c) do
+		local dst = T.C[k]
+		if type(dst) == "table" then
+			dst[1], dst[2], dst[3], dst[4] = col[1], col[2], col[3], col[4]
+		else
+			T.C[k] = { col[1], col[2], col[3], col[4] }
+		end
+	end
+	T.C.open = T.C.glow
+	T.C.green = T.C.glow
+	for s in pairs(allSlices) do
+		if type(s.colour) == "string" and T.C[s.colour] then pcall(s.SetColor, s, s.colour, s.alpha) end
+	end
+	for p in pairs(allPills) do
+		if type(p.colour) == "string" and T.C[p.colour] then pcall(p.SetColor, p, p.colour, p.alpha) end
+	end
+	for t in pairs(allIcons) do
+		if type(t.wuberColor) == "string" and T.C[t.wuberColor] then
+			local fn = t.wuberRawSetVertex or t.SetVertexColor
+			if type(fn) == "function" then pcall(fn, t, T.RGB(t.wuberColor, t.wuberAlpha)) end
+		end
+	end
+	for fs in pairs(T.allText) do
+		if type(fs.wuberColor) == "string" and T.C[fs.wuberColor] then
+			local fn = fs.wuberRawSetColor or fs.SetTextColor
+			if type(fn) == "function" then pcall(fn, fs, T.RGB(fs.wuberColor, fs.wuberAlpha)) end
+		end
+	end
+	for _, bd in pairs(allBackdrops) do paintBackdrop(bd) end
+	for obj, fn in pairs(allRepaint) do pcall(fn, obj) end
+	return id
+end
+
+function T.SetTheme(id)
+	id = T.ThemeId(id)
+	local db = W.db
+	if type(db) == "table" then db.theme = id end
+	T.ApplyTheme(id, true)
+	if W.Fire then
+		W.Fire("THEME", id)
+		W.Fire("SETTINGS", "theme")
+	end
+	return id
+end
+
+W.OnLogin(function() T.ApplyTheme(T.ThemeId()) end)

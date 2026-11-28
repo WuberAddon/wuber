@@ -55,7 +55,7 @@ local function buildSplash(win)
 	sp:EnableMouse(false) -- click-through: any click ends it (GLOBAL_MOUSE_DOWN)
 	sp.bg = T.Tex(sp, "winbg", "BACKGROUND")
 	sp.bg:SetAllPoints(sp)
-	sp.bg:SetTexCoord(0, 504 / 512, 0, 840 / 1024)
+	sp.bg:SetTexCoord(0, 504 / 512, 0, 840 / 1024) if type(T.RegisterBackdrop) == "function" then T.RegisterBackdrop(sp, { art = { sp.bg }, layer = "BACKGROUND", sub = 0 }) end
 	sp.art = CreateFrame("Frame", nil, sp)
 	sp.art:SetSize(250, 250)
 	sp.art:SetPoint("CENTER", sp, "CENTER", 0, 30)
@@ -267,7 +267,7 @@ local function buildPhone(win)
 	ph.bezel = bezel
 	ph.ring = T.NineSlice(bezel, "phone", 56, 112 / 256, "ARTWORK", 0)
 	ph.ring.parts.M:Hide()
-	ph.ring:SetColor("white")
+	ph.ring:SetColor({ 1, 1, 1, 1 })
 	-- side keys: action button and volume on the left, power on the right
 	ph.keys = {
 		sideKey(ph, "LEFT", 112, 24), sideKey(ph, "LEFT", 158, 48), sideKey(ph, "LEFT", 214, 48),
@@ -359,9 +359,29 @@ local function buildPhone(win)
 	home.bar:SetSize(124, 5)
 	home.bar:SetPoint("CENTER", home, "CENTER", 0, -1)
 	home.bar.fill = T.PillFill(home.bar, { 1, 1, 1, 0.78 }, 5, "ARTWORK", 0)
-	safeScript(home, "OnEnter", function(self) self.bar.fill:SetColor({ 1, 1, 1, 1 }) end)
-	safeScript(home, "OnLeave", function(self) self.bar.fill:SetColor({ 1, 1, 1, 0.78 }) end)
+	local function homeRest()
+		if T.activeTheme == T.DEFAULT_THEME then return { 1, 1, 1, 0.78 } end
+		return "white", 0.55
+	end
+	local function homeHover()
+		if T.activeTheme == T.DEFAULT_THEME then return { 1, 1, 1, 1 } end
+		return "white", 0.9
+	end
+	safeScript(home, "OnEnter", function(self) self.bar.fill:SetColor(homeHover()) end)
+	safeScript(home, "OnLeave", function(self) self.bar.fill:SetColor(homeRest()) end)
 	T.Press(home, { fill = home.bar.fill })
+	if type(T.OnTheme) == "function" then
+		T.OnTheme(ph, function()
+			if T.activeTheme == T.DEFAULT_THEME then
+				ph.signal.dim:SetVertexColor(1, 1, 1, 0.28)
+				ph.battery:SetVertexColor(1, 1, 1, 0.5)
+			else
+				ph.signal.dim:SetVertexColor(T.RGB("white", 0.28))
+				ph.battery:SetVertexColor(T.RGB("white", 0.5))
+			end
+			home.bar.fill:SetColor(homeRest())
+		end)
+	end
 	safeScript(home, "OnClick", function() UI.Toggle(false) end)
 	T.Tip(home, "Close Wuber", "Swipe home: hides the app. Your ride carries on; the minimap button or /wuber opens it again.", "ANCHOR_BOTTOM")
 	ph.home = home

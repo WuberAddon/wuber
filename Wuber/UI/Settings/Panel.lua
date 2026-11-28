@@ -494,7 +494,7 @@ local function build(win)
 	end)
 	T.Tip(resetBtn, "Reset", "Puts the window back at its usual place and size: the middle of the screen, or beside the chat box when the middle would cover it.")
 	st.controls.resetPos = resetBtn
-	winSec.baseH = y + 6
+	y = RowsMod.themeRow(winSec, y) winSec.baseH = y + 6
 
 	-- This window: Advanced (Wide pages), then Check my game and its results card in a frame of their own,
 	-- so the check is the last row of the page in both modes, directly above the footer
@@ -644,7 +644,7 @@ function UI.UpdateSettings()
 	if c.scale and not c.scale.pending then
 		local v = scaleNow()
 		if math.abs((c.scale.value or 0) - v) > 0.001 then c.scale:Set(v) end
-	end
+	end if c.theme and type(c.theme.Paint) == "function" then c.theme.Paint() end
 	local n = hiddenCount()
 	if st.hiddenRow then
 		st.hiddenRow:SetActive(n > 0)

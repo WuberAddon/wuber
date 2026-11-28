@@ -336,6 +336,7 @@ function T.Pill(parent, text, style, w, h, name, template)
 		pcall(pillPaint, self)
 	end)
 	pillPaint(b)
+	if type(T.OnTheme) == "function" then T.OnTheme(b, pillPaint) end
 	return b
 end
 
@@ -884,6 +885,7 @@ function T.Toggle(parent, on, onChange)
 	t:SetScript("OnLeave", function(self) self.hover = nil pcall(paint, self) end)
 	T.Press(t, { paint = function(self) paint(self) end }) -- the click is the press's, on mouse down
 	t:SetOn(t.on)
+	if type(T.OnTheme) == "function" then T.OnTheme(t, paint) end
 	return t
 end
 
@@ -1042,6 +1044,7 @@ function T.Segmented(parent, choices, value, onChange, width, height, opts)
 	local s = CreateFrame("Frame", nil, parent)
 	s:SetSize(width, height)
 	s.bg = T.PillFill(s, "line", height, "BACKGROUND", 0)
+	if type(T.OnTheme) == "function" then T.OnTheme(s, segPaint) end
 	s.buttons = {}
 	local n = #choices
 	local bw = (width - 4) / math.max(1, n)

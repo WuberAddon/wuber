@@ -524,6 +524,9 @@ local function threeSlice(tex, frame, path, layer, sub, u1, v0, v1, top, bottom)
 	mid:SetPoint("TOPLEFT", tex, "TOPRIGHT", 0, 0)
 	mid:SetPoint("BOTTOMRIGHT", right, "BOTTOMLEFT", 0, 0)
 	mid:SetTexCoord(a, b, v0, v1)
+	if type(T.RegisterBackdrop) == "function" then
+		T.RegisterBackdrop(frame, { art = { tex, mid, right }, top = top, bottom = bottom, layer = layer, sub = sub })
+	end
 	return { left = tex, mid = mid, right = right }
 end
 

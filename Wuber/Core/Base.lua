@@ -375,6 +375,7 @@ W.DEFAULTS = {
 	advanced = nil,         -- Simple or Advanced (W.Advanced): W.InitDB makes it false the first time; never filled from here
 	groupFinder = false,    -- the Group Finder preview (draft, Net.GroupFinder): off by default; on, Wuber may search and delist from clicks
 	simpleNote = nil,       -- true while a player whose saved data is older than Simple mode has not been told yet
+	theme = "classic",      -- window theme: "classic", "daylight", "night" or "fel" (Theme.Tokens)
 }
 
 -- Driver mode settings belong to one character (logging in on another Warlock must not
@@ -416,6 +417,7 @@ local function fill(db, defaults)
 end
 
 local FX_LEVELS = { full = true, light = true, off = true }
+local THEME_IDS = { classic = true, daylight = true, night = true, fel = true }
 
 function W.InitDB()
 	if type(WuberDB) ~= "table" then WuberDB = {} end
@@ -427,6 +429,7 @@ function W.InitDB()
 	end
 	if type(db.advertOnline) ~= "boolean" then db.advertOnline = true end
 	if not FX_LEVELS[db.fx] then db.fx = "full" end
+	if not THEME_IDS[db.theme] then db.theme = "classic" end
 	if type(db.plates) ~= "boolean" then db.plates = true end
 	if type(db.coach) ~= "boolean" then db.coach = false end
 	if type(db.tipsOn) ~= "boolean" then db.tipsOn = true end
